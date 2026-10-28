@@ -1,0 +1,97 @@
+# Source configuration and compliance decisions for the SIP discovery engine (Groww, India).
+# Every id below was checked with a real request on 2026-10-29. Re-check before any full-scale run.
+
+window_months: 24
+
+# Play ids: play.google.com/store/apps/details?id=<id>&gl=IN returned HTTP 200 with the expected app title.
+# iOS ids: returned by the iTunes Search API (country=in); the India review RSS feed returned reviews unless noted.
+products:
+  groww:     {name: Groww,              play_id: com.nextbillion.groww, ios_id: 1404871703, role: primary}
+  coin:      {name: Coin by Zerodha,    play_id: com.zerodha.coin,      ios_id: 1392892554, role: contrast}
+  indmoney:  {name: INDmoney,           play_id: in.indwealth,          ios_id: 1450178837, role: contrast}
+  et_money:  {name: ET Money,           play_id: com.smartspends,       ios_id: 1212752482, role: contrast}
+  # Zerodha Kite (play com.zerodha.kite3, ios 1449453802) is not used: it is a trading app, and its India RSS feed returned 0 reviews.
+
+sources:
+  play:
+    enabled: true
+    tool: python google-play-scraper (v1.2.7), country=in, sort newest, no rating filter (positive reviews matter here)
+    langs: [en, hi]
+    per_app_limit: {groww: 60000, contrast: 1500}
+    sampling_note: >
+      Probe on 2026-10-29: the newest 3,000 English Groww reviews spanned only 2026-10-05 to 2026-10-28, and 36 of them (1.2%) named
+      SIP, mutual fund or MF. So the pull pages far back (raw collection is free) and the prefilter keeps every SIP item across months.
+      The Hindi feed held 2,793 reviews in total, 2018 to 2026; all are fetched and the window applies.
+    compliance: Public store pages; scraping is against Google's general terms, so keep volume modest and disclose the method.
+
+  appstore:
+    enabled: true
+    tool: iTunes customer-reviews RSS (JSON), India store only
+    url_pattern: "https://itunes.apple.com/{cc}/rss/customerreviews/page={n}/id={ios_id}/sortby={mostrecent|mosthelpful}/json"
+    locales: [in]
+    known_limits: 500 reviews per app per sort (10 pages of 50).
+    compliance: Official public feed.
+
+  youtube:
+    enabled: true
+    tool: YouTube Data API v3 (official), regionCode=IN, English and Hindi videos
+    quota: 10000 units per day default; search.list costs 100 units, commentThreads.list costs 1 unit
+    compliance: Official API; follow YouTube API Services terms; do not keep cached data longer than allowed.
+
+  tradingqna:
+    enabled: true
+    tool: Discourse public JSON. Category listings /c/{slug}/{id}.json?page=N, then /t/{id}.json per topic. One request every 2 seconds.
+    categories: {personal-finance: 14, coin-zerodhas-direct-mf-platform: 17, general: 5}
+    max_pages: {general: 150}
+    robots_txt: >
+      tradingqna.com/robots.txt (checked 2026-10-29) disallows /search for every user agent, so search.json is NOT used
+      (one probe request was sent before this was noticed). /c/ listings and /t/ topic pages are not disallowed.
+    terms: tradingqna.com/tos returned 200; content is public Q&A. Disclose the method; store no author names.
+    bias: Zerodha's forum, so it skews to Coin users and to experienced investors rather than first-timers.
+
+  reddit:
+    enabled: true
+    opt_in: true   # never part of a default refresh; runs only with `collect reddit` or `refresh --reddit`
+    tool: Apify actor automation-lab/reddit-scraper
+    robots_txt: www.reddit.com/robots.txt disallows all crawlers and points to Reddit's Public Content Policy.
+    compliance: >
+      Direct scraping is against Reddit's rules. Decision made by the project owner to use Apify at small, non-commercial scale,
+      only when run by hand. Disclose this in the write-up.
+    subreddits: [IndiaInvestments, mutualfunds, personalfinanceindia, IndianStockMarket]
+    verified_cost_usd: start 0.003 per run, 0.00115 per post, 0.000575 per comment (free tier, checked 2026-09).
+    safety: Each run passes maxTotalChargeUsd and refuses to run if less than $0.25 of the monthly free credit would remain.
+
+  hackernews:
+    enabled: false
+    reason: Not where Indian retail SIP investors talk; collector removed.
+  stackexchange:
+    enabled: false
+    reason: Not where Indian retail SIP investors talk; collector removed.
+  google_community:
+    enabled: false
+    reason: Not relevant to this product; collector removed.
+
+queries:
+  reddit:
+    - SIP stop
+    - stopped SIP
+    - pause SIP
+    - first SIP
+    - SIP returns
+    - SIP loss
+    - Groww SIP
+    - SIP mandate
+  youtube_video_discovery:
+    - should I stop my SIP
+    - SIP band karna chahiye
+    - SIP pause kaise kare groww
+    - groww SIP review
+    - my first SIP experience
+    - SIP returns negative what to do
+    - SIP loss me hai kya kare
+    - SIP 1 year return reality
+    - why investors stop SIP market fall
+    - SIP mandate autopay failed
+    - step up SIP explained
+    - mutual fund SIP mistakes beginners
+    - SIP बंद करें या नहीं

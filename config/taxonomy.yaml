@@ -1,0 +1,144 @@
+# Taxonomy v2: first version for SIP / mutual-fund journeys on Groww (v1 was the previous engine's, retired).
+# Every enum value has a one-line definition so the same text can go into prompts. Rule for every field: never guess; use
+# not_stated / unknown when the text does not say. PENDING before extraction: the belief / root-cause field (owner decision).
+
+version: v2
+
+# Relevance: is this about a person's own SIP or mutual-fund experience (good, bad or neutral)? Only sip_or_mf_journey continues.
+problem_family:
+  sip_or_mf_journey: The writer's own SIP or mutual-fund experience or decision (starting, continuing, checking, pausing, stopping, a failed instalment, returns), or a secondhand account of a named person's (my dad, my friend), positive, negative or neutral.
+  stocks_or_fno: About stocks, F&O, IPOs, trading or charts, with no SIP or mutual-fund experience.
+  kyc_or_onboarding: Account opening, KYC, bank linking or verification, with no SIP or mutual-fund experience.
+  app_bug_or_support: Crashes, login, slowness, customer support or UI complaints not linked by the writer to their SIP or mutual funds.
+  charges_or_fees: Brokerage, fees, hidden charges or pricing, not linked to their SIP or mutual funds.
+  other: Generic praise or criticism ("best app for mutual funds"), advice given to someone else with no experience of the writer's own, or anything else.
+
+language:
+  english: Written in English.
+  hinglish: Hindi (or another Indian language) written in Latin letters, alone or mixed with English.
+  hindi: Written in Devanagari script.
+  other_language: Any other language or script.
+
+about_whom:
+  self: The writer describes their own SIP or mutual funds.
+  secondhand: The writer describes a named other person's SIP (family member, friend, colleague).
+
+investor_experience:
+  first_time: The writer says this is their first SIP or first investment, or that they are new or a beginner at investing.
+  experienced: The writer says they have invested before (earlier funds, stocks, years of investing).
+  not_stated: The text does not say.
+
+journey_stage:
+  before_start: Has not started yet; deciding, asking or setting up.
+  first_3_months: Within the first three months of their first SIP.
+  months_4_to_12: Between four and twelve months after starting.
+  after_12_months: More than a year after starting.
+  unknown: The text does not say how long they have been investing.
+
+sip_action:
+  started: Has just started or set up an SIP.
+  continuing: Is still investing as before, including through a fall.
+  increased: Raised the amount, used a step-up, or added another SIP.
+  considering_stopping: Is thinking about pausing, cutting or stopping but has not done it.
+  paused: Paused the SIP (temporarily skipped instalments by choice).
+  reduced: Lowered the SIP amount.
+  stopped: Cancelled or stopped the SIP.
+  instalment_failed: An instalment did not go through (mandate, autopay, bank, balance), without the person choosing it.
+  redeemed: Withdrew or sold mutual-fund units.
+  switched_platform: Moved their SIP or mutual funds to another app or platform.
+  not_stated: No SIP action is described.
+
+action_reason:
+  needed_money: Needed the money for an expense or emergency.
+  income_change: Income fell, was irregular, or the job changed.
+  returns_below_expectation: Returns were lower than expected, without a market fall being named.
+  market_fall: A market fall, red portfolio or loss on paper.
+  mandate_or_autopay_issue: Mandate, autopay, bank debit or instalment processing went wrong.
+  forgot_or_not_tracking: Forgot, stopped looking, or lost track.
+  confused_by_app_or_numbers: Did not understand what the app or its numbers showed.
+  advice_from_someone: Someone (person, video, influencer) told them to.
+  lost_trust_in_platform: No longer trusts the app or company.
+  goal_changed: Their goal or plan changed (reached it, or a new priority).
+  other: A stated reason that fits none of the above.
+  not_stated: No reason is given.
+
+contrast_bucket:  # derived in code from sip_action, not asked of the model
+  continuers: continuing, increased.
+  considerers: considering_stopping (still active; the people an intervention can reach).
+  droppers: paused, reduced, stopped, redeemed.
+  involuntary_lapse: instalment_failed (counts as inactive in the business metric).
+
+what_they_check:
+  returns_or_pnl: Profit and loss, gain or return shown in the app.
+  nav: The fund's NAV.
+  portfolio_value: Total current value of holdings.
+  instalment_debit: Whether the instalment was debited or processed.
+  xirr: XIRR or annualised return.
+  fund_rating: Fund rating, ranking or category comparison.
+  none_or_never: Says they do not check, or stopped looking.
+  not_stated: The text does not say what they check.
+
+check_frequency:
+  daily: Daily or more often.
+  weekly: About weekly.
+  monthly: About monthly or at each instalment.
+  rarely: A few times a year or less.
+  none_or_never: Says they never check or stopped checking.
+  not_stated: The text does not say how often.
+
+outside_app_behaviour:
+  asked_friend_family: Asked or followed a friend, family member or colleague.
+  youtube_or_influencer: Watched videos or followed an influencer.
+  reddit_or_forum: Asked or read on Reddit or a forum.
+  advisor_or_ca: Asked a financial advisor, distributor or CA.
+  none_stated: No outside-app behaviour is described.
+
+emotion:
+  anxious: Worried, scared or panicking.
+  regret: Wishes they had not started, or had done otherwise.
+  confused: Does not understand what is happening.
+  indifferent: Calm or unbothered.
+  confident: Sure of their approach or happy with it.
+  angry: Angry or frustrated at the app or company.
+  not_stated: No emotion is expressed.
+
+life_stage:
+  student: A student.
+  early_career: First job or early in their career.
+  family: Married, has children or supports a family.
+  mid_career: Established mid-career.
+  near_retirement: Close to or in retirement.
+  not_stated: The text does not say.
+
+income_type:
+  salaried: A regular salary.
+  student: Student income or none.
+  self_employed: Business or self-employed.
+  irregular: Gig, freelance or otherwise irregular income.
+  not_stated: The text does not say.
+
+source_of_money:
+  salary: From their salary.
+  family_money: Pocket money or money from family.
+  business_income: From a business.
+  savings: From existing savings.
+  windfall: Bonus, gift or one-off money.
+  not_stated: The text does not say.
+
+influenced_by:
+  friend_family: Friend, family member or colleague.
+  youtube_or_influencer: Videos or an influencer.
+  app_or_ad: The app's own prompts, or an advert.
+  advisor: A financial advisor or distributor.
+  self: Their own decision or research.
+  not_stated: The text does not say.
+
+severity:
+  considered: Thought about an action but has not taken it.
+  acted: Actually paused, reduced, stopped or redeemed.
+  unclear: Cannot be judged from the text.
+
+confidence:
+  high: The text states the point directly.
+  medium: The point is implied.
+  low: The point is inferred from thin or ambiguous text.
