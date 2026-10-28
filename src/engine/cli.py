@@ -143,9 +143,8 @@ def run_relevance(model, limit):
         for r, p in zip(chunk, preds):
             if p is None:
                 continue
-            fam = relevance.to_label(p)
             db.execute("UPDATE filter_results SET relevant=?, problem_family=?, language=?, confidence=?, model=?, run_id=? "
-                       "WHERE item_id=?", (int(fam == "search_or_retrieval"), p["problem_family"], p["language"],
+                       "WHERE item_id=?", (int(p["problem_family"] == relevance.RELEVANT), p["problem_family"], p["language"],
                                            p["confidence"], model, run_id, r["item_id"]))
             done += 1
         db.commit()

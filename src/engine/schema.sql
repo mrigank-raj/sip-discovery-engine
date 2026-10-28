@@ -35,25 +35,31 @@ CREATE TABLE IF NOT EXISTS filter_results (
 CREATE TABLE IF NOT EXISTS extractions (
   item_id TEXT PRIMARY KEY REFERENCES raw_items(item_id),
   json TEXT NOT NULL,
-  failure_mode TEXT,
+  summary TEXT,
+  secondhand INTEGER,
+  investor_experience TEXT,
+  platform TEXT,
+  journey_stage TEXT,
+  sip_action TEXT,
+  contrast_bucket TEXT,
+  action_reason TEXT,
+  emotion TEXT,
+  what_they_check TEXT,
+  check_frequency TEXT,
+  outside_app_behaviour TEXT,
+  life_stage TEXT,
+  income_type TEXT,
+  source_of_money TEXT,
+  influenced_by TEXT,
   severity TEXT,
-  outcome TEXT,
-  photo_type TEXT,
-  product_mentioned TEXT,
+  has_expectation INTEGER,
+  has_belief INTEGER,
   confidence TEXT,
   taxonomy_version TEXT,
   model TEXT,
   run_id TEXT
 );
-
-CREATE TABLE IF NOT EXISTS cue_mentions (
-  item_id TEXT NOT NULL REFERENCES raw_items(item_id),
-  cue_type TEXT NOT NULL,
-  cue_value TEXT,
-  status TEXT NOT NULL,
-  quote TEXT NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_cue_type_status ON cue_mentions(cue_type, status);
+CREATE INDEX IF NOT EXISTS idx_ext_action ON extractions(sip_action, contrast_bucket);
 
 CREATE TABLE IF NOT EXISTS clusters (
   cluster_id INTEGER PRIMARY KEY,

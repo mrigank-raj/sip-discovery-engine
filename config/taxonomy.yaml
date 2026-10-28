@@ -1,6 +1,8 @@
 # Taxonomy v2: first version for SIP / mutual-fund journeys on Groww (v1 was the previous engine's, retired).
 # Every enum value has a one-line definition so the same text can go into prompts. Rule for every field: never guess; use
-# not_stated / unknown when the text does not say. PENDING before extraction: the belief / root-cause field (owner decision).
+# not_stated / unknown when the text does not say.
+# Free-text fields (not enums), each verbatim-checked where it is a quote: summary (English, clustering only), expectation_at_start
+# (quote), belief_at_action (English paraphrase) + belief_quote (quote), secondhand (true/false), age_stated (as written).
 
 version: v2
 
@@ -19,9 +21,13 @@ language:
   hindi: Written in Devanagari script.
   other_language: Any other language or script.
 
-about_whom:
-  self: The writer describes their own SIP or mutual funds.
-  secondhand: The writer describes a named other person's SIP (family member, friend, colleague).
+platform:
+  groww: Groww.
+  zerodha: Zerodha Coin or Kite.
+  indmoney: INDmoney.
+  etmoney: ET Money.
+  other: Another named app, AMC website or distributor.
+  not_stated: No platform is named. (Store reviews take the platform of the app reviewed, set in code.)
 
 investor_experience:
   first_time: The writer says this is their first SIP or first investment, or that they are new or a beginner at investing.
@@ -64,9 +70,10 @@ action_reason:
 
 contrast_bucket:  # derived in code from sip_action, not asked of the model
   continuers: continuing, increased.
-  considerers: considering_stopping (still active; the people an intervention can reach).
-  droppers: paused, reduced, stopped, redeemed.
-  involuntary_lapse: instalment_failed (counts as inactive in the business metric).
+  considering: considering_stopping (still active; the people an intervention can reach).
+  acted: paused, reduced, stopped, redeemed.
+  instalment_failed: instalment_failed, shown separately and kept in the metric view (counts as inactive in the business metric).
+  switched_platform: switched_platform, shown separately.
 
 what_they_check:
   returns_or_pnl: Profit and loss, gain or return shown in the app.

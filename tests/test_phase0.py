@@ -9,7 +9,7 @@ from engine import cli  # noqa: E402
 def test_schema_creates_all_tables(tmp_path):
     db_file = cli.init_db(tmp_path / "t.db")
     names = {r[0] for r in sqlite3.connect(db_file).execute("select name from sqlite_master where type='table'")}
-    assert {"raw_items", "filter_results", "extractions", "cue_mentions",
+    assert {"raw_items", "filter_results", "extractions",
             "clusters", "cluster_items", "runs", "needs_review"} <= names
 
 
