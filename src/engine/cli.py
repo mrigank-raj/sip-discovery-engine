@@ -238,6 +238,9 @@ def main(argv=None):
     c.add_argument("--max-usd", type=float, help="reddit: hard spend cap for this run (Apify free credit)")
     c.add_argument("--skip", type=int, help="reddit listing: skip the first N subreddits (already collected)")
     c.add_argument("--listing", action="store_true", help="reddit: top-of-year subreddit listings filtered by keyword instead of searches")
+    gs = sub.add_parser("golden-sheet", help="write the blind golden set from the prefiltered pool (no model output used)")
+    gs.add_argument("--n", type=int, default=35)
+    gs.add_argument("--add", type=int, default=0, help="append this many more stratified items, keeping existing labels")
     s = sub.add_parser("sample")
     s.add_argument("-n", type=int, default=5)
     a = p.parse_args(argv)
@@ -290,6 +293,9 @@ def main(argv=None):
     elif a.cmd == "relevance-run":
         init_db()
         run_relevance(a.model or load_yaml("llm.yaml")["providers"]["gemini"]["models"]["relevance"], a.limit)
+    elif a.cmd == "golden-sheet":
+        from engine import golden
+        golden.make_sheet(a.n, a.add)
     elif a.cmd == "sample":
         sample(a.n)
     else:

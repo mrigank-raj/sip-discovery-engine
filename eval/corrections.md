@@ -15,6 +15,16 @@ Cases where a person rejected or corrected AI output, and why. Filled in by hand
 - Decision: ___
 - Date and who decided: ___
 
+## 0b. Belief examples in the extraction prompt (prompt-design decision, 2026-10-29, before any extraction ran)
+
+- What the AI wrote: worked examples with SIP-specific beliefs ("I thought SIP gives fixed returns like an FD, so I stopped",
+  "I knew the first year would be flat, so I kept going", "he thought the money was gone") and an expectation example
+  ("socha tha FD se zyada milega").
+- What I changed it to: placeholder shapes with no SIP content ("I thought [X], so I [action]" has a belief; "[Event] happened,
+  so I [action]" and "I am [emotion], so I [action]" do not). The rule that an action or emotion alone is not a belief is kept.
+- Why: concrete domain beliefs in the prompt could seed the very findings the engine is meant to discover (the model would be
+  primed to see FD-like expectations or paper-loss beliefs). The examples should teach the form of a stated belief, not its content.
+
 ## 1. Correction
 
 - Item or output:
