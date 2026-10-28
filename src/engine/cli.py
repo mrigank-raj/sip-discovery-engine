@@ -241,6 +241,7 @@ def main(argv=None):
     gs = sub.add_parser("golden-sheet", help="write the blind golden set from the prefiltered pool (no model output used)")
     gs.add_argument("--n", type=int, default=35)
     gs.add_argument("--add", type=int, default=0, help="append this many more stratified items, keeping existing labels")
+    sub.add_parser("golden-score", help="engine vs your labels: overall, per source, per prefilter group, every disagreement")
     s = sub.add_parser("sample")
     s.add_argument("-n", type=int, default=5)
     a = p.parse_args(argv)
@@ -296,6 +297,9 @@ def main(argv=None):
     elif a.cmd == "golden-sheet":
         from engine import golden
         golden.make_sheet(a.n, a.add)
+    elif a.cmd == "golden-score":
+        from engine import golden
+        golden.score()
     elif a.cmd == "sample":
         sample(a.n)
     else:
