@@ -125,13 +125,17 @@ def run_prefilter(recompute=False):
         print(f"  {r['source']:<17} {r['p']}/{r['n']}  ({100 * r['p'] // r['n']}%)")
 
 
-def run_relevance(model, limit):
-    """Classify items that passed the keyword filter and have no LLM answer yet. Saves after every chunk."""
+def run_relevance(model, limit, golden_only=False):
+    """Classify items that passed the keyword filter and have no LLM answer yet. Saves after every chunk.
+    golden_only=True limits it to the golden-set items (so their relevance can be checked before a full run)."""
+    import csv
     from engine import llm, relevance
     load_dotenv(ROOT / ".env")
     db = store.connect(DB_PATH)
+    only = [r["item_id"] for r in csv.DictReader(open(ROOT / "eval" / "golden_set.csv", encoding="utf-8-sig"))] if golden_only else []
     rows = db.execute("SELECT item_id, source, title, text FROM raw_items JOIN filter_results USING(item_id) "
-                      "WHERE prefilter_pass=1 AND relevant IS NULL ORDER BY item_id LIMIT ?", (limit or -1,)).fetchall()
+                      "WHERE prefilter_pass=1 AND relevant IS NULL" + (f" AND item_id IN ({','.join('?' * len(only))})" if only else "")
+                      + " ORDER BY item_id LIMIT ?", (*only, limit or -1)).fetchall()
     print(f"{len(rows)} items to classify with {model}")
     started, done, stop = store.now(), 0, None
     run_id = store.log_run(db, "relevance", None, {"model": model, "limit": limit, **store.versions()}, {}, [], started)
@@ -205,6 +209,7 @@ def main(argv=None):
     sp = sub.add_parser("relevance-run")
     sp.add_argument("--model", default=None, help="default: relevance model in config/llm.yaml")
     sp.add_argument("--limit", type=int, default=0, help="max items (0 = all)")
+    sp.add_argument("--golden", action="store_true", help="only the golden-set items that have no answer yet")
     pf = sub.add_parser("prefilter")
     pf.add_argument("--recompute", action="store_true", help="rescore every item, not just new ones")
     rf = sub.add_parser("refresh")
@@ -243,7 +248,8 @@ def main(argv=None):
     gs = sub.add_parser("golden-sheet", help="write the blind golden set from the prefiltered pool (no model output used)")
     gs.add_argument("--n", type=int, default=35)
     gs.add_argument("--add", type=int, default=0, help="append this many more stratified items, keeping existing labels")
-    sub.add_parser("golden-score", help="engine vs your labels: overall, per source, per prefilter group, every disagreement")
+    gsc = sub.add_parser("golden-score", help="engine vs your labels: overall, per source, per prefilter group, every disagreement")
+    gsc.add_argument("--relevance-only", action="store_true", help="score relevance alone (before extraction has run)")
     sub.add_parser("label-views", help="paste-friendly markdown of the two labelling sheets, with no engine output")
     s = sub.add_parser("sample")
     s.add_argument("-n", type=int, default=5)
@@ -296,13 +302,13 @@ def main(argv=None):
         pilot.run(a.pool, a.out, a.model or load_yaml("llm.yaml")["providers"]["gemini"]["models"]["extraction"], a.save_db, a.batch)
     elif a.cmd == "relevance-run":
         init_db()
-        run_relevance(a.model or load_yaml("llm.yaml")["providers"]["gemini"]["models"]["relevance"], a.limit)
+        run_relevance(a.model or load_yaml("llm.yaml")["providers"]["gemini"]["models"]["relevance"], a.limit, a.golden)
     elif a.cmd == "golden-sheet":
         from engine import golden
         golden.make_sheet(a.n, a.add)
     elif a.cmd == "golden-score":
         from engine import golden
-        golden.score()
+        golden.score(relevance_only=a.relevance_only)
     elif a.cmd == "label-views":
         from engine import golden
         golden.label_views()

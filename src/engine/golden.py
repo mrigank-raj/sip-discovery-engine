@@ -134,10 +134,10 @@ def _present(v):
     return (v or "").strip().lower() not in EMPTY
 
 
-def compare(gold, engine):
+def compare(gold, engine, relevance_only=False):
     """gold: dicts with item_id, source, group, text and the label columns. engine: {item_id: {"relevant": bool or None,
     "rec": extraction dict or None}}. Relevance is scored on every labelled item; extraction fields only on items the person
-    marked relevant. Blank enum cells are treated as not labelled. Returns (cells, disagreements)."""
+    marked relevant (never with relevance_only). Blank enum cells are treated as not labelled. Returns (cells, disagreements)."""
     cells, dis = [], []
 
     def add(g, field, mine, theirs):
@@ -153,7 +153,7 @@ def compare(gold, engine):
         if mine is None:
             continue
         add(g, "is_relevant", mine, e.get("relevant"))
-        if not mine:
+        if not mine or relevance_only:
             continue
         rec = e.get("rec")
         if _bool(g.get("secondhand")) is not None:
@@ -225,9 +225,33 @@ def _engine(db, ids):
     return {i: {"relevant": rel.get(i), "rec": recs.get(i)} for i in ids}
 
 
-def score(spot_checks=10):
+def relevance_report(db, gold, engine, dis):
+    """Every golden item's relevance with the engine's family, language and confidence, and each disagreement in full."""
+    q = ",".join("?" * len(gold))
+    fam = {r["item_id"]: r for r in db.execute(f"SELECT item_id, problem_family, language, confidence FROM filter_results "
+                                               f"WHERE item_id IN ({q})", [g["item_id"] for g in gold])}
+    yn = {True: "yes", False: "no", None: "not classified"}
+    L = ["## Relevance, item by item", "", "| # | source | group | you | engine | engine family | language | confidence |",
+         "|---|---|---|---|---|---|---|---|"]
+    for k, g in enumerate(gold, 1):
+        f = fam.get(g["item_id"]) or {}
+        mine, theirs = _bool(g.get("is_relevant")), engine[g["item_id"]]["relevant"]
+        L.append(f"| G{k}{'' if mine == theirs else ' **x**'} | {g['source']} | {g['group']} | {yn[mine]} | {yn[theirs]} | "
+                 f"{f['problem_family'] if f else '-'} | {f['language'] if f else '-'} | {f['confidence'] if f else '-'} |")
+    row = {g["item_id"]: k for k, g in enumerate(gold, 1)}
+    L += ["", "## Relevance disagreements", ""]
+    for d in [d for d in dis if d["field"] == "is_relevant"]:
+        f = fam.get(d["item_id"]) or {}
+        L += [f"### G{row[d['item_id']]} ({d['source']}, {d['group']}): you {yn[d['mine']]}, engine {yn[d['engine']]} "
+              f"as `{f['problem_family'] if f else '-'}` ({f['confidence'] if f else '-'} confidence)", "",
+              _quote_block(d["text"]), ""]
+    return L
+
+
+def score(spot_checks=10, relevance_only=False):
     """Compare the engine with the hand labels in eval/golden_set.csv; print rates overall, per source and per prefilter group,
-    and write every disagreement plus a post-scoring summary spot-check to eval/results/golden_score.md and .json."""
+    and write every disagreement plus a post-scoring summary spot-check to eval/results/golden_score.md and .json.
+    relevance_only=True scores and reports relevance alone (used before extraction has run)."""
     import json
     db = store.connect(ROOT / "data" / "engine.db")
     rows = list(csv.DictReader(open(SHEET, encoding="utf-8-sig")))
@@ -236,7 +260,25 @@ def score(spot_checks=10):
     gold = [{**r, "group": stratum(meta[r["item_id"]]), "text": meta[r["item_id"]]["text"]} for r in rows]
     labelled = [g for g in gold if _bool(g.get("is_relevant")) is not None]
     engine = _engine(db, [g["item_id"] for g in gold])
-    cells, dis = compare(gold, engine)
+    cells, dis = compare(gold, engine, relevance_only)
+    if relevance_only:
+        o, s, gr = rates(cells)["is_relevant"], rates(cells, "source")["is_relevant"], rates(cells, "group")["is_relevant"]
+        tp = sum(c["mine"] and c["engine"] for c in cells)
+        fp = sum(not c["mine"] and c["engine"] for c in cells)
+        fn = sum(c["mine"] and not c["engine"] for c in cells)
+        L = ["# Golden set: relevance only", "",
+             "Stratified for coverage, not proportional to volume; 20 items, so every rate rests on very few items.", "",
+             f"- Agreement: {pct(o['overall'])}",
+             f"- Engine said relevant and you agreed (precision): {pct((tp, tp + fp))}",
+             f"- You said relevant and the engine agreed (recall): {pct((tp, tp + fn))}",
+             "- By source: " + "; ".join(f"{k} {pct(v)}" for k, v in sorted(s.items())),
+             "- By prefilter group: " + "; ".join(f"{k} {pct(gr.get(k, (0, 0)))}" for k in PRIORITY), ""]
+        L += relevance_report(db, gold, engine, dis)
+        out = ROOT / "eval" / "results"
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "golden_relevance.md").write_text("\n".join(L) + "\n", encoding="utf8")
+        print("\n".join(L))
+        return
     overall, by_src, by_grp = rates(cells), rates(cells, "source"), rates(cells, "group")
     split = {k: split_rates(cells, by) for k, by in (("overall", None), ("source", "source"), ("group", "group"))}
     sources = sorted({c["source"] for c in cells})
