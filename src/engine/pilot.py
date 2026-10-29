@@ -32,17 +32,34 @@ def run(pool, out, model, save_db, batch=8, ids=None):
     print(f"{len(ids)} items in the {pool} pool; {len(done)} already done; extracting {len(rows)} with {model}")
     path.parent.mkdir(parents=True, exist_ok=True)
 
+    run_id = store.log_run(db, "extract", None, {"model": model, "pool": pool, "batch": batch, **store.versions()}, {}, [],
+                           store.now()) if save_db else None
+    meta = {r["item_id"]: r for r in db.execute("SELECT item_id, source, product FROM raw_items")} if save_db else {}
+
+    def to_db(records, reviews):
+        """Save as we go, so the Explorer and the snapshot publisher see progress before the run ends."""
+        for item_id, rec in records:
+            extract.save(db, item_id, rec, model, run_id, tax_version, meta[item_id]["source"], meta[item_id]["product"])
+        for item_id, why in reviews:
+            if not db.execute("SELECT 1 FROM needs_review WHERE item_id=? AND reason=?", (item_id, why)).fetchone():
+                db.execute("INSERT INTO needs_review VALUES(?,?,?)", (item_id, why, None))
+        db.commit()
+
     def flush():
         state["usage"] = llm.usage
         path.write_text(json.dumps(state, indent=1, ensure_ascii=False), encoding="utf8")
 
     def on_batch(start, recs, review):
-        for r, rec in zip(rows[start:start + len(recs)], recs):
-            if rec:
-                state["records"][r["item_id"]] = rec
-        state["review"] += [[rows[i]["item_id"], why] for i, why in review if [rows[i]["item_id"], why] not in state["review"]]
+        new = [(r["item_id"], rec) for r, rec in zip(rows[start:start + len(recs)], recs) if rec]
+        state["records"].update(dict(new))
+        bad = [[rows[i]["item_id"], why] for i, why in review if [rows[i]["item_id"], why] not in state["review"]]
+        state["review"] += bad
         flush()
+        if save_db:
+            to_db(new, bad)
 
+    if save_db:  # anything in the resume file from an earlier run of the old code that never reached the database
+        to_db(list(state["records"].items()), state["review"])
     stopped = None
     try:
         extract.extract(rows, model, batch=batch, on_batch=on_batch, progress=lambda d, n: print(f"  {d}/{len(rows)}", flush=True))
@@ -50,12 +67,8 @@ def run(pool, out, model, save_db, batch=8, ids=None):
         stopped = str(e)
     flush()
     if save_db:
-        run_id = store.log_run(db, "extract", None, {"model": model, "pool": pool, "batch": batch, **store.versions()},
-                               {"saved": len(state["records"]), **llm.usage}, [stopped] if stopped else [], store.now())
-        meta = {r["item_id"]: r for r in db.execute("SELECT item_id, source, product FROM raw_items")}
-        for item_id, rec in state["records"].items():
-            extract.save(db, item_id, rec, model, run_id, tax_version, meta[item_id]["source"], meta[item_id]["product"])
-        db.executemany("INSERT INTO needs_review VALUES(?,?,?)", [(i, why, None) for i, why in state["review"]])
+        db.execute("UPDATE runs SET counts_json=?, errors_json=? WHERE run_id=?",
+                   (json.dumps({"saved": len(state["records"]), **llm.usage}), json.dumps([stopped] if stopped else []), run_id))
         db.commit()
     print(f"valid {len(state['records'])}/{len(ids)}; needs_review {len(state['review'])}; requests {llm.usage['requests']}; "
           f"tokens in {llm.usage['prompt_tokens']} out {llm.usage['output_tokens']}; saved {out}")
