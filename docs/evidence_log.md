@@ -1,19 +1,19 @@
 # AI Evidence Log
 
-Generated 2026-10-29T14:31:28+00:00 by `engine.cli evidence-log`. Every number below is read from the database or the eval files at that time. Counts are mentions in a sample of public posts, not population rates.
+Generated 2026-10-29T19:20:58+00:00 by `engine.cli evidence-log`. Every number below is read from the database or the eval files at that time. Counts are mentions in a sample of public posts, not population rates.
 
 ## 1. Sources and volume per stage
 
-| source | collected | prefiltered | classified | relevant | extracted |
-|---|---|---|---|---|---|
-| appstore | 1272 | 268 | 104 | 71 | 0 |
-| play | 23037 | 1705 | 4 | 0 | 0 |
-| reddit | 547 | 251 | 4 | 3 | 0 |
-| tradingqna | 742 | 411 | 4 | 1 | 0 |
-| youtube | 2928 | 1045 | 4 | 1 | 0 |
-| **total** | 28526 | 3680 | 120 | 76 | 0 |
+| source | collected | prefiltered | classified | relevant | extracted | no_sip_action_stated | analysed |
+|---|---|---|---|---|---|---|---|
+| appstore | 1272 | 268 | 268 | 160 | 160 | 20 | 140 |
+| play | 23037 | 1705 | 1705 | 726 | 537 | 105 | 432 |
+| reddit | 547 | 251 | 251 | 119 | 16 | 1 | 15 |
+| tradingqna | 742 | 411 | 411 | 152 | 17 | 6 | 11 |
+| youtube | 2928 | 1045 | 1045 | 495 | 17 | 2 | 15 |
+| **total** | 28526 | 3680 | 3680 | 1652 | 747 | 134 | 613 |
 
-Relevance rate among classified items: 63% (76 of 120). Classified so far: 120 of 3680 prefiltered; extracted 0 of 76 relevant.
+Relevance rate among classified items: 45% (1652 of 3680). Classified so far: 3680 of 3680 prefiltered; extracted 747 of 1652 relevant.
 
 Collection method and compliance per source (from config/sources.yaml):
 
@@ -30,7 +30,7 @@ Collection method and compliance per source (from config/sources.yaml):
 ## 2. Models and prompt versions
 
 - Relevance: `gemini-3.5-flash-lite`; extraction: `gemini-3.5-flash-lite`; insight wording: `gemini-3.5-flash` (fallback `gemini-3.5-flash-lite`). Budget: $0, free tier only.
-- Current versions: `{"taxonomy": "v3", "taxonomy_sha": "dfee6caa", "prompt_relevance_sha": "f9474895", "prompt_relevance_version": "relevance-v4", "prompt_extraction_sha": "11b2f936"}`
+- Current versions: `{"taxonomy": "v3", "taxonomy_sha": "dfee6caa", "prompt_relevance_sha": "b2c0f1cf", "prompt_relevance_version": "relevance-v5", "prompt_extraction_sha": "11b2f936"}`
 
 Model-backed runs recorded in the `runs` table:
 
@@ -43,13 +43,24 @@ Model-backed runs recorded in the `runs` table:
 | relevance | 2026-10-29T13:54 | gemini-3.5-flash-lite | v3 | relevance-v3 | 11b2f936 | {'classified': 20, 'requests': 1, 'retries': 0, 'prompt_tokens': 2959, 'output_tokens': 90 |
 | relevance | 2026-10-29T14:26 | gemini-3.5-flash-lite | v3 | relevance-v4 | 11b2f936 | {'classified': 20, 'requests': 1, 'retries': 0, 'prompt_tokens': 3171, 'output_tokens': 11 |
 | relevance | 2026-10-29T14:27 | gemini-3.5-flash-lite | v3 | relevance-v4 | 11b2f936 | {} |
+| relevance | 2026-10-29T14:37 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {'classified': 20, 'requests': 1, 'retries': 0, 'prompt_tokens': 3241, 'output_tokens': 11 |
+| relevance | 2026-10-29T14:38 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {} |
+| relevance | 2026-10-29T15:15 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {'classified': 2660, 'requests': 148, 'retries': 20, 'prompt_tokens': 390977, 'output_toke |
+| extract | 2026-10-29T18:51 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {} |
+| cluster | 2026-10-29T19:05 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {"clusters": 24, "items": 425} |
+| extract | 2026-10-29T19:08 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {"saved": 747, "requests": 23, "retries": 0, "prompt_tokens": 72687, "output_tokens": 2604 |
 
 ## 3. Extraction quality: validator rejections and review
 
 Every quote is checked to appear word for word in the text of the item it is attached to (NFC, zero-width characters removed, smart quotes made plain, whitespace collapsed). A record that fails is retried once, alone, with the error; if it fails again it goes to `needs_review` and is not used.
 
-- Extracted and valid: 0; sent to review after the retry: 0
-- Items with a stated belief (candidate, not finding): 0 of 0
+- Extracted and valid: 747; sent to review after the retry: 5 (0.7% of attempted)
+- Items with a stated belief (candidate, not finding): 5 of 747; null rate 99%
+  - review reason example: severity 'acted' needs a paused, reduced, stopped or redeemed sip_action, got 'switched_platform'
+  - review reason example: severity 'acted' needs a paused, reduced, stopped or redeemed sip_action, got 'started'
+  - review reason example: evidence_quotes must hold 1 to 3 quotes, got 0
+  - review reason example: severity 'acted' needs a paused, reduced, stopped or redeemed sip_action, got 'started'
+  - review reason example: evidence_quotes must hold 1 to 3 quotes, got 0
 
 ## 4. Golden set
 
@@ -59,54 +70,66 @@ From `eval/results/golden_relevance.md`:
 
 Stratified for coverage, not proportional to volume; 20 items, so every rate rests on very few items.
 
-- Agreement: 80% (16/20)
-- Engine said relevant and you agreed (precision): 67% (4/6)
-- You said relevant and the engine agreed (recall): 67% (4/6)
-- By source: appstore 100% (4/4); play 100% (4/4); reddit 75% (3/4); tradingqna 75% (3/4); youtube 50% (2/4)
-- By prefilter group: stop_or_fail 60% (3/5); returns 80% (8/10); sip_or_mf 100% (5/5)
+- Agreement: 70% (14/20)
+- Engine said relevant and you agreed (precision): 50% (6/12)
+- You said relevant and the engine agreed (recall): 100% (6/6)
+- By source: appstore 100% (4/4); play 50% (2/4); reddit 75% (3/4); tradingqna 50% (2/4); youtube 75% (3/4)
+- By prefilter group: stop_or_fail 60% (3/5); returns 80% (8/10); sip_or_mf 60% (3/5)
 
 #### Relevance, item by item
 
 | # | source | group | you | engine | engine family | whose | language | confidence |
 |---|---|---|---|---|---|---|---|---|
-| G1 | appstore | returns | no | no | other | someone_else | english | medium |
-| G2 | play | returns | no | no | other | own | english | high |
-| G3 **x** | reddit | returns | no | yes | sip_or_mf_journey | named_person | english | medium |
+| G1 | appstore | returns | no | no | other | no_one | english | high |
+| G2 **x** | play | returns | no | yes | sip_or_mf_journey | own | english | high |
+| G3 **x** | reddit | returns | no | yes | sip_or_mf_journey | named_person | english | high |
 | G4 | tradingqna | returns | no | no | other | no_one | english | high |
-| G5 **x** | youtube | returns | yes | no | sip_or_mf_journey | someone_else | hinglish | medium |
-| G6 | appstore | sip_or_mf | no | no | other | someone_else | english | medium |
-| G7 | play | sip_or_mf | no | no | other | no_one | english | medium |
+| G5 | youtube | returns | yes | yes | sip_or_mf_journey | own | hinglish | high |
+| G6 | appstore | sip_or_mf | no | no | other | no_one | english | high |
+| G7 | play | sip_or_mf | no | no | other | no_one | english | high |
 | G8 | reddit | sip_or_mf | no | no | other | someone_else | english | high |
-| G9 | tradingqna | sip_or_mf | no | no | other | own | english | high |
-| G10 | youtube | sip_or_mf | no | no | other | no_one | english | high |
+| G9 **x** | tradingqna | sip_or_mf | no | yes | sip_or_mf_journey | own | english | medium |
+| G10 **x** | youtube | sip_or_mf | no | yes | sip_or_mf_journey | own | english | high |
 | G11 | appstore | stop_or_fail | yes | yes | sip_or_mf_journey | named_person | english | high |
-| G12 | play | stop_or_fail | no | no | other | someone_else | hinglish | high |
+| G12 **x** | play | stop_or_fail | no | yes | sip_or_mf_journey | own | english | medium |
 | G13 | reddit | stop_or_fail | yes | yes | sip_or_mf_journey | own | english | high |
 | G14 **x** | tradingqna | stop_or_fail | no | yes | sip_or_mf_journey | own | english | medium |
-| G15 **x** | youtube | stop_or_fail | yes | no | sip_or_mf_journey | someone_else | hinglish | medium |
-| G16 | appstore | returns | no | no | app_bug_or_support | no_one | english | medium |
+| G15 | youtube | stop_or_fail | yes | yes | sip_or_mf_journey | own | hinglish | high |
+| G16 | appstore | returns | no | no | app_bug_or_support | no_one | english | high |
 | G17 | play | returns | no | no | other | no_one | english | high |
 | G18 | reddit | returns | yes | yes | sip_or_mf_journey | own | english | high |
-| G19 | tradingqna | returns | no | no | charges_or_fees | someone_else | english | medium |
+| G19 | tradingqna | returns | no | no | other | no_one | english | high |
 | G20 | youtube | returns | yes | yes | sip_or_mf_journey | own | english | high |
 
 #### Relevance disagreements
 
-### G3 (reddit, returns): you no, engine yes as `sip_or_mf_journey` (medium confidence)
+### G2 (play, returns): you no, engine yes as `sip_or_mf_journey` (high confidence)
+
+> Your app shows me only historic XIRR returns of entire MF portfolio but not able to see my last 3M, 6M, 1Y, 3Y XIRR returns in MF . Kindly add this like other apps Zerodha, Groww.
+
+### G3 (reddit, returns): you no, engine yes as `sip_or_mf_journey` (high confidence)
 
 > Also honorable mention is the GST charged on each premium payment. Conveniently, nobody talks about that, and not even in your calculations. Add it, IIRC 4.5% on first premium payment, and 2.5% on subsequent payments, and your XIRR drops by 2-3% more.
 
-### G5 (youtube, returns): you yes, engine no as `sip_or_mf_journey` (medium confidence)
+### G9 (tradingqna, sip_or_mf): you no, engine yes as `sip_or_mf_journey` (medium confidence)
 
-> Agar har month sip kar rahe hai to aage chal kar agar return nahi dega to jo paisa invest kiye hai wo to milega na
+> [Feature request] Need option to select only mutual funds in Console
+>
+> Currently we see option to exclude the mutual funds in “Holdings” page which enables to select just stocks.
+>
+> Similarly I am looking for option to select just MF holdings for sector wise allocation and stocks they are holding.
+
+### G10 (youtube, sip_or_mf): you no, engine yes as `sip_or_mf_journey` (high confidence)
+
+> DSP Small Cap Fund - Direct Plan - Growth
+
+### G12 (play, stop_or_fail): you no, engine yes as `sip_or_mf_journey` (medium confidence)
+
+> if you r using groww for only mf don't upgrade to dmat. otherwise u will redeem your money only thg Grow. that fund's app redeem money more faster than grow. grow takes 2 day more time
 
 ### G14 (tradingqna, stop_or_fail): you no, engine yes as `sip_or_mf_journey` (medium confidence)
 
 > Does it give detailed  CG statement with for each quarter as mandated by tax forms?
-
-### G15 (youtube, stop_or_fail): you yes, engine no as `sip_or_mf_journey` (medium confidence)
-
-> Once we cancel the SIP, can we restart it when we want?
 
 
 
@@ -185,6 +208,18 @@ Cases where a person rejected or corrected AI output, and why. Filled in by hand
   v4 fixed the advice-to-others errors (G8, G12) but lost two Hinglish questions phrased as "we" / "agar ... kar rahe hai"
   (G5, G15), which it read as `someone_else`. Decision (owner, 2026-10-29): accept v4 and stop tuning on these 20 items;
   no holdout due to time.
+- **v4 broke rule (a) for Hinglish/hypothetical questions; fixed in v5.** Owner's fix (2026-10-29, framed as restoring rule (a),
+  "a person asking about their own SIP is relevant", not as tuning): `whose_holdings` = own when the writer asks about or
+  describes their own situation using "we / hum / agar hum", "if I", hypotheticals or questions ("what if my SIP...", "can we
+  restart"). The full v4 run was stopped at about 400 of 3,660 items and is restarted from scratch under v5. Golden set, run once:
+
+  | prompt | agreement | precision | recall | disagreements |
+  |---|---|---|---|---|
+  | v5 | 70% (14/20) | 50% (6/12) | 100% (6/6) | G2, G3, G9, G10, G12, G14 (all engine yes) |
+
+  v5 recovered G5 and G15 but lost G2, G9, G10 and G12, which v4 had right: feature requests, a fund name alone and an app
+  comparison now come back as `own`. The example "can we restart" is close to G15's own wording, so this rerun is not an
+  independent test of the fix. Per the owner's instruction, the full run restarts under v5 regardless of this score.
 
 ### 1. Correction
 
@@ -223,9 +258,11 @@ blind. For each, note whether the summary is faithful:
 Copied word for word into `docs/evidence_log.md` by `engine.cli evidence-log`. Edit here, not in the generated log.
 
 - Golden-set relevance score was measured on the same 20 items used to tune the prompt (v2→v4), so it is optimistic. No separate holdout due to time.
-- Relevance-v4 on the golden set: 80% agreement, 67% precision, 67% recall (4 of 6 relevant items found). The two misses were
-  Hinglish questions phrased in the first person plural or as a conditional, so recall on Hinglish posts may be lower than on
-  English ones.
+- v5 trades precision (50% on golden) for recall (100%); the analysis layer excludes items with no stated SIP action, so false positives don't reach findings.
+- Relevance-v5 (the version used for the full run) on the golden set: 70% agreement, 50% precision, 100% recall (6 of 6
+  relevant items found, 12 called relevant). Errors run towards including too much: feature requests, a fund name and app
+  comparisons. Downstream, such items mostly extract as `sip_action=not_stated`; counts of actions and reasons are less affected
+  than the relevant-item total. (v4 had 80% / 67% / 67% but missed Hinglish questions about the writer's own SIP.)
 - Golden set: 20 items hand-labelled for relevance by the author. Extraction fields were not hand-labelled at scale (2 items); extraction quality is guarded by the verbatim validator and is reported via validator rejection and review rates, not golden-set agreement.
 - **Golden set is stratified for coverage, not proportional to volume.** Its 20 items are spread evenly across source x prefilter
   group (4 per source, 1 or 2 per cell), so a small stratum such as App Store "returns" (18 items in the pool) gets as many items
