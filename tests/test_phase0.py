@@ -15,7 +15,7 @@ def test_schema_creates_all_tables(tmp_path):
 
 def test_taxonomy_every_value_has_a_definition():
     tax = cli.load_yaml("taxonomy.yaml")
-    assert tax["version"] == "v2"
+    assert tax["version"] == "v3"
     for enum, values in tax.items():
         if enum != "version":
             assert values and all(isinstance(d, str) and d for d in values.values()), enum

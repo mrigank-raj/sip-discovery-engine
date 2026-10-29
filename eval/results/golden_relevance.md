@@ -2,18 +2,18 @@
 
 Stratified for coverage, not proportional to volume; 20 items, so every rate rests on very few items.
 
-- Agreement: 65% (13/20)
-- Engine said relevant and you agreed (precision): 60% (9/15)
-- You said relevant and the engine agreed (recall): 90% (9/10)
-- By source: appstore 75% (3/4); play 50% (2/4); reddit 75% (3/4); tradingqna 50% (2/4); youtube 75% (3/4)
-- By prefilter group: stop_or_fail 80% (4/5); returns 80% (8/10); sip_or_mf 20% (1/5)
+- Agreement: 55% (11/20)
+- Engine said relevant and you agreed (precision): 40% (6/15)
+- You said relevant and the engine agreed (recall): 100% (6/6)
+- By source: appstore 50% (2/4); play 25% (1/4); reddit 75% (3/4); tradingqna 50% (2/4); youtube 75% (3/4)
+- By prefilter group: stop_or_fail 60% (3/5); returns 70% (7/10); sip_or_mf 20% (1/5)
 
 ## Relevance, item by item
 
 | # | source | group | you | engine | engine family | language | confidence |
 |---|---|---|---|---|---|---|---|
-| G1 | appstore | returns | yes | yes | sip_or_mf_journey | english | medium |
-| G2 | play | returns | yes | yes | sip_or_mf_journey | english | high |
+| G1 **x** | appstore | returns | no | yes | sip_or_mf_journey | english | medium |
+| G2 **x** | play | returns | no | yes | sip_or_mf_journey | english | high |
 | G3 | reddit | returns | no | no | other | english | medium |
 | G4 | tradingqna | returns | no | no | other | english | high |
 | G5 | youtube | returns | yes | yes | sip_or_mf_journey | hinglish | high |
@@ -25,15 +25,27 @@ Stratified for coverage, not proportional to volume; 20 items, so every rate res
 | G11 | appstore | stop_or_fail | yes | yes | sip_or_mf_journey | english | high |
 | G12 **x** | play | stop_or_fail | no | yes | sip_or_mf_journey | english | high |
 | G13 | reddit | stop_or_fail | yes | yes | sip_or_mf_journey | english | high |
-| G14 | tradingqna | stop_or_fail | yes | yes | sip_or_mf_journey | english | medium |
+| G14 **x** | tradingqna | stop_or_fail | no | yes | sip_or_mf_journey | english | medium |
 | G15 | youtube | stop_or_fail | yes | yes | sip_or_mf_journey | hinglish | high |
 | G16 **x** | appstore | returns | no | yes | sip_or_mf_journey | english | medium |
 | G17 | play | returns | no | no | other | english | high |
 | G18 | reddit | returns | yes | yes | sip_or_mf_journey | english | high |
-| G19 **x** | tradingqna | returns | yes | no | other | english | high |
+| G19 | tradingqna | returns | no | no | other | english | high |
 | G20 | youtube | returns | yes | yes | sip_or_mf_journey | english | high |
 
 ## Relevance disagreements
+
+### G1 (appstore, returns): you no, engine yes as `sip_or_mf_journey` (medium confidence)
+
+> INDmoney’s investment tracking needs significant improvement. It does not display XIRR for investments held for less than one year, making it difficult to accurately evaluate short-term investment performance.
+>
+> More importantly, there is no consolidated portfolio-level view showing metrics such as XIRR and total Gain/Loss across the entire portfolio, including both Stocks and Mutual Funds. Users should not have to analyze each investment category separately to understand their overall performance.
+>
+> A comprehensive portfolio dashboard with consolidated XIRR, absolute returns, total invested amount, current value, and overall Gain/Loss would make the app far more useful for tracking investments.
+
+### G2 (play, returns): you no, engine yes as `sip_or_mf_journey` (high confidence)
+
+> Your app shows me only historic XIRR returns of entire MF portfolio but not able to see my last 3M, 6M, 1Y, 3Y XIRR returns in MF . Kindly add this like other apps Zerodha, Groww.
 
 ### G7 (play, sip_or_mf): you no, engine yes as `sip_or_mf_journey` (medium confidence)
 
@@ -62,13 +74,11 @@ Stratified for coverage, not proportional to volume; 20 items, so every rate res
 
 > if you r using groww for only mf don't upgrade to dmat. otherwise u will redeem your money only thg Grow. that fund's app redeem money more faster than grow. grow takes 2 day more time
 
+### G14 (tradingqna, stop_or_fail): you no, engine yes as `sip_or_mf_journey` (medium confidence)
+
+> Does it give detailed  CG statement with for each quarter as mandated by tax forms?
+
 ### G16 (appstore, returns): you no, engine yes as `sip_or_mf_journey` (medium confidence)
 
 > App barely has any features, xirr functionality works sometimes. Haven’t seen the app get any meaningful update in the last few years. Even filters to search for mutual funds are so so basic.
-
-### G19 (tradingqna, returns): you yes, engine no as `other` (high confidence)
-
-> Hi @thethinker, The CAGR returns that you see for mutual funds on Coin/Console or other platforms are shown after deduction of the expense ratio. This is because the NAV (Net Asset Value) of a mutual fund, which is used to calculate returns and CAGR, is declared after accounting for the expense ratio.
->
-> So, any return, whether it’s the daily change or long-term CAGR like 1Y, 3Y, or 5Y, that you see based on NAVs is already net of the expense ratio.
 

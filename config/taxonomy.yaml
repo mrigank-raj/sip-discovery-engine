@@ -1,19 +1,20 @@
-# Taxonomy v2: first version for SIP / mutual-fund journeys on Groww (v1 was the previous engine's, retired).
+# Taxonomy v3: v2 with the strict relevance rule (2026-10-29, eval/corrections.md section 0c). v1 was the previous engine's.
 # Every enum value has a one-line definition so the same text can go into prompts. Rule for every field: never guess; use
 # not_stated / unknown when the text does not say.
 # Free-text fields (not enums), each verbatim-checked where it is a quote: summary (English, clustering only), expectation_at_start
 # (quote), belief_at_action (English paraphrase) + belief_quote (quote), secondhand (true/false), age_stated (as written).
 
-version: v2
+version: v3
 
-# Relevance: is this about a person's own SIP or mutual-fund experience (good, bad or neutral)? Only sip_or_mf_journey continues.
+# Relevance: does the writer state an action, experience, worry or decision about their own (or a named person's) SIP or
+# mutual-fund holdings (good, bad or neutral)? Only sip_or_mf_journey continues.
 problem_family:
-  sip_or_mf_journey: The writer's own SIP or mutual-fund experience or decision (starting, continuing, checking, pausing, stopping, a failed instalment, returns), or a secondhand account of a named person's (my dad, my friend), positive, negative or neutral.
+  sip_or_mf_journey: The writer states an action, experience, worry or decision about their own SIP or mutual-fund holdings (starting, continuing, checking, pausing, stopping, a failed instalment, how their returns look to them), or about a named other person's (my dad, my friend); positive, negative or neutral.
   stocks_or_fno: About stocks, F&O, IPOs, trading or charts, with no SIP or mutual-fund experience.
   kyc_or_onboarding: Account opening, KYC, bank linking or verification, with no SIP or mutual-fund experience.
   app_bug_or_support: Crashes, login, slowness, customer support or UI complaints not linked by the writer to their SIP or mutual funds.
   charges_or_fees: Brokerage, fees, hidden charges or pricing, not linked to their SIP or mutual funds.
-  other: Generic praise or criticism ("best app for mutual funds"), advice given to someone else with no experience of the writer's own, or anything else.
+  other: Feature requests, fund names alone, app-vs-app comparisons, generic praise or criticism ("best app for mutual funds"), explanations or advice to someone else, or anything else with no SIP or mutual-fund experience of the writer's own.
 
 language:
   english: Written in English.

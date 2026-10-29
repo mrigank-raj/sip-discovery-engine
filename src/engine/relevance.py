@@ -3,7 +3,7 @@ from pathlib import Path
 
 import yaml
 
-from engine import llm
+from engine import llm, store
 
 ROOT = Path(__file__).resolve().parents[2]
 TEXT_LIMIT = 1200
@@ -31,7 +31,7 @@ def build_prompt(items):
     for i, it in enumerate(items):
         text = it["text"] if len(it["text"]) <= TEXT_LIMIT else it["text"][:TEXT_LIMIT] + " [...]"
         blocks.append(f"### {i} | source: {it['source']} | thread, video or review title: {it.get('title') or '-'}\n{text}")
-    template = (ROOT / "prompts" / "relevance.md").read_text(encoding="utf8")
+    template = store.PROMPT_HEADER.sub("", (ROOT / "prompts" / "relevance.md").read_text(encoding="utf8"))
     return (template.replace("{families}", defs["problem_family"]).replace("{language}", defs["language"])
             .replace("{items}", "\n\n".join(blocks)))
 

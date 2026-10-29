@@ -28,3 +28,11 @@ def test_hinglish_and_hindi_are_classes_not_rejections():
 def test_classify_retries_items_the_model_skipped():
     out = relevance.classify(ITEMS, "m", batch=5, generate=fake_generate)
     assert all(o is not None for o in out) and len(out) == 5
+
+
+def test_prompt_version_is_recorded_but_never_sent():
+    from engine import store
+    assert store.versions()["prompt_relevance_version"] == "relevance-v3"
+    p = relevance.build_prompt(ITEMS[:1])
+    assert "version:" not in p and "<!--" not in p and p.startswith("You classify")
+    assert "Feature requests" in p and "Explanations, answers or advice to someone else" in p

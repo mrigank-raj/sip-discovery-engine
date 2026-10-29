@@ -97,7 +97,17 @@ def versions():
 
     return {"taxonomy": yaml.safe_load((root / "config" / "taxonomy.yaml").read_text(encoding="utf8"))["version"],
             "taxonomy_sha": sha("config/taxonomy.yaml"), "prompt_relevance_sha": sha("prompts/relevance.md"),
+            "prompt_relevance_version": prompt_version(root / "prompts" / "relevance.md"),
             "prompt_extraction_sha": sha("prompts/extraction.md")}
+
+
+PROMPT_HEADER = re.compile(r"\A<!--.*?-->\n", re.S)  # a version note at the top of a prompt file; never sent to the model
+
+
+def prompt_version(path):
+    head = PROMPT_HEADER.match(Path(path).read_text(encoding="utf8"))
+    m = head and re.search(r"version:\s*(\S+)", head.group(0))
+    return m.group(1) if m else None
 
 
 def log_run(db, stage, source, params, counts, errors, started, cost=None):
