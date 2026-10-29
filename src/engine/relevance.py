@@ -12,7 +12,7 @@ RELEVANT = "sip_or_mf_journey"
 # the relevance step uses it. Relevance is decided in code from this and the family, never by the model alone.
 WHOSE = {"own": "The writer's own SIP or mutual-fund holdings.",
          "named_person": "A specific other person's, including family and friends (my dad, my friend, my wife).",
-         "someone_else": "The person being answered or advised, or people in general (you, your SIP, investors).",
+         "someone_else": "The person being answered or advised, or people in general (you, your SIP, investors), when the writer is not asking about their own situation.",
          "no_one": "No one's holdings (a feature, a fund, an app, the market)."}
 COUNTS = {"own", "named_person"}
 

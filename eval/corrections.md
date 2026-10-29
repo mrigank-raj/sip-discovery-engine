@@ -71,6 +71,18 @@ Cases where a person rejected or corrected AI output, and why. Filled in by hand
   v4 fixed the advice-to-others errors (G8, G12) but lost two Hinglish questions phrased as "we" / "agar ... kar rahe hai"
   (G5, G15), which it read as `someone_else`. Decision (owner, 2026-10-29): accept v4 and stop tuning on these 20 items;
   no holdout due to time.
+- **v4 broke rule (a) for Hinglish/hypothetical questions; fixed in v5.** Owner's fix (2026-10-29, framed as restoring rule (a),
+  "a person asking about their own SIP is relevant", not as tuning): `whose_holdings` = own when the writer asks about or
+  describes their own situation using "we / hum / agar hum", "if I", hypotheticals or questions ("what if my SIP...", "can we
+  restart"). The full v4 run was stopped at about 400 of 3,660 items and is restarted from scratch under v5. Golden set, run once:
+
+  | prompt | agreement | precision | recall | disagreements |
+  |---|---|---|---|---|
+  | v5 | 70% (14/20) | 50% (6/12) | 100% (6/6) | G2, G3, G9, G10, G12, G14 (all engine yes) |
+
+  v5 recovered G5 and G15 but lost G2, G9, G10 and G12, which v4 had right: feature requests, a fund name alone and an app
+  comparison now come back as `own`. The example "can we restart" is close to G15's own wording, so this rerun is not an
+  independent test of the fix. Per the owner's instruction, the full run restarts under v5 regardless of this score.
 
 ## 1. Correction
 

@@ -32,7 +32,7 @@ def test_classify_retries_items_the_model_skipped():
 
 def test_prompt_version_is_recorded_but_never_sent():
     from engine import store
-    assert store.versions()["prompt_relevance_version"] == "relevance-v4"
+    assert store.versions()["prompt_relevance_version"] == "relevance-v5"
     p = relevance.build_prompt(ITEMS[:1])
     assert "version:" not in p and "<!--" not in p and p.startswith("You classify")
     assert "Feature requests" in p and "Explanations, answers or advice to someone else" in p
