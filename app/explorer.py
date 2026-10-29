@@ -44,17 +44,39 @@ items, ms, f = D["items"], D["metrics"], D["funnel"]
 st.title("SIP Discovery Engine")
 st.caption("Why first-time mutual-fund investors on Groww keep or stop their SIPs, from public reviews, forums and video comments.")
 st.warning("Counts are **mentions in a sample of public posts**, not how many investors do something. Store reviews are mostly "
-           "about one app; Reddit covers about two weeks; relevance agreed with hand labels on 16 of 20 tuning items. "
-           "Read the Evidence log in docs/evidence_log.md before relying on any number.")
-pre, cls, rel, ext = (int(f[c].sum()) for c in ("prefiltered", "classified", "relevant", "extracted"))
+           "about one app; Reddit covers about two weeks; relevance agreed with hand labels on 14 of 20 items that were also used "
+           "to tune it (100% recall, 50% precision). Read docs/evidence_log.md before relying on any number.")
+PLACEHOLDER = "Populates when extraction completes (est. Oct 31)."
+
+st.subheader("Funnel: collected → prefiltered → classified → relevant → extracted")
+num = lambda c: int(f[c].fillna(0).sum())  # noqa: E731
+cols = st.columns(6)
+for col, (label, c) in zip(cols, [("Collected", "collected"), ("Kept by keyword prefilter", "prefiltered"), ("Classified for relevance", "classified"),
+                                  ("Relevant", "relevant"), ("Extracted", "extracted"), ("Used in analysis", "analysed")]):
+    col.metric(label, f"{num(c):,}")
+st.dataframe(f.rename(columns={"no_sip_action_stated": "relevant but no SIP action stated (likely relevance false positives)",
+                               "analysed": "used in analysis"}), hide_index=True, width="stretch")
+st.caption("Per source. Relevant = the post is about the writer's own (or a named person's) SIP or mutual-fund holdings. "
+           "Used in analysis = extracted and states a SIP action, a belief or an emotion; only these feed clusters, scores, "
+           "contrasts and insight cards.")
+
+with st.expander("Evaluation: golden set (relevance, 20 hand-labelled items)", expanded=True):
+    g = ROOT / "eval" / "results" / "golden_relevance.md"
+    if g.exists():
+        st.markdown(g.read_text(encoding="utf8").replace("\n## ", "\n#### ").replace("# Golden set: relevance only", "", 1))
+    else:
+        st.write("No golden-set score yet.")
+
+pre, cls, rel, ext = num("prefiltered"), num("classified"), num("relevant"), num("extracted")
 if cls < pre or ext < rel:
     st.info(f"**Run in progress: {ext} of {rel} items extracted** (relevance classified {cls} of {pre} prefiltered items). "
             "Every view reflects only what has been processed so far.")
-if items.empty:
-    st.stop()
 
-VIEWS = ["Insights", "Opportunity table", "Continuers vs droppers", "Cluster detail", "Segments", "Funnel and volume", "Candidate beliefs"]
+VIEWS = ["Insights", "Opportunity table", "Continuers vs droppers", "Cluster detail", "Segments", "Candidate beliefs", "Volume by month"]
 view = st.segmented_control("View", VIEWS, default="Insights", key="view", label_visibility="collapsed") or "Insights"
+if items.empty:
+    st.info(PLACEHOLDER)
+    st.stop()
 
 
 def quote(q, src, url):
@@ -151,15 +173,9 @@ if view == "Segments":
     if not stated.empty:
         st.dataframe(pd.crosstab(stated[seg], stated["contrast_bucket"].fillna(stated["sip_action"])), width="stretch")
 
-if view == "Funnel and volume":
-    excluded = int(f["no_sip_action_stated"].fillna(0).sum())
-    st.metric("Relevant but no SIP action stated (likely relevance false positives)", excluded)
-    st.dataframe(f.rename(columns={"no_sip_action_stated": "relevant but no SIP action stated (likely relevance false positives)",
-                                   "analysed": "used in analysis"}), hide_index=True, width="stretch")
-    st.caption("collected → kept by the keyword prefilter → classified by the relevance model → relevant (own or a named person's SIP or "
-               "mutual-fund holdings) → extracted and passed the verbatim-quote validator → used in analysis (states a SIP action, a "
-               "belief or an emotion). Clusters, the opportunity score, the contrast and the insight cards use only the last group.")
-    st.bar_chart(items.groupby(items["date"].str[:7]).size().rename("extracted posts by month"))
+if view == "Volume by month":
+    st.metric("Relevant but no SIP action stated (likely relevance false positives)", num("no_sip_action_stated"))
+    st.bar_chart(items.groupby(items["date"].str[:7]).size().rename("posts used in analysis, by month"))
     st.dataframe(items.groupby(["source", "platform"]).size().rename("posts").reset_index(), hide_index=True, width="stretch")
 
 if view == "Candidate beliefs":

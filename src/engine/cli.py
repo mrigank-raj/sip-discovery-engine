@@ -218,7 +218,10 @@ def main(argv=None):
     rf.add_argument("--skip-extract", action="store_true")
     rf.add_argument("--reddit", action="store_true", help="also refresh Reddit (uses Apify free credit; off by default)")
     sub.add_parser("cluster-assign", help="put new extractions into the nearest existing cluster of the same action group")
-    sub.add_parser("export-demo", help="write the slim database used to host the Explorer")
+    sub.add_parser("export-demo", help="write the slim database used to host the Explorer (checked; refuses to write if unsafe)")
+    sub.add_parser("publish-demo", help="export-demo, then commit and push demo/engine.db and eval/results")
+    pl = sub.add_parser("publish-loop", help="publish a fresh snapshot every N more extracted items until the extraction run ends")
+    pl.add_argument("--every", type=int, default=500)
     ins = sub.add_parser("insights")
     ins.add_argument("--no-llm", action="store_true", help="use the plain fallback headlines only")
     sub.add_parser("evidence-log", help="write docs/evidence_log.md: volumes per stage, models, prompts, golden set, corrections, biases")
@@ -276,6 +279,12 @@ def main(argv=None):
     elif a.cmd == "export-demo":
         from engine import demo
         demo.export(DB_PATH)
+    elif a.cmd == "publish-demo":
+        from engine import demo
+        demo.publish(DB_PATH)
+    elif a.cmd == "publish-loop":
+        from engine import demo
+        demo.publish_loop(DB_PATH, a.every)
     elif a.cmd == "insights":
         from engine import insights
         m = load_yaml("llm.yaml")["providers"]["gemini"]["models"]
