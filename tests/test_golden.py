@@ -44,3 +44,27 @@ def test_compare_scores_relevance_on_all_and_extraction_only_on_items_marked_rel
     assert [(d["item_id"], d["mine"], d["engine"]) for d in belief] == [("a", "null", "stated"), ("c", "stated", "(not extracted)")]
     assert not any(c["field"] == "age_stated" for c in cells)                    # blank presence cells are not scored
     assert any(d["item_id"] == "c" and d["field"] == "sip_action" and d["engine"] == "(not extracted)" for d in dis)
+
+
+def cell(field, mine, engine, source="play", group="sip_or_mf"):
+    return {"field": field, "mine": mine, "engine": engine, "agree": mine == engine, "source": source, "group": group}
+
+
+def test_split_rates_separate_stated_agreement_from_false_stated_and_ignore_booleans():
+    cells = [cell("sip_action", "stopped", "stopped"), cell("sip_action", "paused", "stopped", source="reddit"),
+             cell("sip_action", "not_stated", "not_stated"), cell("sip_action", "not_stated", "continuing"),
+             cell("sip_action", "not_stated", "(not extracted)"),                 # engine never ran: not a hallucination
+             cell("journey_stage", "unknown", "first_3_months"), cell("is_relevant", True, True)]
+    s = golden.split_rates(cells)
+    assert s["stated"]["sip_action"]["overall"] == (1, 2)
+    assert s["false_stated"]["sip_action"]["overall"] == (1, 3)
+    assert s["false_stated"]["journey_stage"]["overall"] == (1, 1)
+    assert "is_relevant" not in s["stated"] and "is_relevant" not in s["false_stated"]
+    assert golden.split_rates(cells, "source")["stated"]["sip_action"] == {"play": (1, 1), "reddit": (0, 1)}
+    assert golden.rates(cells)["sip_action"]["overall"] == (2, 5)      # overall is inflated by agreeing not_stated
+
+
+def test_too_few_stated_labels_are_not_shown_as_a_percentage():
+    assert golden.pct((1, 2), golden.MIN_STATED) == "too few to score (n=2)"
+    assert golden.pct((2, 3), golden.MIN_STATED) == "67% (2/3)"
+    assert golden.pct((0, 0)) == "-"
