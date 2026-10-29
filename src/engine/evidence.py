@@ -24,9 +24,9 @@ def write(db_path=None):
          "or the eval files at that time. Counts are mentions in a sample of public posts, not population rates.", ""]
 
     f = cluster.funnel(db)
-    tot = {k: sum(r[k] or 0 for r in f) for k in ("collected", "prefiltered", "classified", "relevant", "extracted")}
+    tot = {k: sum(r[k] or 0 for r in f) for k in ("collected", "prefiltered", "classified", "relevant", "extracted", "no_sip_action_stated", "analysed")}
     L += ["## 1. Sources and volume per stage", ""] + _table(f + [{"source": "**total**", **tot}],
-                                                             ["source", "collected", "prefiltered", "classified", "relevant", "extracted"])
+                                                             ["source", "collected", "prefiltered", "classified", "relevant", "extracted", "no_sip_action_stated", "analysed"])
     rate = f"{100 * tot['relevant'] / tot['classified']:.0f}%" if tot["classified"] else "n/a"
     L += ["", f"Relevance rate among classified items: {rate} ({tot['relevant']} of {tot['classified']}). "
           f"Classified so far: {tot['classified']} of {tot['prefiltered']} prefiltered; extracted {tot['extracted']} of {tot['relevant']} relevant.", ""]

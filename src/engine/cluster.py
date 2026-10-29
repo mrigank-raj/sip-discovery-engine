@@ -24,10 +24,15 @@ WEIGHTS = {"frequency": 0.40, "acted": 0.30, "stage": 0.15, "evidence": 0.15}
 MIN_ITEMS, MIN_KNOWN_STAGE = 8, 10
 
 
-def load(db):
-    """Every extracted item with its raw context. Item dicts carry the flattened fields plus the full record as `rec`."""
+ANALYSABLE = "(e.sip_action != 'not_stated' OR e.has_belief = 1 OR e.emotion != 'not_stated')"
+
+
+def load(db, analysable_only=True):
+    """Extracted items with their raw context; dicts carry the flattened fields plus the full record as `rec`.
+    By default only items that state a SIP action, a belief or an emotion: relevance-v5 favours recall (50% precision on the
+    golden set), and its false positives (feature requests, fund names, app comparisons) extract with none of these."""
     rows = db.execute("SELECT e.*, r.source, r.product, r.title, r.text, r.url, r.created_at, r.thread_id FROM extractions e "
-                      "JOIN raw_items r USING(item_id)").fetchall()
+                      "JOIN raw_items r USING(item_id)" + (f" WHERE {ANALYSABLE}" if analysable_only else "")).fetchall()
     out = []
     for r in rows:
         d = dict(r)
@@ -220,7 +225,7 @@ def contrast(db):
 def candidate_beliefs(db, path=ROOT / "analysis" / "candidate_beliefs.csv"):
     """Every stated belief, for grouping by hand. These are candidates to validate in research, not findings."""
     import csv
-    rows = [i for i in load(db) if i["has_belief"]]
+    rows = [i for i in load(db, analysable_only=False) if i["has_belief"]]
     path.parent.mkdir(exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.writer(f)
@@ -233,8 +238,10 @@ def candidate_beliefs(db, path=ROOT / "analysis" / "candidate_beliefs.csv"):
 
 def funnel(db):
     return [dict(r) for r in db.execute(
-        """SELECT r.source, COUNT(*) collected, SUM(f.prefilter_pass) prefiltered, SUM(f.relevant IS NOT NULL) classified,
-           SUM(f.relevant=1) relevant, SUM(e.item_id IS NOT NULL) extracted
+        f"""SELECT r.source, COUNT(*) collected, SUM(f.prefilter_pass) prefiltered, SUM(f.relevant IS NOT NULL) classified,
+           SUM(f.relevant=1) relevant, SUM(e.item_id IS NOT NULL) extracted,
+           SUM(e.item_id IS NOT NULL AND NOT {ANALYSABLE}) no_sip_action_stated,
+           SUM(e.item_id IS NOT NULL AND {ANALYSABLE}) analysed
            FROM raw_items r JOIN filter_results f USING(item_id) LEFT JOIN extractions e USING(item_id)
            GROUP BY r.source ORDER BY r.source""")]
 

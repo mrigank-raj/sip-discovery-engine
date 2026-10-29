@@ -59,8 +59,9 @@ and run logs are removed. `requirements.txt` is deliberately small; the pipeline
 1. `python -m engine.cli export-demo`, then commit `demo/engine.db` and `eval/results/` and push.
 2. On share.streamlit.io: repository `sip-discovery-engine`, branch `main`, main file `app/explorer.py`.
 
-Keep the repository private: it holds post text collected from public sites, and the Reddit part came through a method Reddit's
-rules do not permit (disclosed in `config/sources.yaml`).
+The repository is public by the owner's decision. It holds text of public posts (usernames are never stored; authors are a
+salted hash in the working database and removed from the snapshot), and the Reddit part came through a method Reddit's rules do
+not permit; the method and compliance notes for every source are in `config/sources.yaml`.
 
 ## What to trust
 

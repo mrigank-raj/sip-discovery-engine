@@ -152,9 +152,13 @@ if view == "Segments":
         st.dataframe(pd.crosstab(stated[seg], stated["contrast_bucket"].fillna(stated["sip_action"])), width="stretch")
 
 if view == "Funnel and volume":
-    st.dataframe(f, hide_index=True, width="stretch")
+    excluded = int(f["no_sip_action_stated"].fillna(0).sum())
+    st.metric("Relevant but no SIP action stated (likely relevance false positives)", excluded)
+    st.dataframe(f.rename(columns={"no_sip_action_stated": "relevant but no SIP action stated (likely relevance false positives)",
+                                   "analysed": "used in analysis"}), hide_index=True, width="stretch")
     st.caption("collected → kept by the keyword prefilter → classified by the relevance model → relevant (own or a named person's SIP or "
-               "mutual-fund holdings) → extracted and passed the verbatim-quote validator.")
+               "mutual-fund holdings) → extracted and passed the verbatim-quote validator → used in analysis (states a SIP action, a "
+               "belief or an emotion). Clusters, the opportunity score, the contrast and the insight cards use only the last group.")
     st.bar_chart(items.groupby(items["date"].str[:7]).size().rename("extracted posts by month"))
     st.dataframe(items.groupby(["source", "platform"]).size().rename("posts").reset_index(), hide_index=True, width="stretch")
 

@@ -3,6 +3,7 @@
 Copied word for word into `docs/evidence_log.md` by `engine.cli evidence-log`. Edit here, not in the generated log.
 
 - Golden-set relevance score was measured on the same 20 items used to tune the prompt (v2→v4), so it is optimistic. No separate holdout due to time.
+- v5 trades precision (50% on golden) for recall (100%); the analysis layer excludes items with no stated SIP action, so false positives don't reach findings.
 - Relevance-v5 (the version used for the full run) on the golden set: 70% agreement, 50% precision, 100% recall (6 of 6
   relevant items found, 12 called relevant). Errors run towards including too much: feature requests, a fund name and app
   comparisons. Downstream, such items mostly extract as `sip_action=not_stated`; counts of actions and reasons are less affected
