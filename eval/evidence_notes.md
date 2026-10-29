@@ -2,6 +2,10 @@
 
 Copied word for word into `docs/evidence_log.md` by `engine.cli evidence-log`. Edit here, not in the generated log.
 
+- Golden-set relevance score was measured on the same 20 items used to tune the prompt (v2→v4), so it is optimistic. No separate holdout due to time.
+- Relevance-v4 on the golden set: 80% agreement, 67% precision, 67% recall (4 of 6 relevant items found). The two misses were
+  Hinglish questions phrased in the first person plural or as a conditional, so recall on Hinglish posts may be lower than on
+  English ones.
 - Golden set: 20 items hand-labelled for relevance by the author. Extraction fields were not hand-labelled at scale (2 items); extraction quality is guarded by the verbatim validator and is reported via validator rejection and review rates, not golden-set agreement.
 - **Golden set is stratified for coverage, not proportional to volume.** Its 20 items are spread evenly across source x prefilter
   group (4 per source, 1 or 2 per cell), so a small stratum such as App Store "returns" (18 items in the pool) gets as many items

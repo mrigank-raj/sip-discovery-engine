@@ -124,7 +124,7 @@ def init_db(path):
     with sqlite3.connect(path) as db:
         db.executescript((Path(__file__).parent / "schema.sql").read_text(encoding="utf8"))
         have = {r[1] for r in db.execute("PRAGMA table_info(filter_results)")}
-        for col in ("language", "confidence", "prefilter_groups"):  # databases created before these columns existed
+        for col in ("language", "confidence", "prefilter_groups", "whose_holdings"):  # databases created before these columns existed
             if col not in have:
                 db.execute(f"ALTER TABLE filter_results ADD COLUMN {col} TEXT")
         if "grp" not in {r[1] for r in db.execute("PRAGMA table_info(clusters)")}:

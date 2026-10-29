@@ -11,7 +11,7 @@ def fake_generate(model, prompt, schema):
     """Answers every item except number 3 in the first pass; answers a one-item retry normally."""
     n = prompt.count("### ")
     ids = range(n) if n == 1 else [i for i in range(n) if i != 3]
-    return [{"i": i, "language": "hinglish", "problem_family": "sip_or_mf_journey", "confidence": "high"} for i in ids]
+    return [{"i": i, "language": "hinglish", "whose_holdings": "own", "problem_family": "sip_or_mf_journey", "confidence": "high"} for i in ids]
 
 
 def test_prompt_contains_definitions_and_items_and_no_placeholders():
@@ -32,7 +32,17 @@ def test_classify_retries_items_the_model_skipped():
 
 def test_prompt_version_is_recorded_but_never_sent():
     from engine import store
-    assert store.versions()["prompt_relevance_version"] == "relevance-v3"
+    assert store.versions()["prompt_relevance_version"] == "relevance-v4"
     p = relevance.build_prompt(ITEMS[:1])
     assert "version:" not in p and "<!--" not in p and p.startswith("You classify")
     assert "Feature requests" in p and "Explanations, answers or advice to someone else" in p
+
+
+def test_relevance_is_decided_in_code_from_family_and_whose_holdings():
+    base = {"problem_family": "sip_or_mf_journey"}
+    assert relevance.is_relevant({**base, "whose_holdings": "own"})
+    assert relevance.is_relevant({**base, "whose_holdings": "named_person"})
+    assert not relevance.is_relevant({**base, "whose_holdings": "someone_else"})
+    assert not relevance.is_relevant({**base, "whose_holdings": "no_one"})
+    assert not relevance.is_relevant({"problem_family": "other", "whose_holdings": "own"})
+    assert "whose_holdings" in relevance.schema()["items"]["required"] and "{whose}" not in relevance.build_prompt(ITEMS[:1])

@@ -149,9 +149,9 @@ def run_relevance(model, limit, golden_only=False):
         for r, p in zip(chunk, preds):
             if p is None:
                 continue
-            db.execute("UPDATE filter_results SET relevant=?, problem_family=?, language=?, confidence=?, model=?, run_id=? "
-                       "WHERE item_id=?", (int(p["problem_family"] == relevance.RELEVANT), p["problem_family"], p["language"],
-                                           p["confidence"], model, run_id, r["item_id"]))
+            db.execute("UPDATE filter_results SET relevant=?, problem_family=?, whose_holdings=?, language=?, confidence=?, model=?, "
+                       "run_id=? WHERE item_id=?", (int(relevance.is_relevant(p)), p["problem_family"], p.get("whose_holdings"),
+                                                    p["language"], p["confidence"], model, run_id, r["item_id"]))
             done += 1
         db.commit()
         print(f"  saved {done}/{len(rows)} (requests so far {llm.usage['requests']})", flush=True)

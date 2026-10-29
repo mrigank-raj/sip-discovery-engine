@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS filter_results (
   prefilter_groups TEXT,
   relevant INTEGER,
   problem_family TEXT,
+  whose_holdings TEXT,
   language TEXT,
   confidence TEXT,
   model TEXT,

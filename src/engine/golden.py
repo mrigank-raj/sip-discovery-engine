@@ -228,16 +228,16 @@ def _engine(db, ids):
 def relevance_report(db, gold, engine, dis):
     """Every golden item's relevance with the engine's family, language and confidence, and each disagreement in full."""
     q = ",".join("?" * len(gold))
-    fam = {r["item_id"]: r for r in db.execute(f"SELECT item_id, problem_family, language, confidence FROM filter_results "
+    fam = {r["item_id"]: r for r in db.execute(f"SELECT item_id, problem_family, whose_holdings, language, confidence FROM filter_results "
                                                f"WHERE item_id IN ({q})", [g["item_id"] for g in gold])}
     yn = {True: "yes", False: "no", None: "not classified"}
-    L = ["## Relevance, item by item", "", "| # | source | group | you | engine | engine family | language | confidence |",
-         "|---|---|---|---|---|---|---|---|"]
+    L = ["## Relevance, item by item", "", "| # | source | group | you | engine | engine family | whose | language | confidence |",
+         "|---|---|---|---|---|---|---|---|---|"]
     for k, g in enumerate(gold, 1):
         f = fam.get(g["item_id"]) or {}
         mine, theirs = _bool(g.get("is_relevant")), engine[g["item_id"]]["relevant"]
         L.append(f"| G{k}{'' if mine == theirs else ' **x**'} | {g['source']} | {g['group']} | {yn[mine]} | {yn[theirs]} | "
-                 f"{f['problem_family'] if f else '-'} | {f['language'] if f else '-'} | {f['confidence'] if f else '-'} |")
+                 f"{f['problem_family'] if f else '-'} | {(f['whose_holdings'] or '-') if f else '-'} | {f['language'] if f else '-'} | {f['confidence'] if f else '-'} |")
     row = {g["item_id"]: k for k, g in enumerate(gold, 1)}
     L += ["", "## Relevance disagreements", ""]
     for d in [d for d in dis if d["field"] == "is_relevant"]:

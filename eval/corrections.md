@@ -61,6 +61,16 @@ Cases where a person rejected or corrected AI output, and why. Filled in by hand
   - Remaining risk: the rule was chosen knowing which kinds of item caused disagreements, so any score after the prompt change
     is optimistic. A fresh sample labelled under the strict rule from the start would be a cleaner test.
 - **Then the prompt was tightened** (relevance prompt v3, next step) to state the strict rule and the five not-relevant cases.
+- **Scores on the same 20 items (strict labels), each prompt run once:**
+
+  | prompt | agreement | precision | recall | disagreements |
+  |---|---|---|---|---|
+  | v3 (strict rule in the prompt) | 80% (16/20) | 60% (6/10) | 100% (6/6) | G3, G8, G12, G14 (all engine yes) |
+  | v4 (adds `whose_holdings`; relevant = sip_or_mf_journey AND own or named_person, decided in code) | 80% (16/20) | 67% (4/6) | 67% (4/6) | G3, G14 (engine yes); G5, G15 (engine no) |
+
+  v4 fixed the advice-to-others errors (G8, G12) but lost two Hinglish questions phrased as "we" / "agar ... kar rahe hai"
+  (G5, G15), which it read as `someone_else`. Decision (owner, 2026-10-29): accept v4 and stop tuning on these 20 items;
+  no holdout due to time.
 
 ## 1. Correction
 
