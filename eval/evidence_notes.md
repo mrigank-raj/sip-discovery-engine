@@ -35,7 +35,8 @@ Copied word for word into `docs/evidence_log.md` by `engine.cli evidence-log`. E
 
   So Reddit mostly reflects one fortnight of market mood, and its comments were collected best-effort (the actor reported
   "Comment session blocked" on some threads). Treat Reddit counts as illustrative, not comparable with the other sources.
-- **The relevance rate in the budget was an assumption** (40%); the real figure from the run replaces it here: ___.
+- **The relevance rate in the budget was an assumption** (40%); the real rate is computed from the data in section 1 of the
+  evidence log each time it is generated.
 - **Beliefs are candidates, not findings (Option C).** The engine outputs only beliefs the person states, with a verbatim quote;
   they are grouped by hand and validated through survey open answers and follow-up messages, not by the engine.
 - **Public posts skew to people with something to say,** usually a complaint; quiet continuers and quiet drop-offs post least.

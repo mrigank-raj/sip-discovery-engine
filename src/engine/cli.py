@@ -217,12 +217,11 @@ def main(argv=None):
     rf.add_argument("--skip-collect", action="store_true", help="only process items already collected")
     rf.add_argument("--skip-extract", action="store_true")
     rf.add_argument("--reddit", action="store_true", help="also refresh Reddit (uses Apify free credit; off by default)")
-    ca = sub.add_parser("cluster-assign")
-    ca.add_argument("--check", action="store_true", help="leave-one-out accuracy of nearest-centre assignment")
+    sub.add_parser("cluster-assign", help="put new extractions into the nearest existing cluster of the same action group")
     sub.add_parser("export-demo", help="write the slim database used to host the Explorer")
     ins = sub.add_parser("insights")
     ins.add_argument("--no-llm", action="store_true", help="use the plain fallback headlines only")
-    ins.add_argument("--write-report", action="store_true", help="also update the Key insights block in docs/report.md")
+    sub.add_parser("evidence-log", help="write docs/evidence_log.md: volumes per stage, models, prompts, golden set, corrections, biases")
     er = sub.add_parser("extract-run")
     er.add_argument("--pool", choices=["new"], default="new", help="relevant items not yet extracted")
     er.add_argument("--out", default=str(ROOT / "eval" / "results" / "extraction_run.json"))
@@ -232,9 +231,7 @@ def main(argv=None):
     cb = sub.add_parser("cluster-build")
     cb.add_argument("--model", default=None)
     cb.add_argument("--no-name", action="store_true", help="skip the LLM naming step")
-    sub.add_parser("cluster-report")
-    sub.add_parser("cluster-audit")
-    sub.add_parser("cluster-apply-audit")
+    sub.add_parser("cluster-report", help="cluster table, opportunity scores with and without Play, candidate_beliefs.csv")
     c = sub.add_parser("collect")
     c.add_argument("source", choices=SOURCES)
     c.add_argument("--limit", type=int, default=300, help="target items for this source")
@@ -275,8 +272,7 @@ def main(argv=None):
         refresh.run([x for x in a.sources.split(",") if x] or None, a.skip_collect, a.skip_extract, a.reddit)
     elif a.cmd == "cluster-assign":
         from engine import cluster
-        db = store.connect(DB_PATH)
-        print(cluster.assign_check(db) if a.check else cluster.assign_new(db))
+        print(cluster.assign_new(store.connect(DB_PATH)))
     elif a.cmd == "export-demo":
         from engine import demo
         demo.export(DB_PATH)
@@ -286,16 +282,16 @@ def main(argv=None):
         out = insights.build(m["extraction_strong"], m["relevance"], use_llm=not a.no_llm)
         for k, i in enumerate(out, 1):
             print(f"{k}. [{i['confidence']}{'' if i['written_by_llm'] else ', fallback'}] {i['headline']}")
-        if a.write_report:
-            insights.write_report(out, ROOT / "docs" / "report.md")
-            print("updated docs/report.md")
-    elif a.cmd in ("cluster-build", "cluster-report", "cluster-audit", "cluster-apply-audit"):
+    elif a.cmd == "evidence-log":
+        from engine import evidence
+        evidence.write()
+    elif a.cmd in ("cluster-build", "cluster-report"):
         from engine import cluster
         init_db()
         if a.cmd == "cluster-build":
             cluster.build(a.model or load_yaml("llm.yaml")["providers"]["gemini"]["models"]["relevance"], not a.no_name)
         else:
-            {"cluster-report": cluster.report, "cluster-audit": cluster.audit, "cluster-apply-audit": cluster.apply_audit}[a.cmd]()
+            cluster.report()
     elif a.cmd == "extract-run":
         from engine import pilot
         init_db()

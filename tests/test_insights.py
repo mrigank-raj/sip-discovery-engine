@@ -20,7 +20,10 @@ def test_overclaim_words_are_blocked_only_for_minorities():
 
 
 def test_confidence_comes_from_sample_size_and_source_spread():
-    c = lambda n, s, h=False: insights._cand("triage", {}, "x", [], n, s, heuristic=h)  # noqa: E731
+    def c(n, s, h=False):
+        cand = insights._cand("why_pull_back", {}, "x", [], n, s)
+        cand["heuristic"] = h
+        return cand
     assert insights.confidence(c(100, 5)) == "high"
     assert insights.confidence(c(100, 5, True)) == "medium"      # keyword heuristics are capped
     assert insights.confidence(c(30, 2)) == "medium"
@@ -29,18 +32,18 @@ def test_confidence_comes_from_sample_size_and_source_spread():
 
 
 def test_narrate_retries_an_invented_number_and_drops_what_the_verifier_rejects():
-    cands = [insights._cand("triage", FACTS, "fb", [], 740, 7, 61), insights._cand("unmet", {"a": 34}, "fb", [], 34, 4)]
+    cands = [insights._cand("why_pull_back", FACTS, "fb", [], 740, 7, 61), insights._cand("contrast", {"a": 34}, "fb", [], 34, 4)]
     calls = {"write": 0}
 
     def fake(model, prompt, schema, **kw):
         if schema is insights.VERIFY_SCHEMA:
-            return [{"id": i["id"], "ok": i["id"] != "unmet", "issue": "claims a cause" if i["id"] == "unmet" else ""}
-                    for i in [{"id": "triage"}, {"id": "unmet"}]]
+            return [{"id": i["id"], "ok": i["id"] != "contrast", "issue": "claims a cause" if i["id"] == "contrast" else ""}
+                    for i in [{"id": "why_pull_back"}, {"id": "contrast"}]]
         calls["write"] += 1
         bad = calls["write"] == 1
-        return [{"id": "triage", "headline": "62% of 740 were something else" if bad else "61% of 740 were something else", "so_what": "s", "caveat": "c"},
-                {"id": "unmet", "headline": "34 posts have no workaround", "so_what": "s", "caveat": "c"}]
+        return [{"id": "why_pull_back", "headline": "62% of 740 were something else" if bad else "61% of 740 were something else", "so_what": "s", "caveat": "c"},
+                {"id": "contrast", "headline": "34 posts have no workaround", "so_what": "s", "caveat": "c"}]
 
     out = insights.narrate(cands, "m", "m2", generate=fake)
-    assert out["triage"]["headline"].startswith("61%")           # the invented 62% was rejected and rewritten
-    assert "unmet" not in out                                     # the verifier rejected it twice, so plain text will be used
+    assert out["why_pull_back"]["headline"].startswith("61%")           # the invented 62% was rejected and rewritten
+    assert "contrast" not in out                                     # the verifier rejected it twice, so plain text will be used

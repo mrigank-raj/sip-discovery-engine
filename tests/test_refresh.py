@@ -23,16 +23,18 @@ def test_since_for_steps_back_from_the_newest_item(db):
     assert refresh.since_for(db, "reddit") is None
 
 
-def test_assign_new_joins_nearest_cluster_and_leaves_far_items_alone(db, monkeypatch):
-    vec = {"a1": [1, 0], "a2": [0.9, 0.1], "b1": [0, 1], "res": [0.7, 0.7], "near_a": [0.95, 0.05], "near_b": [0.05, 0.95], "far": [-1, -0.2]}
-    items = [{"item_id": k, "signature": k} for k in vec]
+def test_assign_new_joins_nearest_cluster_in_the_same_group_and_leaves_far_items_alone(db, monkeypatch):
+    vec = {"a1": [1, 0], "a2": [0.9, 0.1], "b1": [0, 1], "near_a": [0.95, 0.05], "near_b": [0.05, 0.95], "far": [-1, -0.2],
+           "near_a_other_group": [0.95, 0.05]}
+    grp = {k: "staying_in" for k in vec} | {"b1": "pulled_back", "near_b": "pulled_back", "near_a_other_group": "pulled_back"}
+    items = [{"item_id": k, "signature": k, "group": grp[k]} for k in vec]
     monkeypatch.setattr(cluster, "load", lambda _db: items)
     embed = lambda texts: np.array([np.array(vec[t], float) / np.linalg.norm(vec[t]) for t in texts])  # noqa: E731
-    for cid, name in [(1, "A"), (2, "B"), (3, "[residual] junk")]:
-        db.execute("INSERT INTO clusters(cluster_id, name, definition, taxonomy_version) VALUES(?,?,?,?)", (cid, name, "", "v1"))
-    db.executemany("INSERT INTO cluster_items VALUES(?,?)", [(1, "a1"), (1, "a2"), (2, "b1"), (3, "res")])
+    for cid, name, g in [(1, "A", "staying_in"), (2, "B", "pulled_back")]:
+        db.execute("INSERT INTO clusters(cluster_id, name, definition, taxonomy_version, grp) VALUES(?,?,?,?,?)", (cid, name, "", "v3", g))
+    db.executemany("INSERT INTO cluster_items VALUES(?,?)", [(1, "a1"), (1, "a2"), (2, "b1")])
     out = cluster.assign_new(db, embed_fn=embed, min_sim=0.5)
-    assert out == {"new": 3, "assigned": 2}
     placed = dict(db.execute("SELECT item_id, cluster_id FROM cluster_items").fetchall())
     assert placed["near_a"] == 1 and placed["near_b"] == 2 and "far" not in placed
-    assert cluster.assign_new(db, embed_fn=embed, min_sim=0.5) == {"new": 1, "assigned": 0}  # rerun changes nothing
+    assert "near_a_other_group" not in placed                       # never joins a cluster of another action group
+    assert out == {"new": 4, "assigned": 2}
