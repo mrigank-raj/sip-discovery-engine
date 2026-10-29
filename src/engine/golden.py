@@ -110,7 +110,8 @@ def compare(gold, engine):
     cells, dis = [], []
 
     def add(g, field, mine, theirs):
-        cells.append({"field": field, "source": g["source"], "group": g["group"], "agree": mine == theirs})
+        cells.append({"field": field, "source": g["source"], "group": g["group"], "agree": mine == theirs,
+                      "mine": mine, "engine": theirs})
         if mine != theirs:
             dis.append({"item_id": g["item_id"], "source": g["source"], "group": g["group"], "field": field,
                         "mine": mine, "engine": theirs, "text": g["text"]})
@@ -135,6 +136,11 @@ def compare(gold, engine):
     return cells, dis
 
 
+NULLISH = {"not_stated", "unknown", "none_stated", "unclear", "null"}  # the "text does not say" value of each field
+NOT_RUN = "(not extracted)"
+MIN_STATED = 3
+
+
 def rates(cells, by=None):
     """{field: {key: (agree, n)}} where key is 'overall' or the value of `by` (source or group)."""
     out = defaultdict(lambda: defaultdict(lambda: [0, 0]))
@@ -143,6 +149,35 @@ def rates(cells, by=None):
         out[c["field"]][k][0] += c["agree"]
         out[c["field"]][k][1] += 1
     return {f: {k: tuple(v) for k, v in d.items()} for f, d in out.items()}
+
+
+def split_rates(cells, by=None):
+    """Two rates that a pile of agreeing not_stated labels cannot inflate, per field and key:
+    - stated: agreement on items where the person labelled a real value (not not_stated / unknown / null);
+    - false_stated: items the person labelled not_stated where the engine filled a value (a possible hallucination).
+    Both are (count, n). Boolean fields (is_relevant, secondhand) have no not_stated value and are left out."""
+    stated = defaultdict(lambda: defaultdict(lambda: [0, 0]))
+    false = defaultdict(lambda: defaultdict(lambda: [0, 0]))
+    for c in cells:
+        if isinstance(c["mine"], bool):
+            continue
+        k = "overall" if by is None else c[by]
+        if c["mine"] in NULLISH:
+            false[c["field"]][k][1] += 1
+            false[c["field"]][k][0] += c["engine"] not in NULLISH and c["engine"] != NOT_RUN
+        else:
+            stated[c["field"]][k][1] += 1
+            stated[c["field"]][k][0] += c["agree"]
+    freeze = lambda d: {f: {k: tuple(v) for k, v in x.items()} for f, x in d.items()}  # noqa: E731
+    return {"stated": freeze(stated), "false_stated": freeze(false)}
+
+
+def pct(t, min_n=1):
+    """'67% (2/3)'; 'too few to score (n=2)' below min_n; '-' when there is nothing to score."""
+    a, n = t
+    if not n:
+        return "-"
+    return f"too few to score (n={n})" if n < min_n else f"{100 * a / n:.0f}% ({a}/{n})"
 
 
 def _engine(db, ids):
@@ -167,17 +202,36 @@ def score(spot_checks=10):
     engine = _engine(db, [g["item_id"] for g in gold])
     cells, dis = compare(gold, engine)
     overall, by_src, by_grp = rates(cells), rates(cells, "source"), rates(cells, "group")
-    fmt = lambda t: f"{100 * t[0] / t[1]:.0f}% ({t[0]}/{t[1]})" if t[1] else "-"  # noqa: E731
+    split = {k: split_rates(cells, by) for k, by in (("overall", None), ("source", "source"), ("group", "group"))}
+    sources = sorted({c["source"] for c in cells})
+    fields = ["is_relevant", "secondhand", *ENUM_FIELDS, *PRESENCE_FIELDS]
+
+    def table(get, min_n):
+        """One row per field: overall, then each source, then each prefilter group."""
+        rows = ["| field | overall | " + " | ".join(sources) + " | " + " | ".join(PRIORITY) + " |",
+                "|---" * (2 + len(sources) + len(PRIORITY)) + "|"]
+        for f in fields:
+            o = get("overall", f, "overall")
+            if o is None:
+                continue
+            rows.append(f"| {f} | {pct(o, min_n)} | " + " | ".join(pct(get("source", f, s) or (0, 0), min_n) for s in sources)
+                        + " | " + " | ".join(pct(get("group", f, g) or (0, 0), min_n) for g in PRIORITY) + " |")
+        return rows
+
+    plain = {"overall": overall, "source": by_src, "group": by_grp}
     L = ["# Golden-set agreement", "",
          f"{len(labelled)} of {len(gold)} items labelled; {sum(_bool(g['is_relevant']) for g in labelled)} marked relevant. "
          "The set is stratified by source and prefilter group for coverage, not proportional to volume, so the overall rate is "
          "not a corpus-wide accuracy. Extraction fields are scored only on items marked relevant; blank cells are not scored.", "",
-         "| field | overall | " + " | ".join(sorted({c["source"] for c in cells})) + " | " + " | ".join(PRIORITY) + " |",
-         "|---" * (2 + len({c["source"] for c in cells}) + len(PRIORITY)) + "|"]
-    for f in ["is_relevant", "secondhand", *ENUM_FIELDS, *PRESENCE_FIELDS]:
-        if f in overall:
-            L.append(f"| {f} | {fmt(overall[f]['overall'])} | " + " | ".join(fmt(by_src[f].get(s, (0, 0))) for s in sorted({c['source'] for c in cells}))
-                     + " | " + " | ".join(fmt(by_grp[f].get(g, (0, 0))) for g in PRIORITY) + " |")
+         "## False-stated rate (read this first)", "",
+         "Items you labelled not stated (not_stated, unknown, none_stated, unclear, null) where the engine filled a value: possible "
+         "hallucination. Lower is better. Shown as count of your not-stated labels.", ""]
+    L += table(lambda k, f, key: split[k]["false_stated"].get(f, {}).get(key), 1)
+    L += ["", f"## Stated-only agreement", "",
+          f"Items where you labelled a real value. Fewer than {MIN_STATED} such labels shows 'too few to score'.", ""]
+    L += table(lambda k, f, key: split[k]["stated"].get(f, {}).get(key), MIN_STATED)
+    L += ["", "## Overall agreement (inflated by agreeing not-stated labels; read with the two tables above)", ""]
+    L += table(lambda k, f, key: plain[k].get(f, {}).get(key), 1)
     bel = [d for d in dis if d["field"] == "belief_at_action"]
     L += ["", "## Beliefs: stated vs null", "",
           f"- Engine found a belief you did not: {sum(d['engine'] == 'stated' for d in bel)}",
@@ -198,6 +252,7 @@ def score(spot_checks=10):
     out.mkdir(parents=True, exist_ok=True)
     (out / "golden_score.md").write_text("\n".join(L) + "\n", encoding="utf8")
     (out / "golden_score.json").write_text(json.dumps({"labelled": len(labelled), "overall": overall, "by_source": by_src,
-                                                       "by_group": by_grp, "disagreements": dis}, indent=1, ensure_ascii=False), encoding="utf8")
+                                                       "by_group": by_grp, "split": split, "disagreements": dis},
+                                                      indent=1, ensure_ascii=False), encoding="utf8")
     print("\n".join(L[:L.index("## Beliefs: stated vs null") + 4]))
     print(f"\n{len(dis)} disagreements listed in eval/results/golden_score.md")

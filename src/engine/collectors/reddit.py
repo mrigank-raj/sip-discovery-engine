@@ -14,7 +14,8 @@ def _remaining_usd(token):
     return d["limits"]["maxMonthlyUsageUsd"] - d["current"]["monthlyUsageUsd"]
 
 
-KEYWORDS = ["sip", "sips", "mutual fund", "mandate", "autopay", "redeem", "nav", "xirr", "elss", "index fund", "step up", "groww"]
+# Matched as substrings by the actor, so no short words that occur inside others ("nav" in "navigate").
+KEYWORDS = ["sip", "mutual fund", "mandate", "autopay", "redeem", "xirr", "elss", "index fund", "step up", "groww"]
 
 
 def fetch(cfg, limit, product_keys, queries=3, subs=4, posts_per_url=5, comments_per_post=10, max_usd=0.5, listing=False, skip=0, since=None):
@@ -36,9 +37,8 @@ def fetch(cfg, limit, product_keys, queries=3, subs=4, posts_per_url=5, comments
             for s in reddit["subreddits"][:subs] for q in qs]
     run_input = {"urls": urls, "maxPostsPerSource": posts_per_url, "includeComments": True,
                  "maxCommentsPerPost": comments_per_post, "commentDepth": 2}
-    if listing or since:  # search URLs return few posts; listings filtered by keyword reach many more. Refresh reads the newest posts.
-        path = "new/" if since else "top/?t=year"
-        run_input["urls"] = urls = [f"https://www.reddit.com/r/{s}/{path}" for s in reddit["subreddits"][skip:subs]]
+    if listing or since:  # Reddit throttles site search (HTTP 429 on 2026-10-29); keyword-filtered newest listings avoid it
+        run_input["urls"] = urls = [f"https://www.reddit.com/r/{s}/new/" for s in reddit["subreddits"][skip:subs]]
         run_input["filterKeywords"] = KEYWORDS
     run = requests.post(f"{API}/acts/{ACTOR}/runs", params={"token": token, "maxTotalChargeUsd": round(cap, 3)},
                         json=run_input, timeout=60).json()["data"]
