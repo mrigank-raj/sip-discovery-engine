@@ -1,0 +1,273 @@
+{
+ "versions": {
+  "taxonomy": "v3",
+  "taxonomy_sha": "dfee6caa",
+  "prompt_relevance_sha": "b2c0f1cf",
+  "prompt_relevance_version": "relevance-v5",
+  "prompt_extraction_sha": "11b2f936"
+ },
+ "insights": [
+  {
+   "id": "why_pull_back",
+   "headline": "Out of 83 posts describing a pull-back, 27 cite lost trust in the platform while 2 cite market falls.",
+   "so_what": "This suggests investigating whether platform trust issues play a larger role in decisions to stop payments than market drops. Examining what triggers this loss of trust could clarify why posts describe stopping payments.",
+   "caveat": "The findings are limited to reasons explicitly mentioned in 83 sample posts.",
+   "confidence": "medium",
+   "n": 83,
+   "sources": 2,
+   "weak": false,
+   "written_by_llm": true,
+   "plain_text": false,
+   "facts": {
+    "posts_that_paused_reduced_stopped_or_redeemed": 83,
+    "give_no_reason": 5,
+    "reasons_given_posts": {
+     "other": 29,
+     "lost_trust_in_platform": 27,
+     "confused_by_app_or_numbers": 9,
+     "mandate_or_autopay_issue": 8,
+     "market_fall": 2
+    }
+   },
+   "quotes": [
+    {
+     "item_id": "appstore:in:12009570500",
+     "source": "appstore",
+     "quote": "Now asking money if you touch anywhere in the app.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:02d756db-bd06-45ad-9575-499892aa93f6",
+     "source": "play",
+     "quote": "When I tried to withdraw my money, I never received the OTP required for verification.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=02d756db-bd06-45ad-9575-499892aa93f6"
+    }
+   ]
+  },
+  {
+   "id": "contrast",
+   "headline": "Confidence is expressed in 73 posts about continuing, whereas anger is expressed in 66 posts about pulling back.",
+   "so_what": "This suggests investigating how negative experiences turn feeling confident into feeling angry. Tracking this emotional change may highlight why posts describe stopping payments.",
+   "caveat": "Only 9 continuing posts and 5 pull-back posts state how frequently the poster checks investments.",
+   "confidence": "medium",
+   "n": 211,
+   "sources": 2,
+   "weak": false,
+   "written_by_llm": true,
+   "plain_text": false,
+   "facts": {
+    "keep_investing": {
+     "posts": 116,
+     "emotion_posts": {
+      "confident": 73,
+      "confused": 12,
+      "angry": 10,
+      "indifferent": 8,
+      "anxious": 3
+     },
+     "check_frequency_posts": {
+      "daily": 5,
+      "monthly": 4
+     },
+     "state_how_often_they_check": 9
+    },
+    "pulled_back_or_considering": {
+     "posts": 95,
+     "emotion_posts": {
+      "angry": 66,
+      "anxious": 10,
+      "confused": 5,
+      "confident": 2,
+      "regret": 2
+     },
+     "check_frequency_posts": {
+      "monthly": 2,
+      "rarely": 1,
+      "daily": 1,
+      "none_or_never": 1
+     },
+     "state_how_often_they_check": 5
+    }
+   },
+   "quotes": [
+    {
+     "item_id": "appstore:in:11973486452",
+     "source": "appstore",
+     "quote": "I am confused with transaction process.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:017dd748-3996-4105-8b79-65b529305209",
+     "source": "play",
+     "quote": "why Groww don't show decimal number in mutual fund ?",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=017dd748-3996-4105-8b79-65b529305209"
+    },
+    {
+     "item_id": "appstore:in:12009570500",
+     "source": "appstore",
+     "quote": "Now asking money if you touch anywhere in the app.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:02d756db-bd06-45ad-9575-499892aa93f6",
+     "source": "play",
+     "quote": "When I tried to withdraw my money, I never received the OTP required for verification.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=02d756db-bd06-45ad-9575-499892aa93f6"
+    }
+   ]
+  },
+  {
+   "id": "involuntary",
+   "headline": "Failed instalments account for 29 percent of the 117 total lapse posts in the sample.",
+   "so_what": "This suggests investigating technical or banking interruptions that prevent planned contributions. Understanding these unchosen failures could explain why payments stop without action by the poster.",
+   "caveat": "The counts rely entirely on post text rather than transaction error logs.",
+   "confidence": "medium",
+   "n": 117,
+   "sources": 2,
+   "weak": false,
+   "written_by_llm": true,
+   "plain_text": false,
+   "facts": {
+    "failed_instalments": 34,
+    "voluntary_pull_backs": 83,
+    "all_lapses": 117,
+    "failed_share_of_lapses_pct": 29,
+    "failed_reasons_posts": {
+     "mandate_or_autopay_issue": 34
+    }
+   },
+   "quotes": [
+    {
+     "item_id": "appstore:in:11993247612",
+     "source": "appstore",
+     "quote": "It started failing silently.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:00c521c4-dff3-4627-aa1a-240367c433a8",
+     "source": "play",
+     "quote": "Unable to do SIP payment. please check.",
+     "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=00c521c4-dff3-4627-aa1a-240367c433a8"
+    }
+   ]
+  },
+  {
+   "id": "when",
+   "headline": "15 of 83 pull-backs say how long the person had been investing.",
+   "so_what": "",
+   "caveat": "",
+   "confidence": "low",
+   "n": 15,
+   "sources": 1,
+   "weak": true,
+   "written_by_llm": false,
+   "plain_text": false,
+   "facts": {
+    "pull_backs": 83,
+    "pull_backs_with_a_stated_stage": 15,
+    "by_stage_posts": {
+     "after_12_months": 10,
+     "months_4_to_12": 2,
+     "first_3_months": 3
+    }
+   },
+   "quotes": [
+    {
+     "item_id": "play:02d756db-bd06-45ad-9575-499892aa93f6",
+     "source": "play",
+     "quote": "When I tried to withdraw my money, I never received the OTP required for verification.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=02d756db-bd06-45ad-9575-499892aa93f6"
+    }
+   ]
+  },
+  {
+   "id": "outside_app",
+   "headline": "Some posts describe asking someone or watching videos before deciding.",
+   "so_what": "",
+   "caveat": "",
+   "confidence": "medium",
+   "n": 211,
+   "sources": 2,
+   "weak": false,
+   "written_by_llm": false,
+   "plain_text": false,
+   "facts": {
+    "keep_investing": {
+     "posts": 116,
+     "turn_outside_the_app": 0,
+     "where_posts": {}
+    },
+    "pulled_back_or_considering": {
+     "posts": 95,
+     "turn_outside_the_app": 0,
+     "where_posts": {}
+    }
+   },
+   "quotes": []
+  },
+  {
+   "id": "first_time",
+   "headline": "33 posts are by self-described first-time investors, 75 by experienced ones.",
+   "so_what": "",
+   "caveat": "",
+   "confidence": "medium",
+   "n": 108,
+   "sources": 2,
+   "weak": false,
+   "written_by_llm": false,
+   "plain_text": false,
+   "facts": {
+    "first_time_posts": 33,
+    "experienced_posts": 75,
+    "first_time_by_action_posts": {
+     "continuers": 13,
+     "started": 10,
+     "not_stated": 6,
+     "acted": 4
+    },
+    "experienced_by_action_posts": {
+     "continuers": 37,
+     "switched_platform": 11,
+     "acted": 11,
+     "not_stated": 10,
+     "instalment_failed": 3,
+     "started": 2
+    }
+   },
+   "quotes": [
+    {
+     "item_id": "appstore:in:13223018717",
+     "source": "appstore",
+     "quote": "I have purchased 1st time mutual fund on Coin, its been more than 3 days it still showing in processing stage.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:009a419f-21ec-420b-91e5-58661713c0c7",
+     "source": "play",
+     "quote": "I want to global ETS an SiP investing knowledge so thanks for this app very useful",
+     "url": "https://play.google.com/store/apps/details?id=in.indwealth&reviewId=009a419f-21ec-420b-91e5-58661713c0c7"
+    }
+   ]
+  },
+  {
+   "id": "blind",
+   "headline": "Of 473 extracted posts, 26% say how long the person has invested, 0% their income type and 23% whether they are first-time investors.",
+   "so_what": "Segment and stage questions (who drops off, and when) mostly cannot be answered from public posts; they need the app's own data or primary research.",
+   "caveat": "Absence from posts does not mean absence in the population; people rarely write these details down.",
+   "confidence": "medium",
+   "n": 473,
+   "sources": 2,
+   "weak": true,
+   "written_by_llm": false,
+   "plain_text": true,
+   "facts": {
+    "extracted_posts": 473,
+    "state_journey_stage_pct": 26,
+    "state_income_type_pct": 0,
+    "state_investor_experience_pct": 23,
+    "state_a_belief": 4
+   },
+   "quotes": []
+  }
+ ]
+}

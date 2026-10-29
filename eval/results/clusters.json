@@ -1,0 +1,2212 @@
+{
+ "weights": {
+  "frequency": 0.4,
+  "acted": 0.3,
+  "stage": 0.15,
+  "evidence": 0.15
+ },
+ "min_items": 8,
+ "below_min": {
+  "clusters": 0,
+  "items": 0
+ },
+ "clusters": [
+  {
+   "id": 12,
+   "name": "App frustration and account closure",
+   "definition": "Users express frustration with platform app features, unhelpful customer support, and issues after redeeming or selling mutual funds, leading them to plan to withdraw investments or leave the application.",
+   "group": "pulled_back",
+   "items": 31,
+   "threads": 31,
+   "sources": {
+    "appstore": 11,
+    "play": 20
+   },
+   "platforms": {
+    "etmoney": 7,
+    "groww": 19,
+    "indmoney": 2,
+    "zerodha": 3
+   },
+   "acted_share": 0.967741935483871,
+   "considered_share": 0.03225806451612903,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 26,
+    "after_12_months": 3,
+    "first_3_months": 2
+   },
+   "known_stage_items": 5,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 5 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 3,
+     "first_time": 3
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 3,
+     "advisor": 1
+    }
+   },
+   "reasons": {
+    "lost_trust_in_platform": 10,
+    "other": 9,
+    "mandate_or_autopay_issue": 3,
+    "market_fall": 1,
+    "confused_by_app_or_numbers": 2,
+    "returns_below_expectation": 1,
+    "needed_money": 1
+   },
+   "beliefs": 1,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12009570500",
+     "source": "appstore",
+     "quote": "Now asking money if you touch anywhere in the app.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12014534475",
+     "source": "appstore",
+     "quote": "this app is restricted to track external which is not giving me comfort, hope the team will resolve the issue, if not i need to sell/transfer the portfolio in this app and say goodbye to this App.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12158606180",
+     "source": "appstore",
+     "quote": "Redeemed my amount wanted to check the status of it.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:166f3ff0-17fb-4ce3-a923-1680fb63f04b",
+     "source": "play",
+     "quote": "I cancelled my first investment, but the money has still not been refunded.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=166f3ff0-17fb-4ce3-a923-1680fb63f04b"
+    }
+   ],
+   "score": 0.69,
+   "score_parts": {
+    "frequency": 1.0,
+    "acted": 0.97,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": 0.573
+  },
+  {
+   "id": 14,
+   "name": "Groww withdrawal failures and stuck funds",
+   "definition": "Users report specific withdrawal and redemption failures, stuck funds, verification errors, and long delays exclusively on the Groww platform, leading to frustration and warnings to other users.",
+   "group": "pulled_back",
+   "items": 18,
+   "threads": 18,
+   "sources": {
+    "appstore": 2,
+    "play": 16
+   },
+   "platforms": {
+    "groww": 17,
+    "etmoney": 1
+   },
+   "acted_share": 1.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 15,
+    "after_12_months": 3
+   },
+   "known_stage_items": 3,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 3 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 3
+    },
+    "life_stage": {},
+    "income_type": {
+     "salaried": 1
+    },
+    "source_of_money": {
+     "salary": 1
+    },
+    "influenced_by": {
+     "self": 3
+    }
+   },
+   "reasons": {
+    "lost_trust_in_platform": 7,
+    "other": 7,
+    "confused_by_app_or_numbers": 1,
+    "mandate_or_autopay_issue": 1,
+    "market_fall": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12197219468",
+     "source": "appstore",
+     "quote": "I’ve stopped using it, and many others I know feel the same.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12495101015",
+     "source": "appstore",
+     "quote": "Groww has made a blunder in my friend’s bank account. As a result, withdrawals go ‘on hold’.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:02d756db-bd06-45ad-9575-499892aa93f6",
+     "source": "play",
+     "quote": "When I tried to withdraw my money, I never received the OTP required for verification.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=02d756db-bd06-45ad-9575-499892aa93f6"
+    }
+   ],
+   "score": 0.464,
+   "score_parts": {
+    "frequency": 0.41,
+    "acted": 1.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 24,
+   "name": "Leaving ET Money over paid features",
+   "definition": "Users expressing frustration with ET Money locking basic features behind a paywall or experiencing technical issues and considering or executing a switch to alternative platforms.",
+   "group": "switched_platform",
+   "items": 28,
+   "threads": 28,
+   "sources": {
+    "appstore": 11,
+    "play": 17
+   },
+   "platforms": {
+    "etmoney": 14,
+    "indmoney": 1,
+    "groww": 9,
+    "zerodha": 4
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.4642857142857143,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "after_12_months": 8,
+    "unknown": 17,
+    "before_start": 2,
+    "first_3_months": 1
+   },
+   "known_stage_items": 11,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.7272727272727273,
+   "stage_flag": null,
+   "segments": {
+    "investor_experience": {
+     "experienced": 9
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 8,
+     "app_or_ad": 1
+    }
+   },
+   "reasons": {
+    "lost_trust_in_platform": 24,
+    "other": 2,
+    "mandate_or_autopay_issue": 1,
+    "confused_by_app_or_numbers": 1
+   },
+   "beliefs": 1,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12047626994",
+     "source": "appstore",
+     "quote": "I have been investing in mutual funds for the past 8 years and started using ETMoney in 2019.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12071221009",
+     "source": "appstore",
+     "quote": "I am practically forced to move to other apps to continue with my investments.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12477959282",
+     "source": "appstore",
+     "quote": "INDmoney made a deceiving suggestion to switch my mutual fund holdings from regular plan to direct plan",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:00e9a32e-33a7-4ff8-8556-04addec74688",
+     "source": "play",
+     "quote": "Lost my trust, searching for better alternatives for mf and equity both",
+     "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=00e9a32e-33a7-4ff8-8556-04addec74688"
+    }
+   ],
+   "score": 0.455,
+   "score_parts": {
+    "frequency": 0.86,
+    "acted": 0.0,
+    "stage": 0.73,
+    "evidence": 0.0
+   },
+   "score_without_play": 0.3
+  },
+  {
+   "id": 19,
+   "name": "General Platform Tracking And Features",
+   "definition": "Posts in this cluster evaluate overall platform features, net worth tracking, multi-asset management, and user interface experiences.",
+   "group": "staying_in",
+   "items": 26,
+   "threads": 26,
+   "sources": {
+    "appstore": 11,
+    "play": 15
+   },
+   "platforms": {
+    "zerodha": 4,
+    "indmoney": 7,
+    "etmoney": 6,
+    "groww": 9
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 12,
+    "after_12_months": 12,
+    "first_3_months": 1,
+    "months_4_to_12": 1
+   },
+   "known_stage_items": 14,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.8571428571428571,
+   "stage_flag": null,
+   "segments": {
+    "investor_experience": {
+     "experienced": 11,
+     "first_time": 2
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 4
+    }
+   },
+   "reasons": {
+    "other": 1,
+    "returns_below_expectation": 1,
+    "confused_by_app_or_numbers": 1
+   },
+   "beliefs": 1,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12060969652",
+     "source": "appstore",
+     "quote": "I am using Coin and find it user friendly.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12395060723",
+     "source": "appstore",
+     "quote": "I have been using this app since 3 months and i would say that this a great app",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12479312732",
+     "source": "appstore",
+     "quote": "I have been using this app for like 4 years, till date I see that they are doing very well for Mutual Fund investment",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:02fd9b3e-5f59-4f1f-aa44-b7f43233ea00",
+     "source": "play",
+     "quote": "Even after choosing my own mutual funds, they charge high quarterly fees and even ask for payment just to access gain reports. My investments don’t even earn enough to cover their charges.",
+     "url": "https://play.google.com/store/apps/details?id=com.smartspends&reviewId=02fd9b3e-5f59-4f1f-aa44-b7f43233ea00"
+    }
+   ],
+   "score": 0.438,
+   "score_parts": {
+    "frequency": 0.77,
+    "acted": 0.0,
+    "stage": 0.86,
+    "evidence": 0.0
+   },
+   "score_without_play": 0.3
+  },
+  {
+   "id": 15,
+   "name": "SIP cancellation and platform switching",
+   "definition": "Users stop or cancel their SIPs, remove funds, and switch platforms due to issues like unexpected deductions, technical bugs, paywalled features, and forced app subscriptions.",
+   "group": "pulled_back",
+   "items": 17,
+   "threads": 17,
+   "sources": {
+    "appstore": 4,
+    "play": 13
+   },
+   "platforms": {
+    "etmoney": 8,
+    "indmoney": 1,
+    "groww": 8
+   },
+   "acted_share": 0.9411764705882353,
+   "considered_share": 0.058823529411764705,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 12,
+    "months_4_to_12": 2,
+    "after_12_months": 3
+   },
+   "known_stage_items": 5,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 5 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "first_time": 1,
+     "experienced": 3
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 3
+    }
+   },
+   "reasons": {
+    "confused_by_app_or_numbers": 2,
+    "mandate_or_autopay_issue": 2,
+    "other": 7,
+    "lost_trust_in_platform": 6
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12241666210",
+     "source": "appstore",
+     "quote": "Removed all my SIPs and stopped being a Genius member.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14043991873",
+     "source": "appstore",
+     "quote": "SIPs sometimes deduct more money than agreed upon.",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14533689166",
+     "source": "appstore",
+     "quote": "On groww when I will do sip it is rejected after 7-8 days dont know why it is happened with 4 different mutual funds",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:04578a6b-1c1e-4e95-91b6-38d3c8dae0e4",
+     "source": "play",
+     "quote": "I was started sip in this app initially. then groww app without my permission shared my number to different SEBI registered agencies.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=04578a6b-1c1e-4e95-91b6-38d3c8dae0e4"
+    }
+   ],
+   "score": 0.428,
+   "score_parts": {
+    "frequency": 0.36,
+    "acted": 0.94,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 20,
+   "name": "Groww App Long-Term Experience",
+   "definition": "Posts in this cluster highlight multi-year experiences, beginner-friendliness, and general feedback specifically regarding the Groww application.",
+   "group": "staying_in",
+   "items": 23,
+   "threads": 23,
+   "sources": {
+    "appstore": 8,
+    "play": 15
+   },
+   "platforms": {
+    "groww": 23
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "after_12_months": 10,
+    "unknown": 12,
+    "months_4_to_12": 1
+   },
+   "known_stage_items": 11,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.9090909090909091,
+   "stage_flag": null,
+   "segments": {
+    "investor_experience": {
+     "experienced": 9,
+     "first_time": 5
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 9
+    }
+   },
+   "reasons": {},
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12253076239",
+     "source": "appstore",
+     "quote": "I have been using this app for last several years.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13391633580",
+     "source": "appstore",
+     "quote": "I’ve been using the Groww app for the last 5 years, and my experience has been absolutely superb!",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13604326710",
+     "source": "appstore",
+     "quote": "I have been using this GROW app nearly 2 years.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:017dd748-3996-4105-8b79-65b529305209",
+     "source": "play",
+     "quote": "why Groww don't show decimal number in mutual fund ?",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=017dd748-3996-4105-8b79-65b529305209"
+    }
+   ],
+   "score": 0.391,
+   "score_parts": {
+    "frequency": 0.64,
+    "acted": 0.0,
+    "stage": 0.91,
+    "evidence": 0.0
+   },
+   "score_without_play": 0.0
+  },
+  {
+   "id": 13,
+   "name": "Redemption delays and amount discrepancies",
+   "definition": "Users complain about delayed mutual fund or ETF redemption orders, missing payouts after several days, and unexpected discrepancies between the shown redemption value and the actual amount credited.",
+   "group": "pulled_back",
+   "items": 10,
+   "threads": 10,
+   "sources": {
+    "appstore": 1,
+    "play": 9
+   },
+   "platforms": {
+    "zerodha": 3,
+    "groww": 7
+   },
+   "acted_share": 1.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 8,
+    "first_3_months": 1,
+    "after_12_months": 1
+   },
+   "known_stage_items": 2,
+   "top_stage": "first_3_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 2 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 1
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 1
+    }
+   },
+   "reasons": {
+    "mandate_or_autopay_issue": 2,
+    "other": 4,
+    "lost_trust_in_platform": 1,
+    "confused_by_app_or_numbers": 2,
+    "returns_below_expectation": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12252491773",
+     "source": "appstore",
+     "quote": "I have with drawn money from my mutual funds.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:1d7ec89c-2d95-49fd-9104-808fbc5adefb",
+     "source": "play",
+     "quote": "i placed a redemption order a week ago .. but did not receive any amount",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=1d7ec89c-2d95-49fd-9104-808fbc5adefb"
+    },
+    {
+     "item_id": "play:2121a2e2-bd48-43c1-bd41-45760ccf2adf",
+     "source": "play",
+     "quote": "one order was processed and then two more processed by groww until all of the amount was redeemed.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=2121a2e2-bd48-43c1-bd41-45760ccf2adf"
+    }
+   ],
+   "score": 0.318,
+   "score_parts": {
+    "frequency": 0.05,
+    "acted": 1.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 3,
+   "name": "General SIP Payment and Auto-Debit Failures",
+   "definition": "Users report silent SIP failures, UPI payment errors, and auto-debit issues despite having sufficient balance on various investment platforms.",
+   "group": "instalment_failed",
+   "items": 24,
+   "threads": 24,
+   "sources": {
+    "appstore": 7,
+    "play": 17
+   },
+   "platforms": {
+    "zerodha": 9,
+    "etmoney": 7,
+    "groww": 8
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 1.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 22,
+    "after_12_months": 1,
+    "months_4_to_12": 1
+   },
+   "known_stage_items": 2,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 2 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 1
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 1
+    }
+   },
+   "reasons": {
+    "mandate_or_autopay_issue": 24
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:11993247612",
+     "source": "appstore",
+     "quote": "It started failing silently.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12019373475",
+     "source": "appstore",
+     "quote": "Since December 2024 the SIP payment using UPI are not happening. Always some error is shown",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12116604044",
+     "source": "appstore",
+     "quote": "Not able to do payment every time while buying Mf in sip",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:00c521c4-dff3-4627-aa1a-240367c433a8",
+     "source": "play",
+     "quote": "Unable to do SIP payment. please check.",
+     "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=00c521c4-dff3-4627-aa1a-240367c433a8"
+    }
+   ],
+   "score": 0.273,
+   "score_parts": {
+    "frequency": 0.68,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 11,
+   "name": "Holding Discrepancies and Missing Mutual Fund Investments",
+   "definition": "Posts in this cluster describe missing mutual fund investments, uncommunicated demat conversions, and calculation or holding discrepancies compared to CAMS.",
+   "group": "no_action_stated",
+   "items": 23,
+   "threads": 23,
+   "sources": {
+    "appstore": 4,
+    "play": 19
+   },
+   "platforms": {
+    "groww": 21,
+    "zerodha": 2
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 21,
+    "after_12_months": 2
+   },
+   "known_stage_items": 2,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 2 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 3
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 2
+    }
+   },
+   "reasons": {
+    "lost_trust_in_platform": 1,
+    "confused_by_app_or_numbers": 1,
+    "returns_below_expectation": 1,
+    "mandate_or_autopay_issue": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:13034488897",
+     "source": "appstore",
+     "quote": "The stock prices update very slowly",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14338846066",
+     "source": "appstore",
+     "quote": "One of my mutual fund investments, made about 7 years ago, is still showing in the app with updated value.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14390284079",
+     "source": "appstore",
+     "quote": "I bought mutual funds from them and they never mentioned it anywhere but stored them in demat form.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:0a9a2b9f-3bfe-4af7-b16e-88796a72abe4",
+     "source": "play",
+     "quote": "its not worth to invest via this app in mutual funds, it's been 4 days but still showing pending while in other app allocation done same days or max to max 24 hours.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=0a9a2b9f-3bfe-4af7-b16e-88796a72abe4"
+    }
+   ],
+   "score": 0.255,
+   "score_parts": {
+    "frequency": 0.64,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 21,
+   "name": "SIP Transaction Management And Issues",
+   "definition": "Posts in this cluster focus on managing SIP setups, tracking deductions, autopay problems, and requesting specific SIP features.",
+   "group": "staying_in",
+   "items": 23,
+   "threads": 23,
+   "sources": {
+    "appstore": 9,
+    "play": 14
+   },
+   "platforms": {
+    "zerodha": 3,
+    "etmoney": 6,
+    "indmoney": 5,
+    "groww": 9
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 18,
+    "months_4_to_12": 1,
+    "after_12_months": 4
+   },
+   "known_stage_items": 5,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 5 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 4
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 1
+    }
+   },
+   "reasons": {
+    "mandate_or_autopay_issue": 4,
+    "confused_by_app_or_numbers": 2,
+    "market_fall": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:11973486452",
+     "source": "appstore",
+     "quote": "I am confused with transaction process.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12997865486",
+     "source": "appstore",
+     "quote": "in last 2 months my sip is not deduct properly as i have sufficient balance in my account",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13376317072",
+     "source": "appstore",
+     "quote": "users who simply want to continue their SIP investments",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:01f4b122-f52b-4905-b74e-f4d2602796b1",
+     "source": "play",
+     "quote": "im using ur app from 2 yrs...user friendly app",
+     "url": "https://play.google.com/store/apps/details?id=com.smartspends&reviewId=01f4b122-f52b-4905-b74e-f4d2602796b1"
+    }
+   ],
+   "score": 0.255,
+   "score_parts": {
+    "frequency": 0.64,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": 0.1
+  },
+  {
+   "id": 7,
+   "name": "Missing Portfolio Data and Synchronization Errors",
+   "definition": "Posts in this cluster complain about missing invested amounts, delayed synchronization of external funds, and missing profit and loss dashboards.",
+   "group": "no_action_stated",
+   "items": 22,
+   "threads": 22,
+   "sources": {
+    "appstore": 4,
+    "play": 18
+   },
+   "platforms": {
+    "zerodha": 6,
+    "indmoney": 3,
+    "groww": 12,
+    "etmoney": 1
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 22
+   },
+   "known_stage_items": 0,
+   "top_stage": null,
+   "stage_concentration": 0.0,
+   "stage_flag": "only 0 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {},
+    "life_stage": {
+     "family": 1
+    },
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {}
+   },
+   "reasons": {
+    "confused_by_app_or_numbers": 2,
+    "mandate_or_autopay_issue": 1,
+    "lost_trust_in_platform": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:13638563126",
+     "source": "appstore",
+     "quote": "ek din pata laga aap ka invested amount seto show kr raha hai , portfolio mein, kya scam hai",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14196220040",
+     "source": "appstore",
+     "quote": "Mutual fund tracking, not working for my son’s account and the support team is unable to help.",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14618436208",
+     "source": "appstore",
+     "quote": "Due to a job loss, I unfortunately missed one EMI, despite having paid the others on time.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:004eb6f5-5d77-472b-aae2-48172a3e82fd",
+     "source": "play",
+     "quote": "Showing Mutual Fund Portfolio which was I sold Few years back",
+     "url": "https://play.google.com/store/apps/details?id=in.indwealth&reviewId=004eb6f5-5d77-472b-aae2-48172a3e82fd"
+    }
+   ],
+   "score": 0.236,
+   "score_parts": {
+    "frequency": 0.59,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 16,
+   "name": "App Experience and Technical Issues with Groww SIPs",
+   "definition": "Posts in this cluster discuss setting up, managing, or troubleshooting SIP investments specifically on the Groww platform, including app updates, technical errors, and customer service complaints.",
+   "group": "starting",
+   "items": 17,
+   "threads": 17,
+   "sources": {
+    "appstore": 3,
+    "play": 14
+   },
+   "platforms": {
+    "groww": 11,
+    "indmoney": 2,
+    "etmoney": 2,
+    "zerodha": 2
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.058823529411764705,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "before_start": 4,
+    "unknown": 6,
+    "after_12_months": 2,
+    "first_3_months": 5
+   },
+   "known_stage_items": 11,
+   "top_stage": "first_3_months",
+   "stage_concentration": 0.45454545454545453,
+   "stage_flag": null,
+   "segments": {
+    "investor_experience": {
+     "first_time": 3,
+     "experienced": 2
+    },
+    "life_stage": {
+     "early_career": 1
+    },
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 5,
+     "app_or_ad": 1
+    }
+   },
+   "reasons": {
+    "mandate_or_autopay_issue": 1,
+    "confused_by_app_or_numbers": 3,
+    "other": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:13952734759",
+     "source": "appstore",
+     "quote": "I was able to complete my KYC and start my first fund in under 10 minutes.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14206223347",
+     "source": "appstore",
+     "quote": "Fantastic app smoothly work to create new SIPS",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14508693289",
+     "source": "appstore",
+     "quote": "I’m using this application from last 3 years for sip management. but now new sip activation is not working properly",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:026a4a6a-4e9b-4082-89dc-e47d5666b5af",
+     "source": "play",
+     "quote": "sir main daliy sip start karne jara ho aurr mujhe lagta hain groww ap mujhe ek acchi amount dega main 100 ki daily sip start karne jara ho",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=026a4a6a-4e9b-4082-89dc-e47d5666b5af"
+    }
+   ],
+   "score": 0.214,
+   "score_parts": {
+    "frequency": 0.36,
+    "acted": 0.0,
+    "stage": 0.45,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 17,
+   "name": "First-Time Mutual Fund Investing and Platform Praise",
+   "definition": "Posts in this cluster feature beginners sharing their initial experiences, ease of use, and overall impressions of starting mutual funds and SIPs on platforms like Groww and Coin.",
+   "group": "starting",
+   "items": 15,
+   "threads": 15,
+   "sources": {
+    "appstore": 5,
+    "play": 10
+   },
+   "platforms": {
+    "zerodha": 3,
+    "groww": 10,
+    "indmoney": 1,
+    "etmoney": 1
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.06666666666666667,
+   "stage_mix": {
+    "first_3_months": 3,
+    "before_start": 7,
+    "unknown": 5
+   },
+   "known_stage_items": 10,
+   "top_stage": "before_start",
+   "stage_concentration": 0.7,
+   "stage_flag": null,
+   "segments": {
+    "investor_experience": {
+     "first_time": 6
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "friend_family": 1,
+     "self": 9
+    }
+   },
+   "reasons": {
+    "other": 3
+   },
+   "beliefs": 1,
+   "quotes": [
+    {
+     "item_id": "appstore:in:13223018717",
+     "source": "appstore",
+     "quote": "I have purchased 1st time mutual fund on Coin, its been more than 3 days it still showing in processing stage.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13729504222",
+     "source": "appstore",
+     "quote": "till one of my friend introduced, taught and made me invest in GROWW",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13996125276",
+     "source": "appstore",
+     "quote": "It’s my first mutual funds and i am very excited to continue with the coin",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:009a419f-21ec-420b-91e5-58661713c0c7",
+     "source": "play",
+     "quote": "I want to global ETS an SiP investing knowledge so thanks for this app very useful",
+     "url": "https://play.google.com/store/apps/details?id=in.indwealth&reviewId=009a419f-21ec-420b-91e5-58661713c0c7"
+    }
+   ],
+   "score": 0.214,
+   "score_parts": {
+    "frequency": 0.27,
+    "acted": 0.0,
+    "stage": 0.7,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 6,
+   "name": "Smooth Beginner Investing Experiences on Groww",
+   "definition": "Posts in this cluster express general satisfaction and a smooth, user-friendly experience when using Groww for mutual fund and SIP investments as a beginner.",
+   "group": "no_action_stated",
+   "items": 19,
+   "threads": 19,
+   "sources": {
+    "appstore": 3,
+    "play": 16
+   },
+   "platforms": {
+    "groww": 19
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 18,
+    "before_start": 1
+   },
+   "known_stage_items": 1,
+   "top_stage": "before_start",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 1 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "first_time": 4
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "app_or_ad": 1,
+     "self": 1
+    }
+   },
+   "reasons": {},
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:13537925205",
+     "source": "appstore",
+     "quote": "I’ve been using the Groww app for my investments and overall, it’s been a smooth experience.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13732584142",
+     "source": "appstore",
+     "quote": "Groww is a very user-friendly app, especially for beginners.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13736467292",
+     "source": "appstore",
+     "quote": "Overall rating 5* from my side.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:0bee6d0a-8c23-4d20-82e6-2bfd442eed59",
+     "source": "play",
+     "quote": "I’ve been using Groww to invest in the stock market and mutual funds, and it makes investing incredibly easy.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=0bee6d0a-8c23-4d20-82e6-2bfd442eed59"
+    }
+   ],
+   "score": 0.182,
+   "score_parts": {
+    "frequency": 0.45,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 9,
+   "name": "Complicated SIP Setup and Management Problems",
+   "definition": "Posts in this cluster complain about difficult SIP user interfaces, app crashes when accessing SIP categories, and rigid mandate requirements.",
+   "group": "no_action_stated",
+   "items": 19,
+   "threads": 19,
+   "sources": {
+    "appstore": 6,
+    "play": 13
+   },
+   "platforms": {
+    "zerodha": 7,
+    "groww": 5,
+    "indmoney": 2,
+    "etmoney": 5
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 16,
+    "before_start": 3
+   },
+   "known_stage_items": 3,
+   "top_stage": "before_start",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 3 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {},
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 1
+    }
+   },
+   "reasons": {
+    "mandate_or_autopay_issue": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12493139040",
+     "source": "appstore",
+     "quote": "Why did we have to make so many changes to how upcoming SIPs are highlighted and payment is made ?",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13002845519",
+     "source": "appstore",
+     "quote": "Too difficult to start SIP and very bad interface to understand how to do it",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13212288839",
+     "source": "appstore",
+     "quote": "starting sip is complicated UX most user get confused.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:106d794c-e987-4451-b6c8-95dd87118c1d",
+     "source": "play",
+     "quote": "et money app is not opening in my mobile I am not so conversant with et momey i was usuling it for watching my SIPs.",
+     "url": "https://play.google.com/store/apps/details?id=com.smartspends&reviewId=106d794c-e987-4451-b6c8-95dd87118c1d"
+    }
+   ],
+   "score": 0.182,
+   "score_parts": {
+    "frequency": 0.45,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 10,
+   "name": "Frustration Over Paid Subscriptions and Paywalls",
+   "definition": "Posts in this cluster express anger over ET Money hiding basic portfolio tracking and mutual fund features behind paid subscription paywalls.",
+   "group": "no_action_stated",
+   "items": 18,
+   "threads": 18,
+   "sources": {
+    "appstore": 12,
+    "play": 6
+   },
+   "platforms": {
+    "etmoney": 18
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 13,
+    "after_12_months": 5
+   },
+   "known_stage_items": 5,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 5 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 4
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 3
+    }
+   },
+   "reasons": {
+    "lost_trust_in_platform": 2
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12008374243",
+     "source": "appstore",
+     "quote": "The recent 4.8.69 update has made accessing my Mutual Fund portfolio a frustrating experience.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12008471372",
+     "source": "appstore",
+     "quote": "I have been using this app for more than 2 years.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12021954741",
+     "source": "appstore",
+     "quote": "Now new update is confusing and not showing complete portfolio according to PAN.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:0a446f2c-45a6-40d4-be10-58cbce2ecc1e",
+     "source": "play",
+     "quote": "Withdrawing money from the mutual fund is turning out to be very complicated.",
+     "url": "https://play.google.com/store/apps/details?id=com.smartspends&reviewId=0a446f2c-45a6-40d4-be10-58cbce2ecc1e"
+    }
+   ],
+   "score": 0.164,
+   "score_parts": {
+    "frequency": 0.41,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": 0.4
+  },
+  {
+   "id": 8,
+   "name": "Delayed NAV Allotment and Order Execution Issues",
+   "definition": "Posts in this cluster report delayed mutual fund NAV allotments, app crashes during market events, and difficulties canceling placed orders.",
+   "group": "no_action_stated",
+   "items": 14,
+   "threads": 14,
+   "sources": {
+    "appstore": 6,
+    "play": 8
+   },
+   "platforms": {
+    "groww": 7,
+    "etmoney": 4,
+    "zerodha": 3
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 14
+   },
+   "known_stage_items": 0,
+   "top_stage": null,
+   "stage_concentration": 0.0,
+   "stage_flag": "only 0 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 2
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {}
+   },
+   "reasons": {
+    "returns_below_expectation": 1,
+    "confused_by_app_or_numbers": 1,
+    "mandate_or_autopay_issue": 1,
+    "lost_trust_in_platform": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12023244903",
+     "source": "appstore",
+     "quote": "In terms of Mutual Fund, you have to constantly verify your holdings in groww by comparing your holdings in MF Central because a lot of times the same has mis matched and I had to raise a ticket to get it resolved.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12062838671",
+     "source": "appstore",
+     "quote": "I am unable to figure out how to withdraw from any mutual fund portfolio.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12253824091",
+     "source": "appstore",
+     "quote": "Lost 3% on ordering date NAV due to ET’s order execution cycle of 1 full day!",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:1604a29e-ffd2-42ee-8377-e6e16ff21c1e",
+     "source": "play",
+     "quote": "on Groww platform Nav is update on same day.",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=1604a29e-ffd2-42ee-8377-e6e16ff21c1e"
+    }
+   ],
+   "score": 0.091,
+   "score_parts": {
+    "frequency": 0.23,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 4,
+   "name": "App Navigation and Transaction Technical Issues",
+   "definition": "Posts in this cluster discuss technical glitches, frozen switch statuses, missing redemption options, or order execution failures when using apps like Zerodha Coin and INDmoney.",
+   "group": "no_action_stated",
+   "items": 13,
+   "threads": 13,
+   "sources": {
+    "appstore": 3,
+    "play": 10
+   },
+   "platforms": {
+    "indmoney": 1,
+    "zerodha": 8,
+    "groww": 4
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "after_12_months": 1,
+    "unknown": 12
+   },
+   "known_stage_items": 1,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 1 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {},
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 2
+    }
+   },
+   "reasons": {
+    "lost_trust_in_platform": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12041221913",
+     "source": "appstore",
+     "quote": "My money has been stuck in a mutual fund for over a year, stuck in a “switch” status without any valid explanation.",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13773439880",
+     "source": "appstore",
+     "quote": "The app doesn’t have a provision to import MFs.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:14695898500",
+     "source": "appstore",
+     "quote": "It was an nice experience.I didn’t feel any techinical glitch.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:0273227e-d73f-4eef-8eae-8314deefb3ed",
+     "source": "play",
+     "quote": "where is the redeem option very bad",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=0273227e-d73f-4eef-8eae-8314deefb3ed"
+    }
+   ],
+   "score": 0.073,
+   "score_parts": {
+    "frequency": 0.18,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 18,
+   "name": "App Interface And Technical Complaints",
+   "definition": "Posts in this cluster discuss specific grievances about app usability, lag, calculation errors, or redemption speeds on investment platforms.",
+   "group": "staying_in",
+   "items": 13,
+   "threads": 13,
+   "sources": {
+    "appstore": 7,
+    "play": 6
+   },
+   "platforms": {
+    "etmoney": 2,
+    "zerodha": 3,
+    "indmoney": 3,
+    "groww": 5
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "after_12_months": 5,
+    "unknown": 7,
+    "months_4_to_12": 1
+   },
+   "known_stage_items": 6,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 6 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 6
+    },
+    "life_stage": {
+     "family": 1
+    },
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 2
+    }
+   },
+   "reasons": {
+    "market_fall": 1,
+    "mandate_or_autopay_issue": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12013980030",
+     "source": "appstore",
+     "quote": "The app which I was using for the past 1 year, I feel it looks very professional and promising, but with the latest update now it looks very bad and very clumsy to choose funds and track existing funds.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12505467155",
+     "source": "appstore",
+     "quote": "My portfolio always shows wrong invested value. I have invested more than 40k and it still shows 29k.",
+     "url": "https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13173361528",
+     "source": "appstore",
+     "quote": "app lags a lot even on an IPhone.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:0f2baa9e-29e6-4831-925b-ba322468b0cb",
+     "source": "play",
+     "quote": "excellent app to invest in MF, to monitor investment. It shows XIRR, absolute returns, prompt deduction of SIP from bank on given date.",
+     "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=0f2baa9e-29e6-4831-925b-ba322468b0cb"
+    }
+   ],
+   "score": 0.073,
+   "score_parts": {
+    "frequency": 0.18,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 5,
+   "name": "Positive Reviews of Investment App Interfaces",
+   "definition": "Posts in this cluster praise platforms like INDmoney and Groww for their clean interfaces, helpful portfolio tracking, and beginner-friendly design.",
+   "group": "no_action_stated",
+   "items": 12,
+   "threads": 12,
+   "sources": {
+    "appstore": 9,
+    "play": 3
+   },
+   "platforms": {
+    "indmoney": 5,
+    "groww": 5,
+    "etmoney": 2
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 11,
+    "before_start": 1
+   },
+   "known_stage_items": 1,
+   "top_stage": "before_start",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 1 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "first_time": 1
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 2
+    }
+   },
+   "reasons": {},
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12008155669",
+     "source": "appstore",
+     "quote": "This is a great app with lot of potential in future to be that one stop financial overview of all personal investments",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13445253906",
+     "source": "appstore",
+     "quote": "I can see my net worth across all my investments",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13458227869",
+     "source": "appstore",
+     "quote": "The interface is clean and easy to use, and it helps me track all my investments in one place.",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:087b4440-1f33-4629-b4a3-a643d59bef42",
+     "source": "play",
+     "quote": "it's a very good app for SIP",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=087b4440-1f33-4629-b4a3-a643d59bef42"
+    }
+   ],
+   "score": 0.055,
+   "score_parts": {
+    "frequency": 0.14,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": 0.1
+  },
+  {
+   "id": 22,
+   "name": "Groww SIP Experience And Tracking",
+   "definition": "Posts in this cluster praise or critique starting and tracking SIP investments specifically on the Groww platform.",
+   "group": "staying_in",
+   "items": 12,
+   "threads": 12,
+   "sources": {
+    "appstore": 5,
+    "play": 7
+   },
+   "platforms": {
+    "groww": 12
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "after_12_months": 4,
+    "unknown": 7,
+    "months_4_to_12": 1
+   },
+   "known_stage_items": 5,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 5 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 3,
+     "first_time": 3
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 3
+    }
+   },
+   "reasons": {
+    "returns_below_expectation": 1
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:13319641146",
+     "source": "appstore",
+     "quote": "I have been using the Groww app for the last 4 years.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13464878640",
+     "source": "appstore",
+     "quote": "tracking your SIP is too. I can track even my external SIPs which is really good.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13484035815",
+     "source": "appstore",
+     "quote": "Groww is truly the best platform for investing and SIPs.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:083e2485-d0ed-48f3-a787-a87dfd0e6722",
+     "source": "play",
+     "quote": "Groww के माध्यम से मैंने SIP, म्यूचुअल फंड और शेयरों में निवेश शुरू किया।",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=083e2485-d0ed-48f3-a787-a87dfd0e6722"
+    }
+   ],
+   "score": 0.055,
+   "score_parts": {
+    "frequency": 0.14,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 23,
+   "name": "Mutual Fund Platform Satisfaction",
+   "definition": "Posts in this cluster express general satisfaction and recommendations for using various apps as reliable mutual fund platforms.",
+   "group": "staying_in",
+   "items": 10,
+   "threads": 10,
+   "sources": {
+    "appstore": 5,
+    "play": 5
+   },
+   "platforms": {
+    "etmoney": 1,
+    "groww": 6,
+    "indmoney": 1,
+    "zerodha": 2
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "after_12_months": 3,
+    "unknown": 7
+   },
+   "known_stage_items": 3,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 3 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 2,
+     "first_time": 1
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 4
+    }
+   },
+   "reasons": {},
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12017889720",
+     "source": "appstore",
+     "quote": "I have been using this app for the past 2 years, and I couldn’t be more satisfied.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:12142494226",
+     "source": "appstore",
+     "quote": "You can setup quick sip, choose your date, skip investments if required and edit the amount too whenever required",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13900175014",
+     "source": "appstore",
+     "quote": "I make all my MF investments using Groww.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:0b2b7398-e8fe-47b9-af83-58111cc8901a",
+     "source": "play",
+     "quote": "great app for my MF investments. easy to understand 🙌",
+     "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=0b2b7398-e8fe-47b9-af83-58111cc8901a"
+    }
+   ],
+   "score": 0.018,
+   "score_parts": {
+    "frequency": 0.05,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 1,
+   "name": "Switching platforms due to app issues and support",
+   "definition": "Users considering redeeming investments, stopping SIPs, or moving to another broker because of technical bugs, lock-ins, or poor customer support.",
+   "group": "considering",
+   "items": 9,
+   "threads": 9,
+   "sources": {
+    "appstore": 3,
+    "play": 6
+   },
+   "platforms": {
+    "etmoney": 4,
+    "groww": 3,
+    "indmoney": 1,
+    "zerodha": 1
+   },
+   "acted_share": 0.0,
+   "considered_share": 1.0,
+   "instalment_failed_share": 0.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 8,
+    "after_12_months": 1
+   },
+   "known_stage_items": 1,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 1 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 1
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 2
+    }
+   },
+   "reasons": {
+    "lost_trust_in_platform": 6,
+    "other": 2
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:12479766532",
+     "source": "appstore",
+     "quote": "I have been logged out from app and whenever i am trying login again it shows my number is already registered.",
+     "url": "https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13767236630",
+     "source": "appstore",
+     "quote": "Just waiting for the right time. Then I will redeem all the investments and move away from your platform.",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "appstore:in:13845883391",
+     "source": "appstore",
+     "quote": "I am unable to cancel my US stocks SIP and also there is no option to remove mandate for auto deduction.",
+     "url": "https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:1d3d45a5-2b58-4c50-a5b8-e6e1c02b5b74",
+     "source": "play",
+     "quote": "the SIP option does not work now. when i try to open it the page does try to open a bit closes down midway and says something error happened.",
+     "url": "https://play.google.com/store/apps/details?id=com.smartspends&reviewId=1d3d45a5-2b58-4c50-a5b8-e6e1c02b5b74"
+    }
+   ],
+   "score": 0.0,
+   "score_parts": {
+    "frequency": 0.0,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  },
+  {
+   "id": 2,
+   "name": "Groww SIP and Autopay Issues",
+   "definition": "Users experience failed SIP installments, autopay failures, pending KYC status, and slow refunds specifically on the Groww platform.",
+   "group": "instalment_failed",
+   "items": 9,
+   "threads": 9,
+   "sources": {
+    "appstore": 1,
+    "play": 8
+   },
+   "platforms": {
+    "groww": 7,
+    "zerodha": 2
+   },
+   "acted_share": 0.0,
+   "considered_share": 0.0,
+   "instalment_failed_share": 1.0,
+   "outside_app_share": 0.0,
+   "stage_mix": {
+    "unknown": 7,
+    "after_12_months": 2
+   },
+   "known_stage_items": 2,
+   "top_stage": "after_12_months",
+   "stage_concentration": 0.0,
+   "stage_flag": "only 2 items with a known stage (need 10); set to 0",
+   "segments": {
+    "investor_experience": {
+     "experienced": 2
+    },
+    "life_stage": {},
+    "income_type": {},
+    "source_of_money": {},
+    "influenced_by": {
+     "self": 1
+    }
+   },
+   "reasons": {
+    "mandate_or_autopay_issue": 9
+   },
+   "beliefs": 0,
+   "quotes": [
+    {
+     "item_id": "appstore:in:13804869043",
+     "source": "appstore",
+     "quote": "Worst App for Mutual Fund investment SIP are getting failed and when I tried to look into the App it’s constantly saying KYC pending and from ages this message is getting popped up",
+     "url": "https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software"
+    },
+    {
+     "item_id": "play:00c574fe-3382-4d85-a8cb-ad7890065630",
+     "source": "play",
+     "quote": "Autopay is not working in my account i tried many to set Autopay but it was unsuccessful",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=00c574fe-3382-4d85-a8cb-ad7890065630"
+    },
+    {
+     "item_id": "play:07cc8fde-a222-4581-8ee3-11c6d48f5fc1",
+     "source": "play",
+     "quote": "kya matlab autopay ka jab khud hi pay krna pdta hai",
+     "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=07cc8fde-a222-4581-8ee3-11c6d48f5fc1"
+    }
+   ],
+   "score": 0.0,
+   "score_parts": {
+    "frequency": 0.0,
+    "acted": 0.0,
+    "stage": 0.0,
+    "evidence": 0.0
+   },
+   "score_without_play": null
+  }
+ ],
+ "contrast": {
+  "continuers": {
+   "items": 116,
+   "with_expectation": 1,
+   "with_belief": 1,
+   "check_frequency": {
+    "not_stated": 107,
+    "daily": 5,
+    "monthly": 4
+   },
+   "what_they_check": {
+    "not_stated": 71,
+    "portfolio_value": 23,
+    "returns_or_pnl": 14,
+    "instalment_debit": 3,
+    "xirr": 2,
+    "nav": 2,
+    "fund_rating": 1
+   },
+   "emotion": {
+    "confident": 73,
+    "confused": 12,
+    "not_stated": 10,
+    "angry": 10,
+    "indifferent": 8,
+    "anxious": 3
+   },
+   "action_reason": {
+    "not_stated": 101,
+    "mandate_or_autopay_issue": 5,
+    "confused_by_app_or_numbers": 4,
+    "returns_below_expectation": 2,
+    "market_fall": 2,
+    "other": 1,
+    "lost_trust_in_platform": 1
+   },
+   "journey_stage": {
+    "unknown": 69,
+    "after_12_months": 41,
+    "months_4_to_12": 5,
+    "first_3_months": 1
+   },
+   "outside_app_behaviour": {
+    "none_stated": 116
+   },
+   "investor_experience": {
+    "not_stated": 66,
+    "experienced": 37,
+    "first_time": 13
+   },
+   "life_stage": {
+    "not_stated": 115,
+    "family": 1
+   },
+   "income_type": {
+    "not_stated": 116
+   },
+   "source_of_money": {
+    "not_stated": 116
+   },
+   "influenced_by": {
+    "not_stated": 90,
+    "self": 26
+   }
+  },
+  "considering": {
+   "items": 10,
+   "with_expectation": 0,
+   "with_belief": 0,
+   "check_frequency": {
+    "not_stated": 10
+   },
+   "what_they_check": {
+    "not_stated": 7,
+    "returns_or_pnl": 2,
+    "nav": 1
+   },
+   "emotion": {
+    "angry": 6,
+    "anxious": 2,
+    "confused": 1,
+    "not_stated": 1
+   },
+   "action_reason": {
+    "lost_trust_in_platform": 6,
+    "other": 2,
+    "not_stated": 1,
+    "confused_by_app_or_numbers": 1
+   },
+   "journey_stage": {
+    "unknown": 9,
+    "after_12_months": 1
+   },
+   "outside_app_behaviour": {
+    "none_stated": 10
+   },
+   "investor_experience": {
+    "not_stated": 9,
+    "experienced": 1
+   },
+   "life_stage": {
+    "not_stated": 10
+   },
+   "income_type": {
+    "not_stated": 10
+   },
+   "source_of_money": {
+    "not_stated": 10
+   },
+   "influenced_by": {
+    "not_stated": 8,
+    "self": 2
+   }
+  },
+  "acted": {
+   "items": 85,
+   "with_expectation": 0,
+   "with_belief": 1,
+   "check_frequency": {
+    "not_stated": 80,
+    "monthly": 2,
+    "rarely": 1,
+    "daily": 1,
+    "none_or_never": 1
+   },
+   "what_they_check": {
+    "not_stated": 53,
+    "portfolio_value": 19,
+    "returns_or_pnl": 8,
+    "instalment_debit": 2,
+    "fund_rating": 1,
+    "none_or_never": 1,
+    "xirr": 1
+   },
+   "emotion": {
+    "angry": 60,
+    "anxious": 8,
+    "not_stated": 8,
+    "confused": 4,
+    "confident": 2,
+    "regret": 2,
+    "indifferent": 1
+   },
+   "action_reason": {
+    "other": 30,
+    "lost_trust_in_platform": 28,
+    "confused_by_app_or_numbers": 9,
+    "mandate_or_autopay_issue": 8,
+    "not_stated": 5,
+    "market_fall": 2,
+    "returns_below_expectation": 2,
+    "needed_money": 1
+   },
+   "journey_stage": {
+    "unknown": 70,
+    "after_12_months": 10,
+    "first_3_months": 3,
+    "months_4_to_12": 2
+   },
+   "outside_app_behaviour": {
+    "none_stated": 85
+   },
+   "investor_experience": {
+    "not_stated": 70,
+    "experienced": 11,
+    "first_time": 4
+   },
+   "life_stage": {
+    "not_stated": 85
+   },
+   "income_type": {
+    "not_stated": 84,
+    "salaried": 1
+   },
+   "source_of_money": {
+    "not_stated": 84,
+    "salary": 1
+   },
+   "influenced_by": {
+    "not_stated": 74,
+    "self": 10,
+    "advisor": 1
+   }
+  },
+  "instalment_failed": {
+   "items": 34,
+   "with_expectation": 0,
+   "with_belief": 0,
+   "check_frequency": {
+    "not_stated": 29,
+    "monthly": 5
+   },
+   "what_they_check": {
+    "not_stated": 20,
+    "instalment_debit": 13,
+    "returns_or_pnl": 1
+   },
+   "emotion": {
+    "angry": 19,
+    "not_stated": 9,
+    "anxious": 4,
+    "confused": 2
+   },
+   "action_reason": {
+    "mandate_or_autopay_issue": 34
+   },
+   "journey_stage": {
+    "unknown": 30,
+    "after_12_months": 3,
+    "months_4_to_12": 1
+   },
+   "outside_app_behaviour": {
+    "none_stated": 34
+   },
+   "investor_experience": {
+    "not_stated": 31,
+    "experienced": 3
+   },
+   "life_stage": {
+    "not_stated": 34
+   },
+   "income_type": {
+    "not_stated": 34
+   },
+   "source_of_money": {
+    "not_stated": 34
+   },
+   "influenced_by": {
+    "not_stated": 32,
+    "self": 2
+   }
+  },
+  "switched_platform": {
+   "items": 33,
+   "with_expectation": 0,
+   "with_belief": 1,
+   "check_frequency": {
+    "not_stated": 31,
+    "daily": 1,
+    "none_or_never": 1
+   },
+   "what_they_check": {
+    "not_stated": 19,
+    "portfolio_value": 9,
+    "fund_rating": 1,
+    "returns_or_pnl": 1,
+    "nav": 1,
+    "instalment_debit": 1,
+    "none_or_never": 1
+   },
+   "emotion": {
+    "angry": 30,
+    "confused": 1,
+    "not_stated": 1,
+    "anxious": 1
+   },
+   "action_reason": {
+    "lost_trust_in_platform": 28,
+    "other": 2,
+    "confused_by_app_or_numbers": 2,
+    "mandate_or_autopay_issue": 1
+   },
+   "journey_stage": {
+    "unknown": 20,
+    "after_12_months": 10,
+    "before_start": 2,
+    "first_3_months": 1
+   },
+   "outside_app_behaviour": {
+    "none_stated": 33
+   },
+   "investor_experience": {
+    "not_stated": 22,
+    "experienced": 11
+   },
+   "life_stage": {
+    "not_stated": 33
+   },
+   "income_type": {
+    "not_stated": 33
+   },
+   "source_of_money": {
+    "not_stated": 33
+   },
+   "influenced_by": {
+    "not_stated": 23,
+    "self": 9,
+    "app_or_ad": 1
+   }
+  }
+ }
+}
