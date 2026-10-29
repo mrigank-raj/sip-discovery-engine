@@ -31,7 +31,8 @@ def fetch(cfg, limit, product_keys, queries=3, subs=4, posts_per_url=5, comments
     reddit = cfg["sources"]["reddit"]
     # Every result costs credit, so queries always name SIP or mutual funds (r/IndianStockMarket is mostly trading).
     qs = [q if "sip" in q.lower() or "mutual fund" in q.lower() else f"{q} SIP" for q in cfg["queries"]["reddit"][:queries]]
-    urls = [f"https://www.reddit.com/r/{s}/search/?q={quote(q)}&restrict_sr=1&sort=relevance&t=all"
+    # Newest first, so the paid results fall inside the 24-month window instead of being old top posts discarded on insert.
+    urls = [f"https://www.reddit.com/r/{s}/search/?q={quote(q)}&restrict_sr=1&sort=new&t=all"
             for s in reddit["subreddits"][:subs] for q in qs]
     run_input = {"urls": urls, "maxPostsPerSource": posts_per_url, "includeComments": True,
                  "maxCommentsPerPost": comments_per_post, "commentDepth": 2}

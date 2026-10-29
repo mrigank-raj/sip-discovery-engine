@@ -108,15 +108,16 @@ def sample(n):
 
 def run_prefilter(recompute=False):
     """Score items with no keyword-filter result yet; recompute=True rescored everything (after changing the filter rules)."""
-    from engine.prefilter import groups_hit, passes
+    from engine.prefilter import groups_hit, own_title, passes
     db = store.connect(DB_PATH)
-    rows = db.execute("SELECT item_id, source, title, text FROM raw_items" + ("" if recompute else
+    rows = db.execute("SELECT item_id, source, thread_id, title, text FROM raw_items" + ("" if recompute else
                       " WHERE item_id NOT IN (SELECT item_id FROM filter_results)")).fetchall()
     print(f"scoring {len(rows)} item(s)")
     for r in rows:
+        title = own_title(r["source"], r["item_id"], r["thread_id"], r["title"])
         db.execute("INSERT INTO filter_results(item_id, prefilter_pass, prefilter_groups) VALUES(?,?,?) ON CONFLICT(item_id) "
                    "DO UPDATE SET prefilter_pass=excluded.prefilter_pass, prefilter_groups=excluded.prefilter_groups",
-                   (r["item_id"], int(passes(r["source"], r["title"], r["text"])), ",".join(groups_hit(r["title"], r["text"]))))
+                   (r["item_id"], int(passes(r["source"], title, r["text"])), ",".join(groups_hit(title, r["text"]))))
     db.commit()
     print("prefilter pass rate by source:")
     for r in db.execute("SELECT source, COUNT(*) n, SUM(prefilter_pass) p FROM filter_results f JOIN raw_items USING(item_id) GROUP BY 1"):

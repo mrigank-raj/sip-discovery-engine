@@ -9,7 +9,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from engine import store
-from engine.prefilter import groups_hit, passes
+from engine.prefilter import groups_hit, own_title, passes
 
 ROOT = Path(__file__).resolve().parents[2]
 SHEET = ROOT / "eval" / "golden_set.csv"
@@ -25,7 +25,7 @@ HEAD = ["item_id", "source", "app", "title", "text", "url"]
 def stratum(r):
     """The prefilter group an item is stratified on, or None if it does not pass on its own text. Comments and replies are
     judged without the video or thread title, which keeps the pool valid under either prefilter rule being decided."""
-    title = None if r["source"] == "youtube" or (r["thread_id"] and r["thread_id"] != r["item_id"]) else r["title"]
+    title = own_title(r["source"], r["item_id"], r["thread_id"], r["title"])
     if not passes(r["source"], title, r["text"]):
         return None
     hit = groups_hit(title, r["text"])

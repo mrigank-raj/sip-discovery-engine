@@ -19,6 +19,12 @@ COMPILED = {k: re.compile(v, re.I) for k, v in GROUPS.items()}
 STORE_SOURCES = {"play", "appstore"}
 
 
+def own_title(source, item_id, thread_id, title):
+    """The title an item is judged with: its own for posts and reviews, none for comments and replies, whose title is the
+    video's or thread's (on-topic by construction, so it would pass every comment)."""
+    return None if source == "youtube" or (thread_id and thread_id != item_id) else title
+
+
 def groups_hit(title, text):
     blob = f"{title or ''}\n{text or ''}"
     return [k for k, rx in COMPILED.items() if rx.search(blob)]

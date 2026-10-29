@@ -74,13 +74,11 @@ sources:
 queries:
   reddit:
     - SIP stop
-    - stopped SIP
-    - pause SIP
-    - first SIP
-    - SIP returns
+    - SIP pause
+    - SIP band
     - SIP loss
-    - Groww SIP
-    - SIP mandate
+    - first SIP
+    - groww SIP
   youtube_video_discovery:
     - should I stop my SIP
     - SIP band karna chahiye
