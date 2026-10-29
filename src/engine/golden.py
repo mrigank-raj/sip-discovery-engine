@@ -116,7 +116,11 @@ def label_views():
 # ---- scoring -------------------------------------------------------------------------------------------------------------
 ENUM_FIELDS = ["investor_experience", "platform", "journey_stage", "sip_action", "action_reason", "what_they_check", "check_frequency",
                "outside_app_behaviour", "emotion", "life_stage", "income_type", "source_of_money", "influenced_by", "severity"]
-PRESENCE_FIELDS = ["expectation_at_start", "belief_at_action", "age_stated"]  # scored as stated vs null; wording is not compared
+# A sip_action label may be one of these groups instead of a single value; the engine's value is then compared as its group.
+SIP_GROUPS = {"staying_in": {"started", "continuing", "increased"},
+              "pulling_back": {"considering_stopping", "paused", "reduced", "stopped"},
+              "out_or_failed": {"instalment_failed", "redeemed", "switched_platform"}}
+PRESENCE_FIELDS =["expectation_at_start", "belief_at_action", "age_stated"]  # scored as stated vs null; wording is not compared
 YES, NO = {"y", "yes", "1", "true", "t"}, {"n", "no", "0", "false", "f"}
 EMPTY = {"", "null", "none", "-"}
 
@@ -156,7 +160,10 @@ def compare(gold, engine):
             add(g, "secondhand", _bool(g["secondhand"]), None if rec is None else bool(rec["secondhand"]))
         for f in ENUM_FIELDS:
             if (g.get(f) or "").strip():
-                add(g, f, g[f].strip().lower(), "(not extracted)" if rec is None else rec[f])
+                mine_f, theirs_f = g[f].strip().lower(), "(not extracted)" if rec is None else rec[f]
+                if f == "sip_action" and mine_f in SIP_GROUPS:  # labelled at group level: compare the engine's group
+                    theirs_f = next((k for k, v in SIP_GROUPS.items() if theirs_f in v), theirs_f)
+                add(g, f, mine_f, theirs_f)
         for f in PRESENCE_FIELDS:  # blank = not labelled; "null" (or none, -) = labelled as not stated
             if not (g.get(f) or "").strip():
                 continue

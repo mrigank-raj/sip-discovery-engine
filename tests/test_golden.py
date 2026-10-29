@@ -68,3 +68,16 @@ def test_too_few_stated_labels_are_not_shown_as_a_percentage():
     assert golden.pct((1, 2), golden.MIN_STATED) == "too few to score (n=2)"
     assert golden.pct((2, 3), golden.MIN_STATED) == "67% (2/3)"
     assert golden.pct((0, 0)) == "-"
+
+
+def test_sip_action_labelled_as_a_group_is_compared_at_group_level():
+    rec = {"secondhand": False, **{f: "not_stated" for f in golden.ENUM_FIELDS}, "belief_at_action": None}
+    gold = [g("a", "play", "sip_or_mf", is_relevant="yes", sip_action="staying_in"),
+            g("b", "play", "sip_or_mf", is_relevant="yes", sip_action="pulling_back"),
+            g("c", "play", "sip_or_mf", is_relevant="yes", sip_action="not_stated")]
+    engine = {"a": {"relevant": True, "rec": {**rec, "sip_action": "continuing"}},
+              "b": {"relevant": True, "rec": {**rec, "sip_action": "redeemed"}},
+              "c": {"relevant": True, "rec": {**rec, "sip_action": "not_stated"}}}
+    cells, dis = golden.compare(gold, engine)
+    got = {c["mine"]: (c["agree"], c["engine"]) for c in cells if c["field"] == "sip_action"}
+    assert got == {"staying_in": (True, "staying_in"), "pulling_back": (False, "out_or_failed"), "not_stated": (True, "not_stated")}

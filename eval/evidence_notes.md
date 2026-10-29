@@ -2,9 +2,10 @@
 
 Copied word for word into `docs/evidence_log.md` by `engine.cli evidence-log`. Edit here, not in the generated log.
 
-- **Golden set is stratified for coverage, not proportional to volume.** Its 35 items are spread evenly across source x prefilter
-  group (about 3 per cell), so a small stratum such as App Store "returns" (18 items in the pool) gets as many items as Play
-  "sip_or_mf" (1,439). Agreement rates are reported overall, per source and per prefilter group; the overall rate is not a
+- Golden set: 20 items hand-labelled for relevance by the author. Extraction fields were not hand-labelled at scale (2 items); extraction quality is guarded by the verbatim validator and is reported via validator rejection and review rates, not golden-set agreement.
+- **Golden set is stratified for coverage, not proportional to volume.** Its 20 items are spread evenly across source x prefilter
+  group (4 per source, 1 or 2 per cell), so a small stratum such as App Store "returns" (18 items in the pool) gets as many items
+  as Play "sip_or_mf" (1,439). Agreement rates are reported overall, per source and per prefilter group; the overall rate is not a
   corpus-wide accuracy, and per-cell rates rest on very few items.
 - **Clusters reflect the model's paraphrase, not the user's words.** Clustering embeds the English `summary` field written by the
   extraction model, because the local embedding model is English-only and handles Hinglish poorly. 10 summaries are
