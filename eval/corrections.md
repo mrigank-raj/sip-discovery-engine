@@ -28,6 +28,40 @@ Cases where a person rejected or corrected AI output, and why. Filled in by hand
 - Why: concrete domain beliefs in the prompt could seed the very findings the engine is meant to discover (the model would be
   primed to see FD-like expectations or paper-loss beliefs). The examples should teach the form of a stated belief, not its content.
 
+## 0c. Relevance rule ambiguity exposed by golden set (2026-10-29)
+
+- **First score.** Relevance on the 20 golden items, prompt v2 as first written: agreement 65% (13/20), precision 60% (9/15),
+  recall 90% (9/10). Six items the engine called relevant were labelled not relevant; one labelled relevant was called `other`.
+- **My own labels were inconsistent.** Reading the disagreements showed that I had applied two different rules:
+  - G1 and G2 (requests for better XIRR views in INDmoney and in a Play app) were labelled yes, while G9 (a request for an MF-only
+    filter in Console) and G16 ("xirr functionality works sometimes") were labelled no. All four are feature requests or app
+    complaints about mutual-fund features with no SIP experience stated.
+  - G19 (a reply explaining to another user that CAGR is shown net of the expense ratio) was labelled yes, while G8 (a reply
+    advising someone else to start a liquid-fund SIP) was labelled no. Both are explanations or advice to someone else.
+- **Decision order.** I first chose the rule, then applied it to all 20 items, and only then changed labels:
+  - Rule (strict): relevant only if the writer states an action, experience, worry or decision about their own (or a named
+    person's) SIP or mutual-fund holdings. Not relevant: feature requests, fund names alone, app-vs-app comparisons, app
+    complaints with no SIP experience, and explanations or advice to someone else.
+  - Under it, four labels changed from yes to no, and none from no to yes:
+    - G1 (App Store, INDmoney): asks for XIRR on short holdings and a consolidated portfolio view. A feature request.
+    - G2 (Play): asks for 3M / 6M / 1Y / 3Y XIRR "like other apps Zerodha, Groww". A feature request and app comparison.
+    - G14 (TradingQ&A): "Does it give detailed CG statement ... as mandated by tax forms?" A question about a feature, with no
+      SIP experience stated.
+    - G19 (TradingQ&A): an explanation of CAGR and the expense ratio to another user. An explanation to someone else.
+  - G1 and G2's sip_action and belief labels were cleared, as they are no longer relevant items.
+  - Result: 6 relevant (G5, G11, G13, G15, G18, G20), 14 not relevant.
+- **This relabelling happened after seeing engine output.** It is an adjudication of an ambiguous rule, not fitting the labels
+  to the engine:
+  - The rule was chosen first and then applied to every one of the 20 items, not only to the disagreements.
+  - Against the engine's prompt-v2 answers, 3 of the 4 changes moved away from the engine (G1, G2 and G14 had been called
+    relevant by the engine and are now labelled not relevant, so they became disagreements) and 1 moved towards it (G19).
+    Scored against the same v2 answers, the relabel alone lowered agreement from 65% (13/20) to 55% (11/20), precision from
+    60% to 40% (6/15), and left recall at 100% (6/6). The relabel made the engine look worse, not better.
+  - The disagreements exposed that the labels themselves followed two different rules (see above); one rule had to be picked.
+  - Remaining risk: the rule was chosen knowing which kinds of item caused disagreements, so any score after the prompt change
+    is optimistic. A fresh sample labelled under the strict rule from the start would be a cleaner test.
+- **Then the prompt was tightened** (relevance prompt v3, next step) to state the strict rule and the five not-relevant cases.
+
 ## 1. Correction
 
 - Item or output:
