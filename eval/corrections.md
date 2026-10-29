@@ -11,9 +11,12 @@ Cases where a person rejected or corrected AI output, and why. Filled in by hand
 - Check: 40 dropped YouTube comments sampled at random (seed 20261029) into `eval/prefilter_dropped_sample.csv`, hand-labelled.
 - Rule agreed beforehand: under about 10% own-SIP-experience keeps text-only; above that adds a second pass for comments under
   SIP-themed titles matching action verbs (band, ruk, rok, chhod, pause, stop, continue, chal raha, redeem, nikaal).
-- Result: ___ of 40 are a person's own SIP experience (___%).
-- Decision: ___
-- Date and who decided: ___
+- Result: labelled 20 of the 40, stopping once the threshold was crossed; 12 of those 20 marked yes.
+- Decision: Partial sample check (20/40) suggested the text-only rule drops SIP-related comments; chose the conservative verb pass to avoid losing Hinglish narratives. Labels were quick and not a precise rate.
+- Applied: text-only matching for comments and replies, plus the verb pass for comments and replies (YouTube, TradingQ&A, Reddit)
+  whose video or thread title names SIPs or mutual funds. The verb pass let in 87 more items (YouTube 82, Reddit 4, TradingQ&A 1);
+  they are tagged `verb_pass` in `prefilter_groups`. The golden set was drawn before this pass, so it holds no verb-pass items.
+- Date and who decided: 2026-10-29, project owner.
 
 ## 0b. Belief examples in the extraction prompt (prompt-design decision, 2026-10-29, before any extraction ran)
 

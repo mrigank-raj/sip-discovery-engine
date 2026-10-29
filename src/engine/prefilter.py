@@ -30,10 +30,21 @@ def groups_hit(title, text):
     return [k for k, rx in COMPILED.items() if rx.search(blob)]
 
 
-def passes(source, title, text):
+# Second pass for comments and replies (decision 2026-10-29, eval/corrections.md section 0): a hand check found SIP stories in
+# comments the text-only rule dropped, often Hinglish with no SIP word ("3 saal se chal raha hai, band nahi karunga").
+ACTION_VERBS = re.compile(r"\b(band|ruk\w*|rok\w*|chhod\w*|pause\w*|stop\w*|continu\w*|chal raha|redeem\w*|nikaal\w*)\b", re.I)
+
+
+def passes(source, title, text, context_title=None):
     """Store reviews are mostly about stocks and F&O, so a returns word alone is not enough there; forum and video items are
-    already on topic through their queries and categories, so any group passes."""
+    already on topic through their queries and categories, so any group passes. A comment or reply (title None) also passes
+    when its video or thread title is about SIPs (`context_title`) and its own text uses an action verb."""
     hit = groups_hit(title, text)
     if source in STORE_SOURCES:
         return "sip_or_mf" in hit or "stop_or_fail" in hit
-    return bool(hit)
+    return bool(hit) or verb_pass(title, text, context_title)
+
+
+def verb_pass(title, text, context_title):
+    return title is None and bool(context_title) and bool(COMPILED["sip_or_mf"].search(context_title)) \
+        and bool(ACTION_VERBS.search(text or ""))
