@@ -243,6 +243,7 @@ def main(argv=None):
     gs.add_argument("--n", type=int, default=35)
     gs.add_argument("--add", type=int, default=0, help="append this many more stratified items, keeping existing labels")
     sub.add_parser("golden-score", help="engine vs your labels: overall, per source, per prefilter group, every disagreement")
+    sub.add_parser("label-views", help="paste-friendly markdown of the two labelling sheets, with no engine output")
     s = sub.add_parser("sample")
     s.add_argument("-n", type=int, default=5)
     a = p.parse_args(argv)
@@ -301,6 +302,9 @@ def main(argv=None):
     elif a.cmd == "golden-score":
         from engine import golden
         golden.score()
+    elif a.cmd == "label-views":
+        from engine import golden
+        golden.label_views()
     elif a.cmd == "sample":
         sample(a.n)
     else:

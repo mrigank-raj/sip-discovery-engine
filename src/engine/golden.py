@@ -88,6 +88,31 @@ def make_sheet(n=35, add=0):
         print(f"  {k[0]:<11}{k[1]:<13} pool {len(pools[k]):>5}  picked {counts[k]}")
 
 
+def _quote_block(text):
+    return "\n".join("> " + line if line.strip() else ">" for line in text.strip().splitlines())
+
+
+def label_views():
+    """Readable, paste-friendly copies of the two labelling sheets for labelling in a chat. They hold only the item text and
+    its context (row number, source, title): no engine output, no ids, no prefilter result."""
+    ev = ROOT / "eval"
+    pre = list(csv.DictReader(open(ev / "prefilter_dropped_sample.csv", encoding="utf-8-sig")))
+    L = ["# Prefilter check: 40 YouTube comments the text-only rule drops", "",
+         "For each: is this a person's own SIP experience? (y/n)", ""]
+    for k, r in enumerate(pre, 1):
+        L += [f"## {k}", "", f"Video title: {r['video_title']}", "", _quote_block(r["comment_text"]), ""]
+    (ev / "label_view_prefilter_sample.md").write_text("\n".join(L), encoding="utf8")
+    gold = list(csv.DictReader(open(SHEET, encoding="utf-8-sig")))
+    L = ["# Golden set: items to label", "",
+         "Fill: is_relevant, sip_action, action_reason, journey_stage, investor_experience, belief_at_action, belief_quote. "
+         "For no belief, write null.", ""]
+    for k, r in enumerate(gold, 1):
+        L += [f"## {k}", "", f"Source: {r['source']}"] + ([f"Title: {r['title']}"] if r["title"].strip() else []) + \
+             ["", _quote_block(r["text"]), ""]
+    (ev / "label_view_golden.md").write_text("\n".join(L), encoding="utf8")
+    print(f"wrote eval/label_view_prefilter_sample.md ({len(pre)} items) and eval/label_view_golden.md ({len(gold)} items)")
+
+
 # ---- scoring -------------------------------------------------------------------------------------------------------------
 ENUM_FIELDS = ["investor_experience", "platform", "journey_stage", "sip_action", "action_reason", "what_they_check", "check_frequency",
                "outside_app_behaviour", "emotion", "life_stage", "income_type", "source_of_money", "influenced_by", "severity"]
