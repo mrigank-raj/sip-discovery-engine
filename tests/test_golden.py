@@ -29,9 +29,9 @@ def g(item_id, source, group, **labels):
 def test_compare_scores_relevance_on_all_and_extraction_only_on_items_marked_relevant():
     rec = {"secondhand": False, **{f: "not_stated" for f in golden.ENUM_FIELDS}, "sip_action": "stopped",
            "belief_at_action": "Believed X", "expectation_at_start": None, "age_stated": None}
-    gold = [g("a", "play", "stop_or_fail", is_relevant="y", sip_action="stopped", belief_at_action=""),
+    gold = [g("a", "play", "stop_or_fail", is_relevant="y", sip_action="stopped", belief_at_action="null"),
             g("b", "youtube", "sip_or_mf", is_relevant="no", sip_action="continuing"),     # not relevant: only relevance scored
-            g("c", "youtube", "returns", is_relevant="yes", sip_action="paused"),           # engine rejected it
+            g("c", "youtube", "returns", is_relevant="yes", sip_action="paused", belief_at_action="I thought X"),  # engine rejected it
             g("d", "play", "sip_or_mf", is_relevant="")]                                    # unlabelled: skipped
     engine = {"a": {"relevant": True, "rec": rec}, "b": {"relevant": True, "rec": rec}, "c": {"relevant": False, "rec": None}}
     cells, dis = golden.compare(gold, engine)
@@ -41,5 +41,6 @@ def test_compare_scores_relevance_on_all_and_extraction_only_on_items_marked_rel
     assert golden.rates(cells, "source")["sip_action"] == {"play": (1, 1), "youtube": (0, 1)}
     assert golden.rates(cells, "group")["is_relevant"] == {"stop_or_fail": (1, 1), "sip_or_mf": (0, 1), "returns": (0, 1)}
     belief = [d for d in dis if d["field"] == "belief_at_action"]
-    assert [(d["item_id"], d["mine"], d["engine"]) for d in belief] == [("a", "null", "stated"), ("c", "null", "(not extracted)")]
+    assert [(d["item_id"], d["mine"], d["engine"]) for d in belief] == [("a", "null", "stated"), ("c", "stated", "(not extracted)")]
+    assert not any(c["field"] == "age_stated" for c in cells)                    # blank presence cells are not scored
     assert any(d["item_id"] == "c" and d["field"] == "sip_action" and d["engine"] == "(not extracted)" for d in dis)

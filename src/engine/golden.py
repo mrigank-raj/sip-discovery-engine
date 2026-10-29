@@ -43,20 +43,22 @@ def strata(db):
 
 
 def pick(pools, n, exclude=(), seed=SEED):
-    """Round robin over sources, then over each source's groups, drawing from seeded shuffles. Deterministic, so a top-up
-    with a larger n continues the same order."""
+    """One item per stratum per pass, drawing from seeded shuffles. Within a pass the order is group position outer, source
+    inner, so a partial last pass spreads its items across sources instead of giving them all to the first one. Deterministic,
+    so a top-up continues the same order."""
     rnd = random.Random(seed)
     order = {k: rnd.sample(v, len(v)) for k, v in sorted(pools.items())}
     by_source = defaultdict(list)
     for src, grp in order:
         by_source[src].append((src, grp))
+    width = max(len(v) for v in by_source.values())
+    keys = [by_source[s][j] for j in range(width) for s in sorted(by_source) if j < len(by_source[s])]
     chosen, depth = [], 0
     while len(chosen) < n and any(len(v) > depth for v in order.values()):
-        for src in sorted(by_source):
-            for key in by_source[src]:
-                ids = [i for i in order[key] if i not in exclude and i not in chosen]
-                if len(order[key]) > depth and ids and len(chosen) < n:
-                    chosen.append(ids[0])
+        for key in keys:
+            ids = [i for i in order[key] if i not in exclude and i not in chosen]
+            if len(order[key]) > depth and ids and len(chosen) < n:
+                chosen.append(ids[0])
         depth += 1
     return chosen
 
@@ -130,7 +132,9 @@ def compare(gold, engine):
         for f in ENUM_FIELDS:
             if (g.get(f) or "").strip():
                 add(g, f, g[f].strip().lower(), "(not extracted)" if rec is None else rec[f])
-        for f in PRESENCE_FIELDS:
+        for f in PRESENCE_FIELDS:  # blank = not labelled; "null" (or none, -) = labelled as not stated
+            if not (g.get(f) or "").strip():
+                continue
             add(g, f, "stated" if _present(g.get(f)) else "null",
                 "(not extracted)" if rec is None else "stated" if rec.get(f) else "null")
     return cells, dis

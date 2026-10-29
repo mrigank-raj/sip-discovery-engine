@@ -4,125 +4,390 @@ appstore:in:14574494098,appstore,indmoney,Portfolio Analytics Need Major Improve
 More importantly, there is no consolidated portfolio-level view showing metrics such as XIRR and total Gain/Loss across the entire portfolio, including both Stocks and Mutual Funds. Users should not have to analyze each investment category separately to understand their overall performance.
 
 A comprehensive portfolio dashboard with consolidated XIRR, absolute returns, total invested amount, current value, and overall Gain/Loss would make the app far more useful for tracking investments.",https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
+play:512e0f3e-746f-4f30-b908-282bac4be09c,play,et_money,,"Your app shows me only historic XIRR returns of entire MF portfolio but not able to see my last 3M, 6M, 1Y, 3Y XIRR returns in MF . Kindly add this like other apps Zerodha, Groww.",https://play.google.com/store/apps/details?id=com.smartspends&reviewId=512e0f3e-746f-4f30-b908-282bac4be09c,,,,,,,,,,,,,,,,,,,,,,
+reddit:mz4e4md,reddit,,"How a bank manager sold a legal scam to my friend’s family. SBI Life Smart Platina Plus, broken down.","Also honorable mention is the GST charged on each premium payment. Conveniently, nobody talks about that, and not even in your calculations. Add it, IIRC 4.5% on first premium payment, and 2.5% on subsequent payments, and your XIRR drops by 2-3% more.",https://www.reddit.com/r/IndiaInvestments/comments/1lhh22o/how_a_bank_manager_sold_a_legal_scam_to_my/mz4e4md/,,,,,,,,,,,,,,,,,,,,,,
+tradingqna:179450-2,tradingqna,coin,Building Tools with Mutual Fund Data: A Quick Guide,"You can also refer to some more below 
+
+Mutual Fund API (mfapi.in)
+
+Direct API link: https://mfapi.in/
+
+Features:
+
+Free REST API for Indian Mutual Funds
+
+Get historical NAV data
+
+Search schemes by name/code
+
+Example Usage:
+
+pythonCopy# Get NAV for a specific scheme
+scheme_code = '119598'  # Example: SBI Blue Chip Fund-Direct Plan-Growth
+api_url = f'https://api.mfapi.in/mf/{scheme_code}'
+
+SIP Calculator
+
+Zerodha Calculators
+
+MF Algo test
+
+https://mf.algotest.in/
+
+Tijori Finance
+
+Link: https://tijorifinance.com/
+
+Features:
+
+Portfolio tracking
+
+Fund screener with advanced filters
+
+Performance comparison
+
+MoneyControl Mutual Fund Tools
+
+link: Mutual Funds Investment Online | Updated List of Mutual Funds | Best Performing Mutual Funds in India - Moneycontrol
+
+Tools available:
+
+Fund Screener
+
+Returns Calculator
+
+Fund Comparison
+
+RupeeVest Research Tools
+
+Link: https://www.rupeevest.com/Mutual-Funds
+
+Features:
+
+Compare multiple funds
+
+Risk analysis
+
+Portfolio overlap checker
+
+Python Library - mftool
+
+GitHub: GitHub - NayakwadiS/mftool: ⚡ Python library for getting publically available Mutual Funds data in India · GitHub
+
+pythonCopyfrom mftool import Mftool
+mf = Mftool()
+# Get scheme details
+scheme_info = mf.get_scheme_details('119598')
+
+Kuvera’s Analysis Tools
+
+Link: Kuvera by CRED
+
+Features:
+
+Portfolio Overlap
+
+Fund comparison
+
+Direct vs Regular comparison
+
+MarketsMojo
+
+Link: https://www.marketsmojo.com/mutualfund
+
+Features:
+
+Fund ratings
+
+Risk analysis
+
+Portfolio health check
+
+Further, I was trying to do something related to the analysis tool and ended up creating something using AI.
+
+Setting Up the Analysis Environment
+
+Python environment with necessary libraries:
+
+pip install mftool pandas numpy matplotlib streamlit plotly requests
+
+Basic Data Extraction Script
+
+from mftool import Mftool
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+import plotly.graph_objects as go
+
+class MFAnalyzer:
+    def __init__(self):
+        self.mf = Mftool()
+        
+    def get_scheme_data(self, scheme_code):
+        """"""Fetch scheme data and convert to DataFrame""""""
+        scheme_data = self.mf.get_scheme_historical_nav(scheme_code)
+        if scheme_data is None:
+            return None
+            
+        df = pd.DataFrame(scheme_data['data'])
+        df['date'] = pd.to_datetime(df['date'], format='%d-%m-%Y')
+        df['nav'] = pd.to_numeric(df['nav'])
+        return df.sort_values('date')
+    
+    def calculate_returns(self, df):
+        """"""Calculate various return metrics""""""
+        latest_nav = df['nav'].iloc[-1]
+        year_ago_nav = df[df['date'] >= (datetime.now() - timedelta(days=365))]['nav'].iloc[0]
+        
+        returns = {
+            'one_year_return': ((latest_nav - year_ago_nav) / year_ago_nav) * 100,
+            'volatility': df['nav'].pct_change().std() * np.sqrt(252) * 100,
+            'latest_nav': latest_nav
+        }
+        return returns
+
+# Usage Example
+analyzer = MFAnalyzer()
+scheme_code = '119598'  # SBI Blue Chip Fund-Direct Plan-Growth
+df = analyzer.get_scheme_data(scheme_code)
+returns = analyzer.calculate_returns(df)
+print(f""One Year Return: {returns['one_year_return']:.2f}%"")
+print(f""Volatility: {returns['volatility']:.2f}%"")
+
+Building a Fund Comparison tool
+
+class MFComparator:
+    def __init__(self):
+        self.analyzer = MFAnalyzer()
+        
+    def compare_funds(self, scheme_codes):
+        """"""Compare multiple funds""""""
+        comparison_data = []
+        
+        for code in scheme_codes:
+            scheme_info = self.analyzer.mf.get_scheme_details(code)
+            df = self.analyzer.get_scheme_data(code)
+            returns = self.analyzer.calculate_returns(df)
+            
+            comparison_data.append({
+                'scheme_name': scheme_info['scheme_name'],
+                'one_year_return': returns['one_year_return'],
+                'volatility': returns['volatility'],
+                'latest_nav': returns['latest_nav'],
+                'category': scheme_info['scheme_category']
+            })
+            
+        return pd.DataFrame(comparison_data)
+    
+    def plot_comparison(self, scheme_codes):
+        """"""Create comparison plot""""""
+        fig = go.Figure()
+        
+        for code in scheme_codes:
+            df = self.analyzer.get_scheme_data(code)
+            scheme_info = self.analyzer.mf.get_scheme_details(code)
+            
+            # Normalize NAV values
+            normalized_nav = (df['nav'] / df['nav'].iloc[0]) * 100
+            
+            fig.add_trace(go.Scatter(
+                x=df['date'],
+                y=normalized_nav,
+                name=scheme_info['scheme_name']
+            ))
+            
+        fig.update_layout(
+            title='Fund Comparison (Normalized Returns)',
+            xaxis_title='Date',
+            yaxis_title='Normalized NAV'
+        )
+        return fig
+
+# Usage Example
+comparator = MFComparator()
+funds_to_compare = ['119598', '119727']  # Add your fund codes
+comparison_df = comparator.compare_funds(funds_to_compare)
+comparison_plot = comparator.plot_comparison(funds_to_compare)
+
+Creating an Interactive Dashboard
+
+Dashboard to visualize the analysis:
+
+import streamlit as st
+
+def create_dashboard():
+    st.title('Mutual Fund Analysis Dashboard')
+    
+    # Sidebar for fund selection
+    st.sidebar.header('Select Funds to Analyze')
+    selected_funds = st.sidebar.multiselect(
+        'Choose funds',
+        ['119598', '119727', '120503'],  # Add more fund codes
+        default=['119598']
+    )
+    
+    if selected_funds:
+        comparator = MFComparator()
+        
+        # Show comparison table
+        st.subheader('Fund Comparison')
+        comparison_df = comparator.compare_funds(selected_funds)
+        st.dataframe(comparison_df)
+        
+        # Show comparison plot
+        st.subheader('Performance Comparison')
+        comparison_plot = comparator.plot_comparison(selected_funds)
+        st.plotly_chart(comparison_plot)
+        
+        # Add risk metrics
+        st.subheader('Risk Metrics')
+        for fund in selected_funds:
+            df = comparator.analyzer.get_scheme_data(fund)
+            returns = comparator.analyzer.calculate_returns(df)
+            st.write(f""**{comparator.analyzer.mf.get_scheme_details(fund)['scheme_name']}**"")
+            st.write(f""Volatility: {returns['volatility']:.2f}%"")
+
+# Run dashboard
+if __name__ == '__main__':
+    create_dashboard()
+
+Advanced Analytics Features
+
+Portfolio Overlap Analysis
+
+def calculate_portfolio_overlap(scheme1_code, scheme2_code):
+    """"""Calculate portfolio overlap between two schemes""""""
+    mf = Mftool()
+    
+    # Get portfolio holdings
+    scheme1_info = mf.get_scheme_details(scheme1_code)
+    scheme2_info = mf.get_scheme_details(scheme2_code)
+    
+    # Extract stock names
+    scheme1_stocks = set(holding['stock_name'] for holding in scheme1_info.get('portfolio_holdings', []))
+    scheme2_stocks = set(holding['stock_name'] for holding in scheme2_info.get('portfolio_holdings', []))
+    
+    # Calculate overlap
+    common_stocks = scheme1_stocks.intersection(scheme2_stocks)
+    overlap_percentage = (len(common_stocks) / min(len(scheme1_stocks), len(scheme2_stocks))) * 100
+    
+    return {
+        'overlap_percentage': overlap_percentage,
+        'common_stocks': list(common_stocks)
+    }
+
+Risk-Adjusted Returns Analysis
+
+def calculate_risk_metrics(df):
+    """"""Calculate advanced risk metrics""""""
+    returns = df['nav'].pct_change()
+    risk_free_rate = 0.04  # Assume 4% risk-free rate
+    
+    # Sharpe Ratio
+    excess_returns = returns - (risk_free_rate/252)
+    sharpe_ratio = np.sqrt(252) * excess_returns.mean() / returns.std()
+    
+    # Maximum Drawdown
+    cumulative_returns = (1 + returns).cumprod()
+    rolling_max = cumulative_returns.expanding().max()
+    drawdowns = cumulative_returns/rolling_max - 1
+    max_drawdown = drawdowns.min()
+    
+    return {
+        'sharpe_ratio': sharpe_ratio,
+        'max_drawdown': max_drawdown,
+        'annualized_volatility': returns.std() * np.sqrt(252)
+    }
+
+Implementing the System
+
+To use this complete system:
+
+Save the code in separate files (e.g., analyzer.py, comparator.py, dashboard.py)
+
+Install required dependencies
+
+Run the dashboard:streamlit run dashboard.py
+
+Key Features of this tool:
+
+Data Extraction
+
+Historical NAV data
+
+Scheme details
+
+Portfolio holdings
+
+Analysis Capabilities
+
+Returns calculation
+
+Risk metrics
+
+Portfolio overlap
+
+Performance comparison
+
+Visualization
+
+Interactive plots
+
+Comparison charts
+
+Risk-return scatter plots
+
+Dashboard Features
+
+Fund selection
+
+Performance metrics
+
+Risk analysis
+
+Portfolio comparison
+
+References and Resources
+
+mftool Documentation: GitHub - NayakwadiS/mftool: ⚡ Python library for getting publically available Mutual Funds data in India · GitHub
+
+Streamlit Documentation: https://docs.streamlit.io/
+
+Plotly Documentation: Open Source Python Graphing & Data Visualization Library | Plotly
+
+Additional data sources:
+
+Money Control API
+
+RupeeVest API
+
+Value Research API",https://tradingqna.com/t/building-tools-with-mutual-fund-data-a-quick-guide/179450/2,,,,,,,,,,,,,,,,,,,,,,
+youtube:Ugxtn65vJu4-P_0wZRJ4AaABAg,youtube,,SIP 📈माइनस में जा रहा है क्या करें | गिरते हुए Market में SIP करें या रोक दें | Mutual Fund SIP Loss,Agar har month sip kar rahe hai to aage chal kar agar return nahi dega to jo paisa invest kiye hai wo to milega na,https://www.youtube.com/watch?v=7uZ7TctzPSk&lc=Ugxtn65vJu4-P_0wZRJ4AaABAg,,,,,,,,,,,,,,,,,,,,,,
 appstore:in:12760619515,appstore,coin,Love the simplicity,"Lot of people raising concerns here , probably don’t know use case of this app. They need to understand difference between demat mutual fund and buying from other platforms. Great app overall , love the stability",https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
+play:528c6519-c24c-4400-954a-39bc2bb07e4a,play,et_money,,mf does not have weekly stp option,https://play.google.com/store/apps/details?id=com.smartspends&reviewId=528c6519-c24c-4400-954a-39bc2bb07e4a,,,,,,,,,,,,,,,,,,,,,,
+reddit:19rrwj4iwyksk,reddit,,Need suggestion whether to enhance Emergency Fund or continue with current plan,"Might be easier to start another SIP in a liquid or ultra short duration fund and put a portion of your monthly investment there until you reach your target amount.
+    
+
+      Then you can close to keep that as your emergency fund or withdraw it as a while and put it in an FD.",https://www.reddit.com/r/personalfinanceindia/comments/1xhimdt/need_suggestion_whether_to_enhance_emergency_fund/19rrwj4iwyksk/,,,,,,,,,,,,,,,,,,,,,,
+tradingqna:186570,tradingqna,,[Feature request] Need option to select only mutual funds in Console,"[Feature request] Need option to select only mutual funds in Console
+
+Currently we see option to exclude the mutual funds in “Holdings” page which enables to select just stocks.
+
+Similarly I am looking for option to select just MF holdings for sector wise allocation and stocks they are holding.",https://tradingqna.com/t/feature-request-need-option-to-select-only-mutual-funds-in-console/186570/1,,,,,,,,,,,,,,,,,,,,,,
+youtube:UgwLiP4AmAC5jDpv8iF4AaABAg,youtube,,How I Turned ₹30k/Month SIP into ₹1 Crore 😱🔥 #investing #wealthcreation  #sanjaykathuria,DSP Small Cap Fund - Direct Plan - Growth,https://www.youtube.com/watch?v=KNHTzLh5IeI&lc=UgwLiP4AmAC5jDpv8iF4AaABAg,,,,,,,,,,,,,,,,,,,,,,
 appstore:in:12495101015,appstore,groww,"Redemptions not working, fake success status","Groww has made a blunder in my friend’s bank account. As a result, withdrawals go ‘on hold’. Groww wrongly shows redemption successful, and there is no way of reporting the issue to customer care. Customers realise this when there is no money in account after 10-15 days.
 
 The only way of getting money, is to go through the bank account modification procedure to be done in person for each folio separately, which takes 10-15 days. Removal of hold takes another 10 days. In total, redemption takes 6-8 weeks of rigorous efforts because they messed up in their DB.
 
 We have used several other apps. Never seen this happening elsewhere.",https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
-play:512e0f3e-746f-4f30-b908-282bac4be09c,play,et_money,,"Your app shows me only historic XIRR returns of entire MF portfolio but not able to see my last 3M, 6M, 1Y, 3Y XIRR returns in MF . Kindly add this like other apps Zerodha, Groww.",https://play.google.com/store/apps/details?id=com.smartspends&reviewId=512e0f3e-746f-4f30-b908-282bac4be09c,,,,,,,,,,,,,,,,,,,,,,
-play:528c6519-c24c-4400-954a-39bc2bb07e4a,play,et_money,,mf does not have weekly stp option,https://play.google.com/store/apps/details?id=com.smartspends&reviewId=528c6519-c24c-4400-954a-39bc2bb07e4a,,,,,,,,,,,,,,,,,,,,,,
 play:888ec6e9-0427-4c09-a637-9c6d04adcc8d,play,groww,,if you r using groww for only mf don't upgrade to dmat. otherwise u will redeem your money only thg Grow. that fund's app redeem money more faster than grow. grow takes 2 day more time,https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=888ec6e9-0427-4c09-a637-9c6d04adcc8d,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:186797,tradingqna,,Alert for mutual fund NAV drop,"Alert for mutual fund NAV drop
-
-Is there any platform that provides alerts when a mutual fund’s NAV falls by a certain percentage? For example, I want to set an alert if PPFAS Flexicap NAV drops 20% from its high.",https://tradingqna.com/t/alert-for-mutual-fund-nav-drop/186797/1,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:183110,tradingqna,coin,Where to find demat mf dividend in tax pnl reports in console,"Where to find demat mf dividend in tax pnl reports in console
-
-Coin MF dividend payout for fy is not mentioned in console tax pnl.
-
-How to check? MF dividend payouts are necessary for filing ITR.
-
-@nithin @ShubhS9",https://tradingqna.com/t/where-to-find-demat-mf-dividend-in-tax-pnl-reports-in-console/183110/1,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:197063-6,tradingqna,groww,"Which SIP platform would you recommend for long-term investing: Zerodha Coin, Groww, Kuvera, ICICI Direct or another platform?","@KaranAggarwal
-
-For this you have to first understand the 2 methods of mutual funds buying and how they operate and what are benefits of them for you.
-
-First method is demat method in which the mutual funds you buy gets credited to you demat account.This method is usually preferred if you invest in stocks and etfs and want your full portfolio to be managed and tracked in one place as mutual funds also come in demat account in this form. Also it has some advantages like modifying bank account is easier nominee modification is easier inheritance is easier.
-
-For example to understand it just assume an hypothetical example 1. You want to withdraw your mutual funds but you have purchased them with x bank account now it is closed and you have to get your money in y bank account you just have to update your bank in your broker like zerodha , dhan and it will be considered for mutual funds as well. Example 2. The inheritance of demat mutual funds are also easier as you just have to do some work with your broker like zerodha , dhan and all the securities in demat account including mutual funds will be seemlessly transferred to the nominee demat account within 7 working days.
-
-Example 3. You have to change nominee in your mutual funds you just have to change it in your broker and it is considered for mutual funds also.
-
-Second method is SOA method where mutual funds do not come in your demat account and stay with the amc (asset management company) like hdfc amc motilal oswal amc parag parikh amc. Let’s understand this also with the above examples 1. Change of bank suppose you have 4 mutual funds with different fund houses (amc) and you want to change the bank in them changing it in the broker app or the app from where you purchase mutual funds like groww kuvera (i haven’t mentioned zerodha , dhan because they keep mutual fund in demat mode) so changing it in these app like groww kuvera don’t do the work you have to contact each amc separately for the change of bank and it also works like this that for example you have 2 folios in same amc you have to change bank in those 2 folios separately. Example 2. You have to change nominee it is also same as bank you have to change nominee in all amc separately and same work case for multiple folios in same amc you have to change nominee in multiple folios even if it is from same amc. Example 3. Inheritance you have to visit and follow the inheritance process for each and every fund house separately and for every folio separately even if it is of same amc.
-
-Here are some apps according to their format of mutual funds (demat or soa).
-
-Zerodha coin (demat)
-
-Dhan (demat and soa both)
-
-Groww (demat but you can opt out of it and can shift to soa)
-
-Kuvera (only soa)
-
-Upstox (demat)
-
-Angel one (demat)
-
-ICICI direct (demat and soa both)
-
-Et money (soa)
-
-You can choose any of the above but according to your conditions like easy inheritance smooth redemption process etc you should choose demat format.
-
-You can choose any of the platform all are very safe zerodha and groww are top platforms and dhan is feature rich and new age platform with no amc and zero brokerage for delivery (zerodha also has that zero brokerage for delivery) I personally use dhan with demat form of mutual funds.",https://tradingqna.com/t/which-sip-platform-would-you-recommend-for-long-term-investing-zerodha-coin-groww-kuvera-icici-direct-or-another-platform/197063/6,,,,,,,,,,,,,,,,,,,,,,
-youtube:UgylTAQYqxv_YzW-Mrx4AaABAg,youtube,,SIP 📈माइनस में जा रहा है क्या करें | गिरते हुए Market में SIP करें या रोक दें | Mutual Fund SIP Loss,Mera to abhi 2 months se  loss me chal raha hai -2300 huva abhitak,https://www.youtube.com/watch?v=7uZ7TctzPSk&lc=UgylTAQYqxv_YzW-Mrx4AaABAg,,,,,,,,,,,,,,,,,,,,,,
-youtube:Ugyd5ug8CVbKDNg3F8d4AaABAg,youtube,,&quot;SIP बंद कब करें? जानिए सही समय! | Sagar Sinha |,आपकी विडियो से में तो बहुत कुछ सीख जातe है और में sip भी करता हूं sip को में कभी रोकता नहीं हूं जब तक मेरा गोल पूरा नहीं हो जाता है 🎉 और एक बात में कहना चाहते है में कभी हारता नहीं हू या जीतता हूं या फिर कुछ सीखता हूं 🎉❤,https://www.youtube.com/watch?v=gAGdeTNzNZ8&lc=Ugyd5ug8CVbKDNg3F8d4AaABAg,,,,,,,,,,,,,,,,,,,,,,
-youtube:UgxATXpy3m85RkQsFep4AaABAg,youtube,groww,Groww में SIP कैसे करें? | How to Start Mutual Funds SIP in Groww App?,Please reply me🙏🙏🙏...maine bhi sbi sip pe 500per month start kiya lekin kitne saal k liye investment karna hai ya phir kite saal k liye karna chahti hu wo to usks kuch option hi nehi hai..like agar autopay kar duya to kinte saal tak payment karna padega,https://www.youtube.com/watch?v=Y58SpRq1SdA&lc=UgxATXpy3m85RkQsFep4AaABAg,,,,,,,,,,,,,,,,,,,,,,
+reddit:19rks3sgq2rpf,reddit,,Veterans who have been in the Indian market for 20+ years: How did you handle historical crashes without stopping your SIPs?,2020 was the first major crash in my investment journey. And like everyone I freaked out as well. My portfolio was down 60%. But somehow I endured all and never stopped my SIP's and never took out any money. Then I saw the fruits of those in the consecutive years where my XIRR touched 15-16%.,https://www.reddit.com/r/mutualfunds/comments/1xe3vpt/veterans_who_have_been_in_the_indian_market_for/19rks3sgq2rpf/,,,,,,,,,,,,,,,,,,,,,,
+tradingqna:182811-15,tradingqna,,"My MF Central account is showing unregistered folios - ""Please Note: Due to availability of multiple Email IDs, the following folios could not be registered under MFCentral """,Does it give detailed  CG statement with for each quarter as mandated by tax forms?,https://tradingqna.com/t/my-mf-central-account-is-showing-unregistered-folios-please-note-due-to-availability-of-multiple-email-ids-the-following-folios-could-not-be-registered-under-mfcentral/182811/15,,,,,,,,,,,,,,,,,,,,,,
+youtube:UgxV1kikR-C4tZvSaqR4AaABAg,youtube,,Angel One me SIP Kaise Cancel Kare? How to Stop SIP in Angel One App in Hindi,"Once we cancel the SIP, can we restart it when we want?",https://www.youtube.com/watch?v=qjnDO4rzatk&lc=UgxV1kikR-C4tZvSaqR4AaABAg,,,,,,,,,,,,,,,,,,,,,,
 appstore:in:14406894211,appstore,coin,Minimal Features and a very basic app,"App barely has any features, xirr functionality works sometimes. Haven’t seen the app get any meaningful update in the last few years. Even filters to search for mutual funds are so so basic.",https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
-appstore:in:13445253906,appstore,indmoney,This is my favorite investment app,"The new update is awesome. I love every single features in the app, I use it for everything literally. Stocks, mutual funds to CC payments.. I can see my net worth across all my investments, tracks even PPF and EPF… thank you so much developers for working hard on this product. Pl continue to build better this trust worthy application. I think you guys have really stayed the course of one app for everything which was the initial goal. Please don’t allow inexperienced developers to create buggy versions in future.",https://itunes.apple.com/in/review?id=1450178837&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
-appstore:in:14207840972,appstore,groww,Decent app,The app is otherwise ok and stable. While redeeming the money from MFs the app always has a default option to credit the amount to groww balance instead of bank account. A user has to manually switch to bank account each time if they dont want it to be credited to wallet. Please keep the default option as bank account and not wallet. In emergencies this manual switch is easily skipped and  then  it takes 1 additional day to transfer money to bank account from wallet which is just inconvenient. Instead the wallet should be optional and default should be bank account for crediting the redeemed balance.,https://itunes.apple.com/in/review?id=1404871703&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
 play:99c4c3f0-f7c3-4e54-907a-d031cb5d4f5a,play,groww,,"Groww offers mutual funds with competitive returns. Top funds: Groww Value Fund (18.69% 5-year return), ELSS Tax Saver Fund, Largecap Fund. Zero commission, SIP ₹500. Expense ratios: 0.9%. AUM: ₹66 Cr (Value Fund). Risk: High. Consult a financial advisor. Check current NAV.",https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=99c4c3f0-f7c3-4e54-907a-d031cb5d4f5a,,,,,,,,,,,,,,,,,,,,,,
-play:5733da21-e859-4e6b-8177-ce9de34b5e8f,play,groww,,best aap for sips,https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=5733da21-e859-4e6b-8177-ce9de34b5e8f,,,,,,,,,,,,,,,,,,,,,,
-play:51303252-bcd7-4c48-a170-ff9e80d1cc28,play,groww,,"I've been using this app for two years. Everything's working fine, but its processing speed is very slow and needs some adjustments. Whenever I want to redeem money, it takes five days for the money to be credited. Change this a bit, Groove! Only then can you increase your customer base. Reduce the redemption time from five days to two days.",https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=51303252-bcd7-4c48-a170-ff9e80d1cc28,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:177214,tradingqna,coin,Equity NAV curve feature finally launched,"Equity NAV curve feature finally launched
+reddit:19rkrmbslt4ud,reddit,,Veterans who have been in the Indian market for 20+ years: How did you handle historical crashes without stopping your SIPs?,"What did you feel in 2020. I remember my Covid days when market was dropping like crazy, my xirr went negative and out of fear I didn't broke my FD and invest in lumpsum. A big mistake",https://www.reddit.com/r/mutualfunds/comments/1xe3vpt/veterans_who_have_been_in_the_indian_market_for/19rkrmbslt4ud/,,,,,,,,,,,,,,,,,,,,,,
+tradingqna:181656-2,tradingqna,coin,Mutual Fund CAGR Graph - Before or After Deduction of Expense Ratio,"Hi @thethinker, The CAGR returns that you see for mutual funds on Coin/Console or other platforms are shown after deduction of the expense ratio. This is because the NAV (Net Asset Value) of a mutual fund, which is used to calculate returns and CAGR, is declared after accounting for the expense ratio.
 
-Zerodha just launched the equity NAV curve feature. It basically treats your account value curve as a mutual fund and gives a similar curve. Mutual funds start at 10 NAV. Zerodha has chosen all its users to start at 1000 NAV. (10 or 1000 doesn’t make any difference)
-
-For example if your account had 10L and you withdrew 5L, the usual curve would fall by half. But new curve won’t fall by half. It would lose half the units(like mutual funds) but the curve would move only by as much percent as it should move due to your trading/investment activity on the remaining 5L. So no big ups and down.
-
-This also means that if you add and withdraw money throughout the year, earlier it was quite hard to calculate the ROI because capital fluctuated so much. But now you can just compare your NAV between two dates and that is the ROI. 
-
-Screenshot_20241218-100213_Chrome1264×2780 95.8 KB
-Go to zerodha dashboard. Click on down arrow next to ‘Equity Value Curve’ and change it to Portfolio Performance Beta and you will get the new curve. It’s live for everyone.",https://tradingqna.com/t/equity-nav-curve-feature-finally-launched/177214/1,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:181088,tradingqna,coin,MF Units credited but invested value showing 0 in coin web and not appearing in zerodha console,"MF Units credited but invested value showing 0 in coin web and not appearing in zerodha console
-
-Hi i am new here and have some queries.
-
-So i purchased 3 mutual fund schemes on last monday and the units all 3 MFs were credited to my demat account yesterday night around 8-9pm. and the the investments were also showing in COIN normally. zerodha states that the investments will appear in console in t+2 days so today is the t+2 days, out of 3 funds 2 of them were showing normally (showing in both console and coin as usual) but one fund is not showing in console even on the t+2 day and in the app the fund was showing but the invested value was showing zero on top of that it was remiting an error stating instrument doesnot exists, i checked cdsl statement in easi portal the units were showing in my cdsl account but not showing in console and app why is that can anybody explain
-
-image1268×91 6.79 KB",https://tradingqna.com/t/mf-units-credited-but-invested-value-showing-0-in-coin-web-and-not-appearing-in-zerodha-console/181088/1,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:193161,tradingqna,,Exit load on Mutual Fund,"Exit load on Mutual Fund
-
-I am not into MF.  Today, a friend of mine informed me she is waiting for one year to pass before she wish to redeem her MF.  I was surprised, I thought exit load was there only for unique MF but was surprised to know that all MF with a small exception charge this.
-
-Should AMCs not waive this, if they believe in their fund.  Maybe the first month or max 3 months to the max to avoid frequent buy and sell. 1 percent is quite high.  I read that exit load for Index fund is nil. Thank God for this.
-
-The commission is higher when compared to ETFs and then this too.  Not heard too many people talk about this aspect when they recommend MF.",https://tradingqna.com/t/exit-load-on-mutual-fund/193161/1,,,,,,,,,,,,,,,,,,,,,,
-youtube:Ugzj8c7RfextsH77unh4AaABAg,youtube,,2 साल से Zero Return! SIP बंद कर दें?,"2017 से कंटिन्यू sip कर रहा है और आज मेरा पोर्टफोलियो बियर फेस में 13.68 xirr है
- मैं अभी भी कंटिन्यू करूंगा",https://www.youtube.com/watch?v=g-Xis2z0x_Y&lc=Ugzj8c7RfextsH77unh4AaABAg,,,,,,,,,,,,,,,,,,,,,,
-youtube:Ugx0P91svp-cpmcvNMl4AaABAg,youtube,,Why SIP returns are Falling? (&amp; will continue to fall),"His videos are always linked to what he is selling...since he is selling ""How to invest in US stock market"" he is promoting it. Over the years this is the pattern i have seen
-
-1. Create an Airbnb business when he was in Goa
-2. Create multiple sources of income like Video editing (good for freelancers but not for ppl with regular jobs)
-3. Learn AI through his company
-4. Now its invest in US stock market
-
-Even buffet is sitting at an all time high cash position. Just because you believe in one thing doesn't mean you have to negate view points of others. 
-
-SIP as an instrument teaches you discipline, there is nothing wrong with that. Currently India is going through a sideways market and US in uptrend, there is no comparison. There will come a time when US will be in sideways and India in an uptrend. What will he do then recommend moving money to India. Lets just enter when things are about to go down!!! 
-
-Do your own research before following things blindly.",https://www.youtube.com/watch?v=oIAQsjJEwj8&lc=Ugx0P91svp-cpmcvNMl4AaABAg,,,,,,,,,,,,,,,,,,,,,,
-youtube:UgyFI00oj1sEBeJxIeJ4AaABAg,youtube,groww,Groww me SIP Band Kaise Kare? How to Cancel SIP in Groww App in Hindi,"Bhai sip cancel krne ke baad 
-Paise toh nahi karenge na ❤❤😅",https://www.youtube.com/watch?v=ab1I8u4jd4s&lc=UgyFI00oj1sEBeJxIeJ4AaABAg,,,,,,,,,,,,,,,,,,,,,,
-appstore:in:13453311566,appstore,et_money,New Version not as useful,Kindly provide the XIRR and other details of both DIY & External funds as in earlier version. Also provide Switch option to other funds in the same AMC. Though the Ultimate SIP has very good results. But for some tasks and reviewing have to turn to Groww or Other platforms. Want that all things should be in one app itself.,https://itunes.apple.com/in/review?id=1212752482&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
-appstore:in:13996125276,appstore,coin,Great experience,"Really very good experience from my side!! It’s my first mutual funds and i am very excited to continue with the coin,
-
-Thanks team zerodha",https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
-appstore:in:11993247612,appstore,coin,Unreliable. SIP fail silently,I have few SIP configured with a Mandate. It was working fine before. But it started failing silently. It says order is sent to AMC but wont deduct any money. It will stay in processing state forever. Support is not helpful.,https://itunes.apple.com/in/review?id=1392892554&type=Purple%20Software,,,,,,,,,,,,,,,,,,,,,,
-play:584dc09f-8b38-48d6-a756-9be70e985103,play,indmoney,,"Don't know why but the trend chart of combined value of all MF removed from analytics in the last update, which was a crucial tool. Edit: now trends for individual MFs have been added, but not for the overall portfolio. Edit 2: the analytics have been restored and is better than the previous ones. Edit 3: if possible please add XIRR % and Absolute Returns % in a chart.",https://play.google.com/store/apps/details?id=in.indwealth&reviewId=584dc09f-8b38-48d6-a756-9be70e985103,,,,,,,,,,,,,,,,,,,,,,
-play:acc60468-0229-4efc-af20-4b37f623ba04,play,groww,,very nice app for ipo & mf,https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=acc60468-0229-4efc-af20-4b37f623ba04,,,,,,,,,,,,,,,,,,,,,,
-play:6ef388fb-5b33-4899-bba4-a82300cab9cf,play,groww,,"Amazing user interface...Any transaction be in Mutual Fund Purchase, creating SIP, redemption, share purchase and selling everything happens seamlessly in the click of a button. wonderful to use and easy to track the portfolios..!!",https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=6ef388fb-5b33-4899-bba4-a82300cab9cf,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:184861-4,tradingqna,,Mutual fund distributor wanting to automate,"I have created my own algo which is good with nifty levels and NAV’s of mutual funds. How can I do trading in mutual funds for retail investors ? I am aware of expense ratio, exit load etc. My strategy is net positive considering the costs. Would like to have views of @nithin as well.",https://tradingqna.com/t/mutual-fund-distributor-wanting-to-automate/184861/4,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:187661,tradingqna,,"Are SBI MF, BOI MF, UTI MF, LIC MF, Canara Robeco MF, etc. backed by governments?","Are SBI MF, BOI MF, UTI MF, LIC MF, Canara Robeco MF, etc. backed by governments?
-
-I would like to know whether AMCs like SBI MF, BOI MF, UTI MF, LIC MF, Canara Robeco MF, etc. are owned and backed / managed by Government of India / state governments. I believe these MFs are joint ventures of PSU banks, so I was wondering whether any backing or support of the government is there for the money that we invest.
-
-Are these AMCs / fund houses considered safe as compared to their private counterparts (HDFC MF, Edelweiss MF, ICICI MF, HSBC MF, Nippon MF, etc.) either during normal times or during any economic / political uncertainties?",https://tradingqna.com/t/are-sbi-mf-boi-mf-uti-mf-lic-mf-canara-robeco-mf-etc-backed-by-governments/187661/1,,,,,,,,,,,,,,,,,,,,,,
-tradingqna:186672,tradingqna,coin,Zerodha coin SIP,"Zerodha coin SIP
-
-I want to know that can i link multiple sip with different execution date to same enach mandate.
-
-For ex = I have 1 sip of motilal oswal mid cap fund that is to be executed on 4th of every month and one of hdfc flexi cap that is to be executed on 5th of every month and one another that is to be executed on 7th of every month can i link all these to the same mandate or i have to create different mandate for each one.",https://tradingqna.com/t/zerodha-coin-sip/186672/1,,,,,,,,,,,,,,,,,,,,,,
-youtube:Ugya1vz4zIdoZVr4ATx4AaABAg,youtube,,Market Crash: SIP बंद करें या जारी रखें?,Sir mene 10Lac Laga diya abhi no profit no loss me hu😊,https://www.youtube.com/watch?v=XSusqbVVb8o&lc=Ugya1vz4zIdoZVr4ATx4AaABAg,,,,,,,,,,,,,,,,,,,,,,
-youtube:Ugynp04JSeFVDBT85NJ4AaABAg,youtube,,SIP Investment | How To Start SIP | SIP Investment for Beginners,मेरे से गलती से एक sip शुरू हो गया है उसको हम चाहते हैं कि कैंसिल हो जाए तो हमें कैसे कैंसिल करना चाहिए हमें इस पर एक वीडियो बनाया आप जरूरी है,https://www.youtube.com/watch?v=qfTDOjMI-Nk&lc=Ugynp04JSeFVDBT85NJ4AaABAg,,,,,,,,,,,,,,,,,,,,,,
+So, any return, whether it’s the daily change or long-term CAGR like 1Y, 3Y, or 5Y, that you see based on NAVs is already net of the expense ratio.",https://tradingqna.com/t/mutual-fund-cagr-graph-before-or-after-deduction-of-expense-ratio/181656/2,,,,,,,,,,,,,,,,,,,,,,
+youtube:UgxH6bX_I1n45lFu6mJ4AaABAg,youtube,,Secret Trick that gives better returns than SIP,"I am purchasing additional units  in mutual fund, only when market falls. This will avoid purchase of units with higher NAV. So far all my mutual funds are doing well even after continuous fall of market.",https://www.youtube.com/watch?v=wi8AGE0d63s&lc=UgxH6bX_I1n45lFu6mJ4AaABAg,,,,,,,,,,,,,,,,,,,,,,
