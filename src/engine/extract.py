@@ -140,9 +140,12 @@ def with_starters(db, rows):
 
 
 def new_pool(db):
-    """Items the classifier called a SIP or mutual-fund journey (any language) that have no extraction yet."""
-    return [r[0] for r in db.execute("SELECT f.item_id FROM filter_results f LEFT JOIN extractions e USING(item_id) "
-                                     "WHERE f.relevant=1 AND e.item_id IS NULL ORDER BY f.item_id")]
+    """Items the classifier called a SIP or mutual-fund journey (any language) that have no extraction yet, taking one item
+    from each source in turn, so a run that stops on the daily quota has covered every source, not only the first in id order."""
+    return [r[0] for r in db.execute(
+        "SELECT f.item_id FROM filter_results f JOIN raw_items r USING(item_id) LEFT JOIN extractions e USING(item_id) "
+        "WHERE f.relevant=1 AND e.item_id IS NULL "
+        "ORDER BY ROW_NUMBER() OVER (PARTITION BY r.source ORDER BY f.item_id), r.source")]
 
 
 def save(db, item_id, rec, model, run_id, taxonomy_version, source=None, product=None):

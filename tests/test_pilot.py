@@ -30,3 +30,13 @@ def test_run_saves_each_batch_to_the_database_as_it_goes(tmp_path, monkeypatch):
     pilot.run("new", str(tmp_path / "state.json"), "m", True, batch=2)
     assert seen == [2, 3]
     assert json.loads((tmp_path / "state.json").read_text())["records"].keys() == {"i0", "i1", "i2"}
+
+
+def test_new_pool_takes_sources_in_turn(tmp_path, monkeypatch):
+    monkeypatch.setenv("AUTHOR_HASH_SALT", "t")
+    db = store.connect(store.init_db(tmp_path / "t.db"))
+    for i in ["appstore:1", "appstore:2", "appstore:3", "play:1", "play:2", "youtube:1"]:
+        db.execute("INSERT INTO raw_items(item_id, source, url, fetched_at, text, content_hash) VALUES(?,?,?,?,?,?)",
+                   (i, i.split(":")[0], "u", "t", "x", i))
+        db.execute("INSERT INTO filter_results(item_id, prefilter_pass, relevant) VALUES(?,1,1)", (i,))
+    assert extract.new_pool(db) == ["appstore:1", "play:1", "youtube:1", "appstore:2", "play:2", "appstore:3"]
