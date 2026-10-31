@@ -39,8 +39,15 @@ ROW = 38  # pixels per bar row, so every category label fits
 YAXIS = alt.Axis(labelOverlap=False, labelLimit=260)
 
 
+def version():
+    """Changes when the engine code or the database file changes. Passed to load() so a cached result never outlives either:
+    st.cache_data keys only on load's own code and arguments, and served a funnel cached under old engine code after a push."""
+    files = sorted((ROOT / "src" / "engine").glob("*.py")) + [cluster.DB_PATH]
+    return tuple((f.name, f.stat().st_mtime_ns, f.stat().st_size) for f in files if f.exists())
+
+
 @st.cache_data(show_spinner="Loading the database")
-def load(groww_only, first_only):
+def load(groww_only, first_only, version):
     db = store.connect(cluster.DB_PATH)
     keep = lambda i: (not groww_only or i["platform"] == "groww") and (not first_only or insights.FIRST(i))  # noqa: E731
     items = [i for i in cluster.load(db) if keep(i)]
@@ -89,7 +96,7 @@ def quote(q, src, url):
 
 groww_only = st.sidebar.toggle("Groww only", help="Only items about Groww: Groww store reviews, and posts that name Groww.")
 first_only = st.sidebar.toggle("First-timers only", key="first_only", help="Only posts where the person says they are a first-time investor.")
-D = load(groww_only, first_only)
+D = load(groww_only, first_only, version())
 items, ms, f = D["items"], D["metrics"], D["funnel"].fillna(0)
 num = lambda c: int(f[c].sum())  # noqa: E731
 
