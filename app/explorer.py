@@ -147,7 +147,8 @@ if g.exists():
 pre, cls, rel, ext = num("prefiltered"), num("classified"), num("relevant"), num("extracted")
 if cls < pre or ext < rel:
     st.progress(min(1.0, ext / rel) if rel else 0.0,
-                text=f"Run in progress: {ext:,} of {rel:,} relevant posts extracted · relevance {cls:,} of {pre:,} classified")
+                text=f"{ext:,} of {rel:,} relevant posts extracted (the rest are queued, or held for manual review after "
+                     f"failing the verbatim-quote check) · relevance {cls:,} of {pre:,} classified")
 
 # ---- analysis views -------------------------------------------------------------------------------------------------
 st.divider()

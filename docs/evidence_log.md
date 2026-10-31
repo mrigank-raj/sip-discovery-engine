@@ -1,19 +1,19 @@
 # AI Evidence Log
 
-Generated 2026-10-29T19:20:58+00:00 by `engine.cli evidence-log`. Every number below is read from the database or the eval files at that time. Counts are mentions in a sample of public posts, not population rates.
+Generated 2026-10-31T02:46:50+00:00 by `engine.cli evidence-log`. Every number below is read from the database or the eval files at that time. Counts are mentions in a sample of public posts, not population rates.
 
 ## 1. Sources and volume per stage
 
 | source | collected | prefiltered | classified | relevant | extracted | no_sip_action_stated | analysed |
 |---|---|---|---|---|---|---|---|
 | appstore | 1272 | 268 | 268 | 160 | 160 | 20 | 140 |
-| play | 23037 | 1705 | 1705 | 726 | 537 | 105 | 432 |
-| reddit | 547 | 251 | 251 | 119 | 16 | 1 | 15 |
-| tradingqna | 742 | 411 | 411 | 152 | 17 | 6 | 11 |
-| youtube | 2928 | 1045 | 1045 | 495 | 17 | 2 | 15 |
-| **total** | 28526 | 3680 | 3680 | 1652 | 747 | 134 | 613 |
+| play | 23037 | 1705 | 1705 | 726 | 722 | 130 | 592 |
+| reddit | 547 | 251 | 251 | 119 | 116 | 19 | 97 |
+| tradingqna | 742 | 411 | 411 | 152 | 150 | 62 | 88 |
+| youtube | 2928 | 1045 | 1045 | 495 | 489 | 88 | 401 |
+| **total** | 28526 | 3680 | 3680 | 1652 | 1637 | 319 | 1318 |
 
-Relevance rate among classified items: 45% (1652 of 3680). Classified so far: 3680 of 3680 prefiltered; extracted 747 of 1652 relevant.
+Relevance rate among classified items: 45% (1652 of 3680). Classified so far: 3680 of 3680 prefiltered; extracted 1637 of 1652 relevant.
 
 Collection method and compliance per source (from config/sources.yaml):
 
@@ -49,13 +49,15 @@ Model-backed runs recorded in the `runs` table:
 | extract | 2026-10-29T18:51 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {} |
 | cluster | 2026-10-29T19:05 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {"clusters": 24, "items": 425} |
 | extract | 2026-10-29T19:08 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {"saved": 747, "requests": 23, "retries": 0, "prompt_tokens": 72687, "output_tokens": 2604 |
+| extract | 2026-10-31T02:11 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {"saved": 1637, "requests": 264, "retries": 2, "prompt_tokens": 835335, "output_tokens": 3 |
+| cluster | 2026-10-31T02:44 | gemini-3.5-flash-lite | v3 | relevance-v5 | 11b2f936 | {"clusters": 74, "items": 1318} |
 
 ## 3. Extraction quality: validator rejections and review
 
 Every quote is checked to appear word for word in the text of the item it is attached to (NFC, zero-width characters removed, smart quotes made plain, whitespace collapsed). A record that fails is retried once, alone, with the error; if it fails again it goes to `needs_review` and is not used.
 
-- Extracted and valid: 747; sent to review after the retry: 5 (0.7% of attempted)
-- Items with a stated belief (candidate, not finding): 5 of 747; null rate 99%
+- Extracted and valid: 1637; sent to review after the retry: 15 (0.9% of attempted)
+- Items with a stated belief (candidate, not finding): 40 of 1637; null rate 98%
   - review reason example: severity 'acted' needs a paused, reduced, stopped or redeemed sip_action, got 'switched_platform'
   - review reason example: severity 'acted' needs a paused, reduced, stopped or redeemed sip_action, got 'started'
   - review reason example: evidence_quotes must hold 1 to 3 quotes, got 0
