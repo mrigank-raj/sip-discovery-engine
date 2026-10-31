@@ -25,3 +25,16 @@ def test_export_strips_authors_and_unextracted_text_and_check_blocks_leaks(tmp_p
     out.execute("INSERT INTO runs(run_id, stage) VALUES('r', 'x')")
     out.commit()
     assert set(demo.check(tmp_path / "out.db")) == {"author hashes present", "run logs or review notes present"}
+
+
+def test_snapshot_keeps_seen_totals_after_dropping_the_run_log(tmp_path, monkeypatch):
+    from engine import cluster
+    monkeypatch.setattr(demo, "ROOT", tmp_path)
+    src = store.init_db(tmp_path / "src.db")
+    db = store.connect(src)
+    db.executemany("INSERT INTO runs(run_id, stage, source, counts_json) VALUES(?,?,?,?)",
+                   [("r1", "collect", "reddit", '{"seen": 40}'), ("r2", "collect", "reddit", '{"seen": 2}'), ("r3", "extract", None, "{}")])
+    db.commit()
+    assert cluster.seen(db) == {"reddit": 42}
+    demo.export(src, tmp_path / "out.db")
+    assert cluster.seen(store.connect(tmp_path / "out.db")) == {"reddit": 42}

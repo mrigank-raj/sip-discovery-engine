@@ -11,7 +11,7 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from engine import cluster, store  # noqa: E402
+from engine import cluster, insights, store  # noqa: E402
 
 if os.environ.get("ENGINE_DB"):  # point the Explorer at another database (used to render-check views on test data)
     cluster.DB_PATH = Path(os.environ["ENGINE_DB"])
@@ -34,9 +34,9 @@ YAXIS = alt.Axis(labelOverlap=False, labelLimit=260)
 
 
 @st.cache_data(show_spinner="Loading the database")
-def load(groww_only):
+def load(groww_only, first_only):
     db = store.connect(cluster.DB_PATH)
-    keep = (lambda i: i["platform"] == "groww") if groww_only else (lambda i: True)
+    keep = lambda i: (not groww_only or i["platform"] == "groww") and (not first_only or insights.FIRST(i))  # noqa: E731
     items = [i for i in cluster.load(db) if keep(i)]
     by_item = {r["item_id"]: r["name"] for r in db.execute(
         "SELECT ci.item_id, c.name FROM cluster_items ci JOIN clusters c USING(cluster_id)")}
@@ -45,7 +45,9 @@ def load(groww_only):
              "belief": i["rec"].get("belief_at_action"), "belief_quote": i["rec"].get("belief_quote"),
              "expectation": i["rec"].get("expectation_at_start")} for i in items]
     rel = {r["item_id"]: r["relevant"] for r in db.execute("SELECT item_id, relevant FROM filter_results WHERE relevant IS NOT NULL")}
-    return {"items": pd.DataFrame(rows), "metrics": cluster.metrics(db, keep), "funnel": pd.DataFrame(cluster.funnel(db)), "relevant": rel}
+    cards = [{**c, "confidence": insights.confidence(c)} for c in insights.candidates(db, keep)] if groww_only or first_only else None
+    return {"items": pd.DataFrame(rows), "metrics": cluster.metrics(db, keep), "funnel": pd.DataFrame(cluster.funnel(db)), "relevant": rel,
+            "cards": cards}
 
 
 def hbar(df, x, y, color=BLUE, sort="-x", height=None, fmt=",.0f", title=None):
@@ -57,15 +59,16 @@ def hbar(df, x, y, color=BLUE, sort="-x", height=None, fmt=",.0f", title=None):
     return (bars + text).properties(height=height or max(120, ROW * len(df)))
 
 
-def heat(df, x, y, value, x_sort=None, y_sort=None, fmt=".0f"):
+def heat(df, x, y, value, x_sort=None, y_sort=None, fmt=".0f", legend="% of group"):
     """Share heatmap: one-hue sequential blue, the value printed in each cell."""
     base = alt.Chart(df).encode(x=alt.X(f"{x}:N", sort=x_sort, title=None, axis=alt.Axis(labelAngle=-30)),
                                 y=alt.Y(f"{y}:N", sort=y_sort, title=None, axis=YAXIS),
                                 tooltip=[f"{y}:N", f"{x}:N", alt.Tooltip(f"{value}:Q", format=fmt)])
     rect = base.mark_rect(stroke="white", strokeWidth=2).encode(
-        color=alt.Color(f"{value}:Q", scale=alt.Scale(range=SEQ[:4]), legend=alt.Legend(title="% of group")))
+        color=alt.Color(f"{value}:Q", scale=alt.Scale(range=SEQ[:4]), legend=alt.Legend(title=legend)))
+    dark = 0.45 * df[value].max() if legend != "% of group" else 45  # white text where the cell colour is dark
     text = base.mark_text().encode(text=alt.Text(f"{value}:Q", format=fmt),
-                                   color=alt.condition(f"datum['{value}'] > 45", alt.value("white"), alt.value("#0b0b0b")))
+                                   color=alt.condition(f"datum['{value}'] > {dark}", alt.value("white"), alt.value("#0b0b0b")))
     return (rect + text).properties(height=max(160, ROW * df[y].nunique() + 60))
 
 
@@ -79,23 +82,25 @@ def quote(q, src, url):
 
 
 groww_only = st.sidebar.toggle("Groww only", help="Only items about Groww: Groww store reviews, and posts that name Groww.")
-D = load(groww_only)
+first_only = st.sidebar.toggle("First-timers only", key="first_only", help="Only posts where the person says they are a first-time investor.")
+D = load(groww_only, first_only)
 items, ms, f = D["items"], D["metrics"], D["funnel"].fillna(0)
 num = lambda c: int(f[c].sum())  # noqa: E731
 
 st.title("SIP Discovery Engine")
 st.caption("Why do first-time investors keep or stop their SIPs? Public reviews, forums and comments · counts are mentions in a "
-           "sample, not population rates · details in docs/evidence_log.md")
+           "sample, not population rates · Evidence log: [link coming]")
 
 # ---- always visible: funnel, sources, evaluation --------------------------------------------------------------------
 st.subheader("From collected posts to evidence")
-stages = [("Collected", "collected"), ("Keyword prefilter", "prefiltered"), ("Classified", "classified"), ("Relevant", "relevant"),
+stages = [("Seen", "seen"), ("Collected", "collected"), ("Keyword prefilter", "prefiltered"), ("Classified", "classified"), ("Relevant", "relevant"),
           ("Extracted", "extracted"), ("Used in analysis", "analysed")]
 c = st.columns(len(stages))
 for col, (label, k) in zip(c, stages):
     col.metric(label, f"{num(k):,}")
 show(hbar(pd.DataFrame([{"stage": f"{i + 1}. {s}", "posts": num(k)} for i, (s, k) in enumerate(stages)]), "posts", "stage",
           sort=None, title="posts"))
+st.caption("Seen: fetched by the collectors · Collected: kept after dropping too-short, duplicate and out-of-window posts")
 
 left, right = st.columns([3, 2])
 with left:
@@ -157,13 +162,23 @@ view = st.segmented_control("View", VIEWS, default="Insights", key="view", label
 if items.empty:
     st.info(PLACEHOLDER)
     st.stop()
+side = ROOT / "eval" / "results" / "first_timers.md"
+if first_only:
+    st.caption(f"First-timers only: {len(items)} posts where the person says it is their first investing. Every view below is recomputed on them.")
+    if side.exists():
+        with st.expander("Side by side: first-timers vs all users"):
+            st.markdown(side.read_text(encoding="utf8").split("\n", 1)[1])
 
 if view == "Insights":
     p = ROOT / "eval" / "results" / "insights.json"
-    if not p.exists():
-        st.info(PLACEHOLDER)
-    else:
+    if D["cards"] is not None:
+        st.caption("Filtered view: cards recomputed on these posts and worded by code, not the model.")
+        data = [{**c, "headline": c["fallback"], "weak": c["id"] in insights.WEAK_IDS or c["confidence"] == "low"} for c in D["cards"]]
+    elif p.exists():
         data = json.loads(p.read_text(encoding="utf8"))["insights"]
+    else:
+        st.info(PLACEHOLDER)
+    if D["cards"] is not None or p.exists():
         icon = {"high": "🟢", "medium": "🟠", "low": "🔴"}
         for i in [x for x in data if not x["weak"]] + [x for x in data if x["weak"]]:
             with st.container(border=True):
@@ -270,6 +285,14 @@ if view == "Beliefs":
     k[1].metric("Null rate", f"{100 * (1 - len(bl) / len(items)):.0f}%")
     if not bl.empty:
         show(hbar(bl["sip_action"].value_counts().rename_axis("action").reset_index(name="posts"), "posts", "action"))
+        focus = bl["cluster"] == cluster.FOCUS_CLUSTER
+        st.markdown(f"**Cross-tab** · {int(focus.sum())} of {len(bl)} sit in “{cluster.FOCUS_CLUSTER}” (★)")
+        st.dataframe(bl.assign(focus=focus.map({True: "★", False: ""}), contrast_bucket=bl["contrast_bucket"].fillna("-"))
+                     .sort_values(["focus", "cluster"], ascending=[False, True])
+                     [["focus", "belief", "cluster", "sip_action", "contrast_bucket", "investor_experience"]], hide_index=True, width="stretch")
+        show(heat(pd.crosstab(bl["contrast_bucket"].fillna("no bucket"), bl["investor_experience"]).stack().rename("posts").reset_index(),
+                  "investor_experience", "contrast_bucket", "posts", legend="posts")
+             .properties(title="Beliefs by group and investor experience (posts)"))
         for _, r in bl.iterrows():
             with st.expander(f"{r['belief']} · {r['sip_action']}"):
                 quote(r["belief_quote"], r["source"], r["url"])

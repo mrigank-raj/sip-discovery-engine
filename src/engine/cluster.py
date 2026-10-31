@@ -205,10 +205,10 @@ def below_min(ms):
 BUCKETS = ["continuers", "considering", "acted", "instalment_failed", "switched_platform"]
 
 
-def contrast(db):
+def contrast(db, keep=lambda item: True):
     """Continuers vs considering vs acted (instalment_failed and switched_platform shown separately) on what they expected,
     how often they check, how they feel, why, and who they are. Shares are within each bucket."""
-    items = [i for i in load(db) if i["contrast_bucket"]]
+    items = [i for i in load(db) if i["contrast_bucket"] and keep(i)]
     out = {}
     for b in BUCKETS:
         ms = [i for i in items if i["contrast_bucket"] == b]
@@ -222,22 +222,39 @@ def contrast(db):
     return out
 
 
+FOCUS_CLUSTER = "Pausing or stopping SIPs over returns and charges"  # the top-ranked cluster at the full rebuild; beliefs in it are flagged
+
+
 def candidate_beliefs(db, path=ROOT / "analysis" / "candidate_beliefs.csv"):
-    """Every stated belief, for grouping by hand. These are candidates to validate in research, not findings."""
+    """Every stated belief with its cluster, action, contrast bucket and investor experience, for grouping by hand.
+    These are candidates to validate in research, not findings."""
     import csv
     rows = [i for i in load(db, analysable_only=False) if i["has_belief"]]
+    name = {r["item_id"]: r["name"] for r in db.execute("SELECT ci.item_id, c.name FROM cluster_items ci JOIN clusters c USING(cluster_id)")}
     path.parent.mkdir(exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.writer(f)
-        w.writerow(["item_id", "source", "sip_action", "journey_stage", "investor_experience", "belief_at_action", "belief_quote", "link"])
-        for i in sorted(rows, key=lambda i: (i["sip_action"], i["item_id"])):
-            w.writerow([i["item_id"], i["source"], i["sip_action"], i["journey_stage"], i["investor_experience"],
-                        i["rec"]["belief_at_action"], i["rec"]["belief_quote"], i["url"]])
+        w.writerow(["item_id", "source", "cluster", "in_focus_cluster", "sip_action", "contrast_bucket", "investor_experience",
+                    "journey_stage", "belief_at_action", "belief_quote", "link"])
+        for i in sorted(rows, key=lambda i: (name.get(i["item_id"]) != FOCUS_CLUSTER, i["sip_action"], i["item_id"])):
+            c = name.get(i["item_id"], "(none)")
+            w.writerow([i["item_id"], i["source"], c, "yes" if c == FOCUS_CLUSTER else "", i["sip_action"], i["contrast_bucket"] or "",
+                        i["investor_experience"], i["journey_stage"], i["rec"]["belief_at_action"], i["rec"]["belief_quote"], i["url"]])
     return len(rows)
 
 
+def seen(db):
+    """Items each collector fetched, before too-short, duplicate and out-of-window ones were dropped. Read from the run log, or
+    from the totals the hosted snapshot keeps in its place."""
+    snap = db.execute("SELECT 1 FROM sqlite_master WHERE name='collection_seen'").fetchone()
+    q = ("SELECT source, seen FROM collection_seen" if snap else
+         "SELECT source, SUM(json_extract(counts_json, '$.seen')) FROM runs WHERE stage='collect' GROUP BY source")
+    return {r[0]: r[1] or 0 for r in db.execute(q)}
+
+
 def funnel(db):
-    return [dict(r) for r in db.execute(
+    s = seen(db)
+    return [{"source": r["source"], "seen": s.get(r["source"], 0), **dict(r)} for r in db.execute(
         f"""SELECT r.source, COUNT(*) collected, SUM(f.prefilter_pass) prefiltered, SUM(f.relevant IS NOT NULL) classified,
            SUM(f.relevant=1) relevant, SUM(e.item_id IS NOT NULL) extracted,
            SUM(e.item_id IS NOT NULL AND NOT {ANALYSABLE}) no_sip_action_stated,

@@ -21,6 +21,10 @@ def export(src, dest=DEMO_DB):
     a, b = sqlite3.connect(src), sqlite3.connect(tmp)
     a.backup(b)  # a consistent copy even while a run is writing to the source
     a.close()
+    # the run log is dropped, so keep only the per-source "seen" totals the Explorer's funnel starts from
+    b.execute("DROP TABLE IF EXISTS collection_seen")
+    b.execute("CREATE TABLE collection_seen AS SELECT source, SUM(json_extract(counts_json, '$.seen')) seen FROM runs "
+              "WHERE stage='collect' GROUP BY source")
     b.execute("UPDATE raw_items SET text='', title=NULL WHERE item_id NOT IN (SELECT item_id FROM extractions)")
     b.execute("UPDATE raw_items SET raw_json='{}', author_hash=NULL")
     b.execute("DELETE FROM runs")

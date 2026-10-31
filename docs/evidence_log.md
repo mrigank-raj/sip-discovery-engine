@@ -1,6 +1,6 @@
 # AI Evidence Log
 
-Generated 2026-10-31T02:46:50+00:00 by `engine.cli evidence-log`. Every number below is read from the database or the eval files at that time. Counts are mentions in a sample of public posts, not population rates.
+Generated 2026-10-31T03:01:28+00:00 by `engine.cli evidence-log`. Every number below is read from the database or the eval files at that time. Counts are mentions in a sample of public posts, not population rates.
 
 ## 1. Sources and volume per stage
 

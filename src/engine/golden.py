@@ -113,6 +113,76 @@ def label_views():
     print(f"wrote eval/label_view_prefilter_sample.md ({len(pre)} items) and eval/label_view_golden.md ({len(gold)} items)")
 
 
+EXP_SHEET = ROOT / "eval" / "experience_set.csv"
+EXP_VALUES = ("first_time", "experienced", "not_stated")
+
+
+def experience_sheet(per_source=4):
+    """A blind check of investor_experience: `per_source` extracted items from each source (seeded, golden-set items excluded),
+    written as a blank label sheet (eval/experience_set.csv) and a text-only view (eval/label_view_experience.md). Only which
+    items were extracted is read; no extracted field is."""
+    if EXP_SHEET.exists() and any(r["investor_experience"].strip() for r in csv.DictReader(open(EXP_SHEET, encoding="utf-8-sig"))):
+        raise SystemExit(f"{EXP_SHEET.name} already holds labels; not overwritten")
+    db = store.connect(ROOT / "data" / "engine.db")
+    gold = {r["item_id"] for r in csv.DictReader(open(SHEET, encoding="utf-8-sig"))}
+    pools = defaultdict(list)
+    for r in db.execute("SELECT item_id, source FROM raw_items JOIN extractions USING(item_id) ORDER BY item_id"):
+        if r["item_id"] not in gold:
+            pools[r["source"]].append(r["item_id"])
+    rnd = random.Random(SEED)
+    ids = [i for s in sorted(pools) for i in rnd.sample(pools[s], min(per_source, len(pools[s])))]
+    rows = {r["item_id"]: r for r in db.execute(f"SELECT item_id, source, title, text FROM raw_items WHERE item_id IN "
+                                                 f"({','.join('?' * len(ids))})", ids)}
+    with open(EXP_SHEET, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.writer(f)
+        w.writerow(["row", "item_id", "source", "investor_experience", "notes"])
+        w.writerows([f"E{k}", i, rows[i]["source"], "", ""] for k, i in enumerate(ids, 1))
+    L = ["# Investor experience: posts to label", "",
+         "For each, from the post alone: first_time, experienced or not_stated. first_time means the writer says this is their first "
+         "investing (first SIP, new to mutual funds); experienced means they say they have invested before or for years.", ""]
+    for k, i in enumerate(ids, 1):
+        r = rows[i]
+        L += [f"## E{k}", "", f"Source: {r['source']}"] + ([f"Title: {r['title']}"] if (r["title"] or "").strip() else []) + \
+             ["", _quote_block(r["text"]), ""]
+    (ROOT / "eval" / "label_view_experience.md").write_text("\n".join(L), encoding="utf8")
+    print(f"wrote {EXP_SHEET.name} and label_view_experience.md: {len(ids)} items (seed {SEED}), "
+          + ", ".join(f"{s} {sum(rows[i]['source'] == s for i in ids)}" for s in sorted(pools)))
+
+
+def experience_score():
+    """Engine investor_experience vs the labels in eval/experience_set.csv: agreement overall and per source, and how many items
+    labelled first_time the engine called not_stated (missed first-timers). Writes eval/results/golden_experience.md."""
+    rows = [r for r in csv.DictReader(open(EXP_SHEET, encoding="utf-8-sig")) if r["investor_experience"].strip()]
+    if not rows:
+        return print(f"{EXP_SHEET.name}: no labels yet")
+    bad = [r["row"] for r in rows if r["investor_experience"].strip().lower() not in EXP_VALUES]
+    if bad:
+        raise SystemExit(f"labels must be one of {EXP_VALUES}; fix rows {bad}")
+    db = store.connect(ROOT / "data" / "engine.db")
+    eng = {r["item_id"]: r["investor_experience"] for r in db.execute(
+        f"SELECT item_id, investor_experience FROM extractions WHERE item_id IN ({','.join('?' * len(rows))})", [r["item_id"] for r in rows])}
+    pairs = [(r, r["investor_experience"].strip().lower(), eng.get(r["item_id"], NOT_RUN)) for r in rows]
+    agree = sum(m == e for _, m, e in pairs)
+    first = [p for p in pairs if p[1] == "first_time"]
+    missed = sum(e == "not_stated" for _, _, e in first)
+    by_src = defaultdict(lambda: [0, 0])
+    for r, m, e in pairs:
+        by_src[r["source"]][0] += m == e
+        by_src[r["source"]][1] += 1
+    L = ["# Investor experience: engine vs your labels", "",
+         f"- Agreement: {pct((agree, len(pairs)))}",
+         f"- You marked first_time: {len(first)}; the engine called {missed} of them not_stated (missed first-timers)",
+         f"- Engine said first_time where you did not: {sum(e == 'first_time' and m != 'first_time' for _, m, e in pairs)}",
+         "- By source: " + "; ".join(f"{s} {pct(tuple(v))}" for s, v in sorted(by_src.items())), "",
+         "Random within source, so few posts state experience at all; the first_time rates rest on very few items.", "",
+         "| row | source | you | engine |", "|---|---|---|---|"]
+    L += [f"| {r['row']}{'' if m == e else ' **x**'} | {r['source']} | {m} | {e} |" for r, m, e in pairs]
+    out = ROOT / "eval" / "results"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "golden_experience.md").write_text("\n".join(L) + "\n", encoding="utf8")
+    print("\n".join(L[:6]))
+
+
 # ---- scoring -------------------------------------------------------------------------------------------------------------
 ENUM_FIELDS = ["investor_experience", "platform", "journey_stage", "sip_action", "action_reason", "what_they_check", "check_frequency",
                "outside_app_behaviour", "emotion", "life_stage", "income_type", "source_of_money", "influenced_by", "severity"]

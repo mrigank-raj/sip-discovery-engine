@@ -60,8 +60,8 @@ def _dist(items, field, top=5):
     return {k: v for k, v in c.most_common(top)}
 
 
-def candidates(db):
-    items = cluster.load(db)
+def candidates(db, keep=lambda item: True):
+    items = [i for i in cluster.load(db) if keep(i)]
     nsrc = lambda g: len({i["source"] for i in g})  # noqa: E731
     acted = [i for i in items if i["voluntary_acted"]]
     stay = [i for i in items if i["contrast_bucket"] == "continuers"]
@@ -253,6 +253,69 @@ def build(model, fallback_model, use_llm=True):
     (res / "insights.json").write_text(json.dumps({"versions": store.versions(), "insights": out}, indent=1, ensure_ascii=False), encoding="utf8")
     (res / "insights.md").write_text(to_markdown(out), encoding="utf8")
     return out
+
+
+FIRST = lambda i: i["investor_experience"] == "first_time"  # noqa: E731
+
+
+def _cell(n, total):
+    return f"{n} ({_pct(n, total)}%)" if total else "-"
+
+
+def side_by_side(db, keep=FIRST, label="First-timers"):
+    """All users next to one cut (self-described first-time investors by default): opportunity ranking, pull-back reasons,
+    stay-vs-stop sizes and emotion, and the code-worded cards. No LLM. Writes eval/results/first_timers.md."""
+    everyone, cut = cluster.load(db), [i for i in cluster.load(db) if keep(i)]
+    L = [f"# {label} vs all users", "",
+         f"{len(cut)} of {len(everyone)} analysed posts are in the cut. investor_experience is filled only when the person says it, so "
+         "first-timers who do not say so sit in all users; how many the engine misses is measured by the experience label set. "
+         "Counts are posts in a sample, not population rates.", ""]
+
+    ms_all, ms_cut = cluster.metrics(db), cluster.metrics(db, keep)
+    rank = lambda ms: {m["id"]: (k, m) for k, m in enumerate([m for m in ms if m["score"] is not None], 1)}  # noqa: E731
+    ra, rc = rank(ms_all), rank(ms_cut)
+    posts_cut = {m["id"]: m["items"] for m in ms_cut}
+    show = [cid for cid in ra if ra[cid][0] <= 15] + [cid for cid in rc if cid in ra and ra[cid][0] > 15] + [cid for cid in rc if cid not in ra]
+    L += ["## Opportunity ranking", "",
+          f"Scores are rescaled within each view, so compare ranks, not raw scores. A cluster needs {cluster.MIN_ITEMS}+ posts in the view "
+          f"to be ranked; {len(rc)} clusters reach that among {label.lower()}. Top 15 for all users, plus every cluster ranked in the cut.", "",
+          f"| cluster | all: rank | all: score | all: posts | {label}: rank | {label}: score | {label}: posts |", "|---|---|---|---|---|---|---|"]
+    for cid in show:
+        m = (ra.get(cid) or rc[cid])[1]
+        a, c = ra.get(cid), rc.get(cid)
+        L.append(f"| {m['name']} | {a[0] if a else '-'} | {a[1]['score'] if a else '-'} | {a[1]['items'] if a else '-'} | "
+                 f"{c[0] if c else 'not ranked'} | {c[1]['score'] if c else '-'} | {posts_cut.get(cid, 0)} |")
+
+    acted_a, acted_c = [i for i in everyone if i["voluntary_acted"]], [i for i in cut if i["voluntary_acted"]]
+    reasons = Counter(i["action_reason"] for i in acted_a)
+    L += ["", "## Pull-back reasons", "", f"Posts that paused, reduced, stopped or redeemed: all {len(acted_a)}, {label.lower()} {len(acted_c)}.", "",
+          f"| reason | all users | {label} |", "|---|---|---|"]
+    for r, _ in reasons.most_common():
+        L.append(f"| {r} | {_cell(reasons[r], len(acted_a))} | {_cell(sum(i['action_reason'] == r for i in acted_c), len(acted_c))} |")
+
+    con_a, con_c = cluster.contrast(db), cluster.contrast(db, keep)
+    tot_a, tot_c = sum(v["items"] for v in con_a.values()), sum(v["items"] for v in con_c.values())
+    L += ["", "## Stay vs stop: group sizes", "", f"| group | all users | {label} |", "|---|---|---|"]
+    L += [f"| {b} | {_cell(con_a[b]['items'], tot_a)} | {_cell(con_c[b]['items'], tot_c)} |" for b in cluster.BUCKETS]
+    L += ["", "## Stay vs stop: emotion", "", "Share of each group's posts; not-stated emotions are left out of the list but kept in the base.", "",
+          f"| group | emotion | all users | {label} |", "|---|---|---|---|"]
+    for b in ("continuers", "considering", "acted"):
+        for e, n in con_a[b]["emotion"].items():
+            if e not in NS:
+                L.append(f"| {b} | {e} | {_cell(n, con_a[b]['items'])} | {_cell(con_c[b]['emotion'].get(e, 0), con_c[b]['items'])} |")
+
+    ca = {c["id"]: c for c in candidates(db)}
+    cc = {c["id"]: c for c in candidates(db, keep)}
+    L += ["", "## Cards, worded by code (no model)", "", f"| card | all users | {label} |", "|---|---|---|"]
+    for cid in ("why_pull_back", "contrast", "involuntary", "when"):
+        L.append(f"| {cid} | {ca[cid]['fallback']} ({confidence(ca[cid])}) | {cc[cid]['fallback']} ({confidence(cc[cid])}) |")
+    emo = lambda c, g: ", ".join(f"{k} {v}" for k, v in c["facts"][g]["emotion_posts"].items()) or "none stated"  # noqa: E731
+    for g, name in (("keep_investing", "emotion, keep investing"), ("pulled_back_or_considering", "emotion, pulled back or considering")):
+        L.append(f"| {name} | {emo(ca['contrast'], g)} of {ca['contrast']['facts'][g]['posts']} | {emo(cc['contrast'], g)} of {cc['contrast']['facts'][g]['posts']} |")
+    out = ROOT / "eval" / "results" / "first_timers.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(L) + "\n", encoding="utf8")
+    return L
 
 
 def to_markdown(out):

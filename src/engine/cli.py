@@ -251,6 +251,8 @@ def main(argv=None):
     gsc = sub.add_parser("golden-score", help="engine vs your labels: overall, per source, per prefilter group, every disagreement")
     gsc.add_argument("--relevance-only", action="store_true", help="score relevance alone (before extraction has run)")
     sub.add_parser("label-views", help="paste-friendly markdown of the two labelling sheets, with no engine output")
+    sub.add_parser("experience-sheet", help="20 extracted items, 4 per source, to label investor_experience blind")
+    sub.add_parser("first-timers", help="first-time investors vs all users, side by side (no LLM): eval/results/first_timers.md")
     s = sub.add_parser("sample")
     s.add_argument("-n", type=int, default=5)
     a = p.parse_args(argv)
@@ -314,9 +316,17 @@ def main(argv=None):
     elif a.cmd == "golden-score":
         from engine import golden
         golden.score(relevance_only=a.relevance_only)
+        if golden.EXP_SHEET.exists():
+            golden.experience_score()
     elif a.cmd == "label-views":
         from engine import golden
         golden.label_views()
+    elif a.cmd == "experience-sheet":
+        from engine import golden
+        golden.experience_sheet()
+    elif a.cmd == "first-timers":
+        from engine import insights
+        print("\n".join(insights.side_by_side(store.connect(DB_PATH))))
     elif a.cmd == "sample":
         sample(a.n)
     else:

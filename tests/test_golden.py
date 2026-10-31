@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from engine import golden  # noqa: E402
+from engine import golden, store  # noqa: E402
 
 POOLS = {("play", "sip_or_mf"): [f"p{i}" for i in range(50)], ("play", "stop_or_fail"): [f"s{i}" for i in range(3)],
          ("youtube", "returns"): [f"y{i}" for i in range(20)]}
@@ -81,3 +81,24 @@ def test_sip_action_labelled_as_a_group_is_compared_at_group_level():
     cells, dis = golden.compare(gold, engine)
     got = {c["mine"]: (c["agree"], c["engine"]) for c in cells if c["field"] == "sip_action"}
     assert got == {"staying_in": (True, "staying_in"), "pulling_back": (False, "out_or_failed"), "not_stated": (True, "not_stated")}
+
+
+def test_experience_score_counts_first_timers_the_engine_left_not_stated(tmp_path, monkeypatch, capsys):
+    import csv
+    monkeypatch.setattr(golden, "ROOT", tmp_path)
+    monkeypatch.setattr(golden, "EXP_SHEET", tmp_path / "exp.csv")
+    (tmp_path / "data").mkdir()
+    db = store.connect(store.init_db(tmp_path / "data" / "engine.db"))
+    db.executemany("INSERT INTO extractions(item_id, json, investor_experience) VALUES(?, '{}', ?)",
+                   [("a", "not_stated"), ("b", "first_time"), ("c", "experienced"), ("d", "first_time")])
+    db.commit()
+    with open(tmp_path / "exp.csv", "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.writer(f)
+        w.writerow(["row", "item_id", "source", "investor_experience", "notes"])
+        w.writerows([["E1", "a", "play", "first_time", ""], ["E2", "b", "play", "first_time", ""],
+                     ["E3", "c", "reddit", "experienced", ""], ["E4", "d", "reddit", "not_stated", ""], ["E5", "e", "reddit", "", ""]])
+    golden.experience_score()
+    out = capsys.readouterr().out
+    assert "Agreement: 50% (2/4)" in out
+    assert "You marked first_time: 2; the engine called 1 of them not_stated" in out
+    assert "Engine said first_time where you did not: 1" in out
