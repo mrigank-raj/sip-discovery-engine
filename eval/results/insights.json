@@ -9,24 +9,24 @@
  "insights": [
   {
    "id": "why_pull_back",
-   "headline": "Out of 83 posts describing a pull-back, 27 cite lost trust in the platform while 2 cite market falls.",
-   "so_what": "This suggests investigating whether platform trust issues play a larger role in decisions to stop payments than market drops. Examining what triggers this loss of trust could clarify why posts describe stopping payments.",
-   "caveat": "The findings are limited to reasons explicitly mentioned in 83 sample posts.",
-   "confidence": "medium",
-   "n": 83,
-   "sources": 2,
+   "headline": "Out of 190 posts describing pausing, reducing, stopping, or redeeming, 44 cite losing trust in the platform and 20 cite confusion with the app or numbers.",
+   "so_what": "This suggests investigating whether loss of trust and app confusion relate to stopping regular payments. State it as a plain sentence.",
+   "caveat": "In 69 posts, the reason given is listed as other.",
+   "confidence": "high",
+   "n": 190,
+   "sources": 5,
    "weak": false,
    "written_by_llm": true,
    "plain_text": false,
    "facts": {
-    "posts_that_paused_reduced_stopped_or_redeemed": 83,
-    "give_no_reason": 5,
+    "posts_that_paused_reduced_stopped_or_redeemed": 190,
+    "give_no_reason": 15,
     "reasons_given_posts": {
-     "other": 29,
-     "lost_trust_in_platform": 27,
-     "confused_by_app_or_numbers": 9,
-     "mandate_or_autopay_issue": 8,
-     "market_fall": 2
+     "other": 69,
+     "lost_trust_in_platform": 44,
+     "confused_by_app_or_numbers": 20,
+     "mandate_or_autopay_issue": 15,
+     "returns_below_expectation": 10
     }
    },
    "quotes": [
@@ -41,52 +41,60 @@
      "source": "play",
      "quote": "When I tried to withdraw my money, I never received the OTP required for verification.",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=02d756db-bd06-45ad-9575-499892aa93f6"
+    },
+    {
+     "item_id": "reddit:1031fil",
+     "source": "reddit",
+     "quote": "Motilal Oswal presented bill for my S&P500 SIP that they paused months back, anyone else?",
+     "url": "https://www.reddit.com/r/IndiaInvestments/comments/1031fil/motilal_oswal_presented_bill_for_my_sp500_sip/"
     }
    ]
   },
   {
    "id": "contrast",
-   "headline": "Confidence is expressed in 73 posts about continuing, whereas anger is expressed in 66 posts about pulling back.",
-   "so_what": "This suggests investigating how negative experiences turn feeling confident into feeling angry. Tracking this emotional change may highlight why posts describe stopping payments.",
-   "caveat": "Only 9 continuing posts and 5 pull-back posts state how frequently the poster checks investments.",
-   "confidence": "medium",
-   "n": 211,
-   "sources": 2,
+   "headline": "Among 389 posts about continuing investments, 181 show confidence, whereas 106 out of 245 posts about pulling back show anger.",
+   "so_what": "This suggests investigating how emotional expressions in posts relate to decisions to keep or stop regular payments.",
+   "caveat": "Checking frequency is stated in only 22 posts about keeping investments and 12 posts about pulling back.",
+   "confidence": "high",
+   "n": 634,
+   "sources": 5,
    "weak": false,
    "written_by_llm": true,
    "plain_text": false,
    "facts": {
     "keep_investing": {
-     "posts": 116,
+     "posts": 389,
      "emotion_posts": {
-      "confident": 73,
-      "confused": 12,
-      "angry": 10,
-      "indifferent": 8,
-      "anxious": 3
+      "confident": 181,
+      "confused": 29,
+      "indifferent": 25,
+      "anxious": 22,
+      "angry": 20
      },
      "check_frequency_posts": {
+      "monthly": 11,
       "daily": 5,
-      "monthly": 4
-     },
-     "state_how_often_they_check": 9
-    },
-    "pulled_back_or_considering": {
-     "posts": 95,
-     "emotion_posts": {
-      "angry": 66,
-      "anxious": 10,
-      "confused": 5,
-      "confident": 2,
-      "regret": 2
-     },
-     "check_frequency_posts": {
-      "monthly": 2,
-      "rarely": 1,
-      "daily": 1,
+      "rarely": 5,
       "none_or_never": 1
      },
-     "state_how_often_they_check": 5
+     "state_how_often_they_check": 22
+    },
+    "pulled_back_or_considering": {
+     "posts": 245,
+     "emotion_posts": {
+      "angry": 106,
+      "confused": 30,
+      "anxious": 27,
+      "regret": 7,
+      "confident": 6
+     },
+     "check_frequency_posts": {
+      "monthly": 4,
+      "rarely": 4,
+      "daily": 3,
+      "none_or_never": 1
+     },
+     "state_how_often_they_check": 12
     }
    },
    "quotes": [
@@ -118,22 +126,23 @@
   },
   {
    "id": "involuntary",
-   "headline": "Failed instalments account for 29 percent of the 117 total lapse posts in the sample.",
-   "so_what": "This suggests investigating technical or banking interruptions that prevent planned contributions. Understanding these unchosen failures could explain why payments stop without action by the poster.",
-   "caveat": "The counts rely entirely on post text rather than transaction error logs.",
-   "confidence": "medium",
-   "n": 117,
-   "sources": 2,
+   "headline": "Failed instalments account for 31 percent of 277 lapse posts, with payment mandate issues cited in 85 of the 87 failed instalment posts.",
+   "so_what": "This suggests investigating how payment mandate issues contribute to overall lapses in regular payments.",
+   "caveat": "The counts measure mentions in a sample of posts rather than backend transaction records.",
+   "confidence": "high",
+   "n": 277,
+   "sources": 5,
    "weak": false,
    "written_by_llm": true,
    "plain_text": false,
    "facts": {
-    "failed_instalments": 34,
-    "voluntary_pull_backs": 83,
-    "all_lapses": 117,
-    "failed_share_of_lapses_pct": 29,
+    "failed_instalments": 87,
+    "voluntary_pull_backs": 190,
+    "all_lapses": 277,
+    "failed_share_of_lapses_pct": 31,
     "failed_reasons_posts": {
-     "mandate_or_autopay_issue": 34
+     "mandate_or_autopay_issue": 85,
+     "income_change": 1
     }
    },
    "quotes": [
@@ -148,27 +157,33 @@
      "source": "play",
      "quote": "Unable to do SIP payment. please check.",
      "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=00c521c4-dff3-4627-aa1a-240367c433a8"
+    },
+    {
+     "item_id": "youtube:Ugw0Q_gFPWJPULE0IW14AaABAg",
+     "source": "youtube",
+     "quote": "Sir maine autopay hi cancle kar diya , to kya honga?",
+     "url": "https://www.youtube.com/watch?v=qjnDO4rzatk&lc=Ugw0Q_gFPWJPULE0IW14AaABAg"
     }
    ]
   },
   {
    "id": "when",
-   "headline": "15 of 83 pull-backs say how long the person had been investing.",
+   "headline": "41 of 190 pull-backs say how long the person had been investing.",
    "so_what": "",
    "caveat": "",
-   "confidence": "low",
-   "n": 15,
-   "sources": 1,
-   "weak": true,
+   "confidence": "medium",
+   "n": 41,
+   "sources": 4,
+   "weak": false,
    "written_by_llm": false,
    "plain_text": false,
    "facts": {
-    "pull_backs": 83,
-    "pull_backs_with_a_stated_stage": 15,
+    "pull_backs": 190,
+    "pull_backs_with_a_stated_stage": 41,
     "by_stage_posts": {
-     "after_12_months": 10,
-     "months_4_to_12": 2,
-     "first_3_months": 3
+     "after_12_months": 30,
+     "months_4_to_12": 4,
+     "first_3_months": 7
     }
    },
    "quotes": [
@@ -177,6 +192,18 @@
      "source": "play",
      "quote": "When I tried to withdraw my money, I never received the OTP required for verification.",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww&reviewId=02d756db-bd06-45ad-9575-499892aa93f6"
+    },
+    {
+     "item_id": "youtube:Ugw0F_q8DugwCQCnMGl4AaABAg",
+     "source": "youtube",
+     "quote": "Stopped the SIP. But continuously investing with buying on dips.",
+     "url": "https://www.youtube.com/watch?v=g-Xis2z0x_Y&lc=Ugw0F_q8DugwCQCnMGl4AaABAg"
+    },
+    {
+     "item_id": "reddit:19rogh77gqkqo",
+     "source": "reddit",
+     "quote": "My bank RM made me do SIP of 20K in Nippon Small cap from 2017 to 2021. After that I stopped because of some personal reasons.",
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1xfq9x0/is_investing_in_smallcap_mutual_funds_worth_the/19rogh77gqkqo/"
     }
    ]
   },
@@ -185,53 +212,81 @@
    "headline": "Some posts describe asking someone or watching videos before deciding.",
    "so_what": "",
    "caveat": "",
-   "confidence": "medium",
-   "n": 211,
-   "sources": 2,
+   "confidence": "high",
+   "n": 634,
+   "sources": 5,
    "weak": false,
    "written_by_llm": false,
    "plain_text": false,
    "facts": {
     "keep_investing": {
-     "posts": 116,
-     "turn_outside_the_app": 0,
-     "where_posts": {}
+     "posts": 389,
+     "turn_outside_the_app": 49,
+     "where_posts": {
+      "youtube_or_influencer": 37,
+      "reddit_or_forum": 12
+     }
     },
     "pulled_back_or_considering": {
-     "posts": 95,
-     "turn_outside_the_app": 0,
-     "where_posts": {}
+     "posts": 245,
+     "turn_outside_the_app": 20,
+     "where_posts": {
+      "youtube_or_influencer": 12,
+      "reddit_or_forum": 7,
+      "asked_friend_family": 1
+     }
     }
    },
-   "quotes": []
+   "quotes": [
+    {
+     "item_id": "reddit:19rfxwdvv8cjm",
+     "source": "reddit",
+     "quote": "I'm not going to add any funds hereafter, yes overlap is there between large cap and flexi cap.",
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1x9xhpa/beginner_to_invest/19rfxwdvv8cjm/"
+    },
+    {
+     "item_id": "youtube:Ugw1finTv5aAOhbRPnJ4AaABAg",
+     "source": "youtube",
+     "quote": "Sip is continuous since 2017..though profits reduced but still in profit",
+     "url": "https://www.youtube.com/watch?v=g-Xis2z0x_Y&lc=Ugw1finTv5aAOhbRPnJ4AaABAg"
+    },
+    {
+     "item_id": "play:f91e60ab-bf15-49a7-997f-272b129c1a2e",
+     "source": "play",
+     "quote": "I am doing manual SIP, and it was difficult to understand how to advance pay next month's installment which I had to watch on YT",
+     "url": "https://play.google.com/store/apps/details?id=com.zerodha.coin&reviewId=f91e60ab-bf15-49a7-997f-272b129c1a2e"
+    }
+   ]
   },
   {
    "id": "first_time",
-   "headline": "33 posts are by self-described first-time investors, 75 by experienced ones.",
+   "headline": "124 posts are by self-described first-time investors, 239 by experienced ones.",
    "so_what": "",
    "caveat": "",
-   "confidence": "medium",
-   "n": 108,
-   "sources": 2,
+   "confidence": "high",
+   "n": 363,
+   "sources": 5,
    "weak": false,
    "written_by_llm": false,
    "plain_text": false,
    "facts": {
-    "first_time_posts": 33,
-    "experienced_posts": 75,
+    "first_time_posts": 124,
+    "experienced_posts": 239,
     "first_time_by_action_posts": {
-     "continuers": 13,
-     "started": 10,
-     "not_stated": 6,
-     "acted": 4
+     "started": 64,
+     "continuers": 33,
+     "not_stated": 14,
+     "acted": 11,
+     "switched_platform": 1,
+     "considering": 1
     },
     "experienced_by_action_posts": {
-     "continuers": 37,
-     "switched_platform": 11,
-     "acted": 11,
-     "not_stated": 10,
-     "instalment_failed": 3,
-     "started": 2
+     "continuers": 145,
+     "not_stated": 27,
+     "acted": 27,
+     "switched_platform": 24,
+     "started": 8,
+     "considering": 5
     }
    },
    "quotes": [
@@ -246,26 +301,32 @@
      "source": "play",
      "quote": "I want to global ETS an SiP investing knowledge so thanks for this app very useful",
      "url": "https://play.google.com/store/apps/details?id=in.indwealth&reviewId=009a419f-21ec-420b-91e5-58661713c0c7"
+    },
+    {
+     "item_id": "youtube:Ugw-Ar8kb4_QWn4w8gd4AaABAg",
+     "source": "youtube",
+     "quote": "Pura acche se samajh aa gaya abhi mai class 12 mai hu jab se income karne lagunga tab se sip karunga jarur.",
+     "url": "https://www.youtube.com/watch?v=ZXLATRO3Ifw&lc=Ugw-Ar8kb4_QWn4w8gd4AaABAg"
     }
    ]
   },
   {
    "id": "blind",
-   "headline": "Of 473 extracted posts, 26% say how long the person has invested, 0% their income type and 23% whether they are first-time investors.",
+   "headline": "Of 1318 extracted posts, 37% say how long the person has invested, 4% their income type and 28% whether they are first-time investors.",
    "so_what": "Segment and stage questions (who drops off, and when) mostly cannot be answered from public posts; they need the app's own data or primary research.",
    "caveat": "Absence from posts does not mean absence in the population; people rarely write these details down.",
-   "confidence": "medium",
-   "n": 473,
-   "sources": 2,
+   "confidence": "high",
+   "n": 1318,
+   "sources": 5,
    "weak": true,
    "written_by_llm": false,
    "plain_text": true,
    "facts": {
-    "extracted_posts": 473,
-    "state_journey_stage_pct": 26,
-    "state_income_type_pct": 0,
-    "state_investor_experience_pct": 23,
-    "state_a_belief": 4
+    "extracted_posts": 1318,
+    "state_journey_stage_pct": 37,
+    "state_income_type_pct": 4,
+    "state_investor_experience_pct": 28,
+    "state_a_belief": 40
    },
    "quotes": []
   }
