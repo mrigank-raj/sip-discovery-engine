@@ -1,5 +1,6 @@
 """SIP Discovery Engine Explorer. Run from the project root:  PYTHONPATH=src streamlit run app/explorer.py"""
 import csv
+import importlib
 import json
 import os
 import sys
@@ -11,7 +12,12 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from engine import cluster, insights, store  # noqa: E402
+from engine import cluster, extract, insights, store  # noqa: E402
+
+# src/ is outside app/, so Streamlit does not re-import it after a push; without this a running app mixes new page code with old
+# engine code (the KeyError 'seen' after the Seen step shipped). Dependencies first.
+for _m in (store, extract, cluster, insights):
+    importlib.reload(_m)
 
 if os.environ.get("ENGINE_DB"):  # point the Explorer at another database (used to render-check views on test data)
     cluster.DB_PATH = Path(os.environ["ENGINE_DB"])
